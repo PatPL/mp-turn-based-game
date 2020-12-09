@@ -1,4 +1,6 @@
-import enums.Status;
+package Webserver;
+
+import Webserver.enums.Status;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,7 +12,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class Server {
+public class WebServer {
 	
 	private final ServerSocket server;
 	private final Thread listenerThread;
@@ -21,7 +23,7 @@ public class Server {
 		 * Interprets the request and builds an appropriate response.
 		 *
 		 * @param req Parsed HTTP request received from a client
-		 * @param res Response object that will be sent back to the client
+		 * @param res Webserver.Response object that will be sent back to the client
 		 * @return Whether the handler has fully handled the request. If true, [res] will be sent. If false, [handleRequest ()] will try to find next handler
 		 */
 		boolean handle(Request req, Response res);
@@ -52,7 +54,7 @@ public class Server {
 	 * @param port The port which will be scanned for incoming connections
 	 * @throws IOException Thrown when unable to open a socket. Is the [port] already in use?
 	 */
-	public Server(int port) throws IOException {
+	public WebServer(int port) throws IOException {
 		// From docs of 'new ServerSocket (int, int)'
 		// backlog – requested maximum length of the queue of incoming connections.
 		final int backlogSize = 16;
@@ -212,7 +214,6 @@ public class Server {
 		
 		for(String URI : handlers.keySet()) {
 			if(req.URI.startsWith(URI)) {
-				System.out.printf("Matched '%s' to '%s'\n", req.URI, URI);
 				if(handlers.get(URI).handle(req, res)) {
 					break;
 				}
@@ -224,9 +225,9 @@ public class Server {
 	}
 	
 	public static void main(String[] args) {
-		Server s;
+		WebServer s;
 		try {
-			s = new Server(80);
+			s = new WebServer(80);
 		}
 		catch(IOException e) {
 			System.out.printf("Couldn't start the server.\n%s\n", e);

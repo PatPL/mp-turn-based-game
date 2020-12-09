@@ -1,4 +1,6 @@
-import enums.Status;
+package Webserver;
+
+import Webserver.enums.Status;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ public class Response {
 	private byte[] binaryBody;
 	
 	/**
-	 * Returns a new Response object with empty body and default [Status.NotImplemented_501] status
+	 * Returns a new Webserver.Response object with empty body and default [Status.NotImplemented_501] status
 	 */
 	public Response() {
 		setStatus(Status.NotImplemented_501);

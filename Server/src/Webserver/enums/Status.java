@@ -1,8 +1,8 @@
-package enums;
+package Webserver.enums;
 
 public enum Status {
 	
-	// 1xx: Informational - Request received, continuing process
+	// 1xx: Informational - Webserver.Request received, continuing process
 	Continue_100(100, "Continue"),
 	SwitchingProtocols_101(101, "Switching Protocols"),
 	
@@ -26,7 +26,7 @@ public enum Status {
 	TemporaryRedirect_307(307, "Temporary Redirect"),
 	
 	// 4xx: Client Error - The request contains bad syntax or cannot be fulfilled
-	BadRequest_400(400, "Bad Request"),
+	BadRequest_400(400, "Bad Webserver.Request"),
 	Unauthorized_401(401, "Unauthorized"),
 	PaymentRequired_402(402, "Payment Required"),
 	Forbidden_403(403, "Forbidden"),
@@ -34,13 +34,13 @@ public enum Status {
 	MethodNotAllowed_405(405, "Method Not Allowed"),
 	NotAcceptable_406(406, "Not Acceptable"),
 	ProxyAuthenticationRequired_407(407, "Proxy Authentication Required"),
-	RequestTimeout_408(408, "Request Time-out"),
+	RequestTimeout_408(408, "Webserver.Request Time-out"),
 	Conflict_409(409, "Conflict"),
 	Gone_410(410, "Gone"),
 	LengthRequired_411(411, "Length Required"),
 	PreconditionFailed_412(412, "Precondition Failed"),
-	RequestEntityTooLarge_413(413, "Request Entity Too Large"),
-	RequestURITooLarge_414(414, "Request-URI Too Large"),
+	RequestEntityTooLarge_413(413, "Webserver.Request Entity Too Large"),
+	RequestURITooLarge_414(414, "Webserver.Request-URI Too Large"),
 	UnsupportedMediaType_415(415, "Unsupported Media Type"),
 	RequestedRangeNotSatisfiable_416(416, "Requested range not satisfiable"),
 	ExpectationFailed_417(417, "Expectation Failed"),

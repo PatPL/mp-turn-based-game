@@ -1,3 +1,5 @@
+package Webserver;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,10 +26,10 @@ public class Request {
 			++i;
 		}
 		
-		// Request-Line
+		// Webserver.Request-Line
 		String[] requestLine = lines[i++].split(" ");
 		if(requestLine.length != 3) {
-			throw new Exception(String.format("Invalid Request-Line:\n%s\n", lines[i - 1]));
+			throw new Exception(String.format("Invalid Webserver.Request-Line:\n%s\n", lines[i - 1]));
 		}
 		else {
 			this.method = requestLine[0];

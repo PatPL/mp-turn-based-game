@@ -2,6 +2,7 @@ package Webserver;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Request {
 	
@@ -11,9 +12,18 @@ public class Request {
 	public Map<String, String> headers;
 	public String body;
 	
+	// For test purposes
+	public Request() {
+		method = "";
+		URI = "";
+		HTTPVersion = "";
+		headers = new HashMap<String, String>();
+		body = "";
+	}
+	
 	// https://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5
 	public Request(String rawHTTP) throws Exception {
-		if(rawHTTP.trim().length() == 0) {
+		if(rawHTTP.strip().length() == 0) {
 			throw new Exception("Empty request");
 		}
 		
@@ -22,33 +32,33 @@ public class Request {
 		String[] lines = rawHTTP.split("\n");
 		
 		// Ignore empty leading lines
-		while(i < lines.length && lines[i].trim().length() == 0) {
+		while(i < lines.length && lines[i].strip().length() == 0) {
 			++i;
 		}
 		
-		// Webserver.Request-Line
+		// Request-Line
 		String[] requestLine = lines[i++].split(" ");
 		if(requestLine.length != 3) {
-			throw new Exception(String.format("Invalid Webserver.Request-Line:\n%s\n", lines[i - 1]));
+			throw new Exception(String.format("Invalid Request-Line:\n%s\n", lines[i - 1]));
 		}
 		else {
-			this.method = requestLine[0];
-			this.URI = requestLine[1];
-			this.HTTPVersion = requestLine[2];
+			this.method = requestLine[0].strip();
+			this.URI = requestLine[1].strip();
+			this.HTTPVersion = requestLine[2].strip();
 		}
 		
 		// general-header
 		// request-header
 		// CRLF
 		this.headers = new HashMap<String, String>();
-		while(i < lines.length && lines[i].trim().length() != 0) {
+		while(i < lines.length && lines[i].strip().length() != 0) {
 			String[] header = lines[i].split(":", 2);
-			if(header.length != 2 || header[0].trim().length() == 0) {
+			if(header.length != 2 || header[0].strip().length() == 0) {
 				// Invalid header
 				continue;
 			}
 			
-			headers.put(header[0].trim(), header[1].trim());
+			headers.put(header[0].strip(), header[1].strip());
 			
 			++i;
 		}
@@ -58,11 +68,27 @@ public class Request {
 		
 		StringBuilder bodyBuilder = new StringBuilder();
 		while(i < lines.length) {
-			bodyBuilder.append(lines[i++]);
+			bodyBuilder.append(lines[i++].strip());
 			bodyBuilder.append("\r\n");
 		}
-		this.body = bodyBuilder.toString();
+		this.body = bodyBuilder.toString().strip();
 		
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		if(this == o) return true;
+		if(o == null || getClass() != o.getClass()) return false;
+		Request request = (Request) o;
+		return Objects.equals(method, request.method) &&
+			Objects.equals(URI, request.URI) &&
+			Objects.equals(HTTPVersion, request.HTTPVersion) &&
+			Objects.equals(headers, request.headers) &&
+			Objects.equals(body, request.body);
+	}
+	
+	@Override
+	public int hashCode() {
+		return Objects.hash(method, URI, HTTPVersion, headers, body);
+	}
 }

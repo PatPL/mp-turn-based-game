@@ -7,7 +7,7 @@ import org.junit.Assert;
 public class ResponseTest {
 	
 	@org.junit.Test
-	public void ResponseTest_EmptyResponse() {
+	public void responseTest_EmptyResponse() {
 		Response res = new Response();
 		
 		String a = res.toString();
@@ -19,7 +19,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_ChangedStatus() {
+	public void responseTest_ChangedStatus() {
 		Response res = new Response();
 		res.setStatus(Status.ExpectationFailed_417);
 		
@@ -32,7 +32,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_CustomStatus() {
+	public void responseTest_CustomStatus() {
 		Response res = new Response();
 		res.setStatus(1234, "aa bb CC DD");
 		
@@ -45,7 +45,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_TextBody() {
+	public void responseTest_TextBody() {
 		Response res = new Response();
 		res.setStatus(Status.BadRequest_400);
 		res.setBody("qqqqqqqqqqqqqqqqqqqqqqqqqqqqq", Response.BodyType.Text);
@@ -62,7 +62,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_HtmlBody() {
+	public void responseTest_HtmlBody() {
 		Response res = new Response();
 		res.setStatus(Status.BadRequest_400);
 		res.setBody("<u>qqqqqqqqqqqqqqqqqqqqqqqqqqqqq</u>", Response.BodyType.HTML);
@@ -79,7 +79,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_MultilineBody() {
+	public void responseTest_MultilineBody() {
 		Response res = new Response();
 		res.setStatus(Status.OK_200);
 		res.setBody(String.join("\r\n",
@@ -104,7 +104,7 @@ public class ResponseTest {
 	}
 	
 	@org.junit.Test
-	public void ResponseTest_CustomHeaders() {
+	public void responseTest_CustomHeaders() {
 		Response res = new Response();
 		res.setStatus(Status.Conflict_409);
 		res.setHeader("test1", "value1");

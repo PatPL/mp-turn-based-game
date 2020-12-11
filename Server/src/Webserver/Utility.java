@@ -1,5 +1,7 @@
 package Webserver;
 
+import java.nio.file.Path;
+
 public class Utility {
 	
 	
@@ -20,16 +22,18 @@ public class Utility {
 	}
 	
 	public static String getExtensionFromPath(String path) {
-		String extension = path.substring(path.lastIndexOf('.'));
+		String fileName = Path.of(path).getFileName().toString();
+		int dotIndex = fileName.lastIndexOf('.');
+		String extension = fileName.substring(Math.max(dotIndex, 0));
 		// Special cases
-		if(path.length() > 0 && path.charAt(0) == '.') {
-			if(path.lastIndexOf('.') == 0) {
+		if(fileName.length() > 0 && fileName.charAt(0) == '.') {
+			if(fileName.lastIndexOf('.') == 0) {
 				// .htaccess
 				extension = "";
 			}
 		}
 		else {
-			if(path.lastIndexOf('.') == -1) {
+			if(fileName.lastIndexOf('.') == -1) {
 				// file
 				extension = "";
 			}

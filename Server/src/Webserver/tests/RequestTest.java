@@ -6,7 +6,7 @@ import org.junit.Assert;
 public class RequestTest {
 	
 	@org.junit.Test
-	public void InvalidRequestTest_EmptyRequest() {
+	public void invalidRequestTest_EmptyRequest() {
 		boolean success;
 		
 		try {
@@ -21,7 +21,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void InvalidRequestTest_InvalidRequestLine() {
+	public void invalidRequestTest_InvalidRequestLine() {
 		boolean success;
 		
 		try {
@@ -38,7 +38,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void InvalidRequestTest_MissingRequestLine() {
+	public void invalidRequestTest_MissingRequestLine() {
 		boolean success;
 		
 		try {
@@ -58,7 +58,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void InvalidRequestTest_RandomText() {
+	public void invalidRequestTest_RandomText() {
 		boolean success;
 		
 		try {
@@ -90,7 +90,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void ValidRequestTest_OnlyRequestLine() throws Exception {
+	public void validRequestTest_OnlyRequestLine() throws Exception {
 		Request a = new Request(String.join("\r\n",
 			"GET / HTTP/1.1"
 		));
@@ -104,7 +104,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void ValidRequestTest_RegularRequest() throws Exception {
+	public void validRequestTest_RegularRequest() throws Exception {
 		Request a = new Request(String.join("\r\n",
 			"POST /list.php HTTP/2",
 			"Accept: */*",
@@ -125,7 +125,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void ValidRequestTest_ShortRequest() throws Exception {
+	public void validRequestTest_ShortRequest() throws Exception {
 		Request a = new Request(String.join("\r\n",
 			"DELETE /user/abcabc HTTP/1.1",
 			"",
@@ -143,7 +143,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void ValidRequestTest_ExcessiveWhitespace() throws Exception {
+	public void validRequestTest_ExcessiveWhitespace() throws Exception {
 		Request a = new Request(String.join("\r\n",
 			"",
 			"",
@@ -175,7 +175,7 @@ public class RequestTest {
 	}
 	
 	@org.junit.Test
-	public void ValidRequestTest_NoBody() throws Exception {
+	public void validRequestTest_NoBody() throws Exception {
 		Request a = new Request(String.join("\r\n",
 			"OPTIONS /api/test/exampleendpoint HTTP/1234",
 			"Accept: application/json",

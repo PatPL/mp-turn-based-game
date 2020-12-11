@@ -78,22 +78,7 @@ public class Response {
 	 * @param path
 	 */
 	public void setContentTypeByFileExtension(String path) {
-		String extension = path.substring(path.lastIndexOf('.'));
-		// Special cases
-		if(path.length() > 0 && path.charAt(0) == '.') {
-			if(path.lastIndexOf('.') == 0) {
-				// .htaccess
-				extension = "";
-			}
-		}
-		else {
-			if(path.lastIndexOf('.') == -1) {
-				// file
-				extension = "";
-			}
-		}
-		
-		setContentType(getMimeFromExtension(extension));
+		setContentType(getMimeFromExtension(Utility.getExtensionFromPath(path)));
 	}
 	
 	public enum BodyType {
@@ -154,6 +139,8 @@ public class Response {
 		
 	}
 	
+	// https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6
+	
 	/**
 	 * Builds an entire response (without binary body, is response uses binary body)
 	 *
@@ -186,7 +173,7 @@ public class Response {
 			output.append(body);
 		}
 		
-		return output.toString();
+		return output.toString().strip();
 	}
 	
 	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types

@@ -1,3 +1,5 @@
+package GameServer;
+
 import Webserver.Request;
 import Webserver.Response;
 import Webserver.WebServer;
@@ -45,6 +47,8 @@ public class GameServer {
 		StringBuilder gameListString = new StringBuilder();
 		for(Game i : gameList) {
 			gameListString.append(i.ID);
+			gameListString.append(",");
+			gameListString.append(i.createdAt);
 			gameListString.append("\r\n");
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);
@@ -72,7 +76,7 @@ public class GameServer {
 		}
 		
 		server.start();
-		System.out.printf("Game server started at %s\n", server.currentWebServer.getAddress());
+		System.out.printf("GameServer.Game server started at %s\n", server.currentWebServer.getAddress());
 	}
 	
 }

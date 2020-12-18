@@ -1,3 +1,5 @@
+package GameServer;
+
 import Webserver.Utility;
 
 import java.util.HashSet;
@@ -10,6 +12,7 @@ public class Game {
 	private final static Set<String> usedIDs = new HashSet<String>();
 	
 	public final String ID;
+	public final long createdAt;
 	
 	public Game() {
 		String newID;
@@ -23,6 +26,7 @@ public class Game {
 		usedIDs.add(newID);
 		ID = newID;
 		
+		createdAt = System.currentTimeMillis();
 	}
 	
 }

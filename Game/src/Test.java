@@ -18,10 +18,10 @@ public class Test {
 	
 	
 	//Returns a letter according to the unit
-	private String letter(Unit unit, int team){
+	private String letter(Unit unit){
 		if(unit.getHealth() <= 0) unit = new Unit();
 		String teamLetter = "R";
-		if(team == 2) teamLetter = "B";                                                    //A - Archer
+		if(unit.getTeamNumber == 2) teamLetter = "B";                                                    //A - Archer
 		if(unit.getName().equals("Archer")) return "[" + teamLetter + "A]    ";            //S - Swordsman
 		if(unit.getName().equals("Swordsman")) return "[" + teamLetter + "S]    ";         //K - Knight
 		if(unit.getName().equals("Knight")) return "[" + teamLetter + "K]    ";            //O - empty
@@ -29,11 +29,11 @@ public class Test {
 	}
 	
 	//Displays current map
-	private void drawMap(int team){
+	private void drawMap(){
 		for(int i = 0 ; i < rows ; i++){
 			System.out.print("RED    ");
 			for(int k = 0 ; k < columns; k++){
-				System.out.print(letter(unitMap[i][k], team));
+				System.out.print(letter(unitMap[i][k]));
 			}
 			System.out.println("BLUE\n\n\n");
 		}
@@ -51,7 +51,7 @@ public class Test {
 	private void turn(Base base){
 		System.out.println("================================== " + base.getTeamNumber()+ " Player Turn ===================================");
 		displayStatus();
-		drawMap(base.getTeamNumber());
+		drawMap();
 	}
 	
 	

@@ -77,6 +77,14 @@ public class Response {
 		
 	}
 	
+	public int getStatusCode() {
+		return statusCode;
+	}
+	
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+	
 	/**
 	 * Sets a predefinied status code and message
 	 *
@@ -95,6 +103,10 @@ public class Response {
 	public void setStatus(int code, String message) {
 		statusCode = code;
 		statusMessage = message;
+	}
+	
+	public String getHeader(String key) {
+		return headers.getOrDefault(key, null);
 	}
 	
 	/**
@@ -138,6 +150,10 @@ public class Response {
 		Text,
 		HTML,
 		Path
+	}
+	
+	public String getBody() {
+		return body;
 	}
 	
 	/**

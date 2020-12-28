@@ -76,7 +76,9 @@ public class ClientGUI {
 		});
 		
 		// test
-		HTTPClient.send("/gameList", "", System.out::println);
+		HTTPClient.send("/gameList", "", res -> {
+			System.out.println(res.getBody());
+		});
 		
 	}
 }

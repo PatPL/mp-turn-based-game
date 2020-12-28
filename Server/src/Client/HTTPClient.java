@@ -1,23 +1,34 @@
 package Client;
 
+import Webserver.Request;
+import Webserver.Response;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 
 public class HTTPClient {
 	
 	public interface HTTPResponseHandler {
-		void onResponse(String responseBody);
+		void onResponse(Response res);
 	}
 	
-	public static void send(String URI, String Body, HTTPResponseHandler handler) {
+	public static void send(String URI, String body, HTTPResponseHandler handler) {
+		Request req = new Request();
+		req.method = "GET";
+		req.URI = URI;
+		req.body = body;
+		
+		send(req, handler);
+	}
+	
+	public static void send(Request req, HTTPResponseHandler handler) {
 		new Thread(() -> {
 			try {
-				handleMessage(URI, Body, handler);
+				handleMessage(req, handler);
 			}
 			catch(IOException e) {
 				System.out.printf("Error while sending a message:\n%s\n", e);
@@ -25,22 +36,12 @@ public class HTTPClient {
 		}).start();
 	}
 	
-	private static void handleMessage(String URI, String Body, HTTPResponseHandler handler) throws IOException {
+	private static void handleMessage(Request req, HTTPResponseHandler handler) throws IOException {
 		Socket serverSocket = new Socket(InetAddress.getLoopbackAddress(), 1234);
 		
 		OutputStream requestStream = serverSocket.getOutputStream();
-		
-		StringBuilder request = new StringBuilder();
-		request.append("GET ");
-		request.append(URI);
-		request.append(" HTTP/1.1\r\n");
-		request.append("\r\n");
-		for(String i : Body.split("\n")) {
-			request.append(i.strip());
-			request.append("\r\n");
-		}
-		
-		requestStream.write(request.toString().getBytes(StandardCharsets.UTF_8));
+		requestStream.write(req.toByteArray());
+		serverSocket.shutdownOutput();
 		
 		BufferedReader input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
 		
@@ -74,8 +75,17 @@ public class HTTPClient {
 			data.append("\n");
 		}
 		
+		Response res;
+		try {
+			res = new Response(data.toString());
+		}
+		catch(Exception e) {
+			System.out.printf("Error while parsing a response: \n%s\n", e);
+			return;
+		}
+		
 		serverSocket.close();
-		handler.onResponse(data.toString());
+		handler.onResponse(res);
 	}
 	
 }

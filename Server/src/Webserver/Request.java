@@ -16,7 +16,7 @@ public class Request {
 	public Request() {
 		method = "";
 		URI = "";
-		HTTPVersion = "";
+		HTTPVersion = "HTTP/1.1";
 		headers = new HashMap<String, String>();
 		body = "";
 	}

@@ -196,6 +196,7 @@ public class WebServer {
 			data.append(input.readLine());
 			data.append("\n");
 		}
+		client.shutdownInput();
 		
 		Request req;
 		Response res = new Response();
@@ -221,6 +222,7 @@ public class WebServer {
 		}
 		
 		client.getOutputStream().write(res.toByteArray());
+		client.shutdownOutput();
 		client.close();
 	}
 	

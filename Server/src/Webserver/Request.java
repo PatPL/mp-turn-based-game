@@ -1,5 +1,6 @@
 package Webserver;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -12,7 +13,6 @@ public class Request {
 	public Map<String, String> headers;
 	public String body;
 	
-	// For test purposes
 	public Request() {
 		method = "";
 		URI = "";
@@ -73,6 +73,42 @@ public class Request {
 		}
 		this.body = bodyBuilder.toString().strip();
 		
+	}
+	
+	/**
+	 * @return Request in form of a UTF-8 encoded byte array
+	 */
+	public byte[] toByteArray() {
+		return this.toString().getBytes(StandardCharsets.UTF_8);
+	}
+	
+	/**
+	 * @return Request in form of a raw String
+	 */
+	@Override
+	public String toString() {
+		StringBuilder output = new StringBuilder();
+		
+		// Request-Line
+		output.append(method);
+		output.append(" ");
+		output.append(URI);
+		output.append(" ");
+		output.append(HTTPVersion);
+		output.append("\r\n");
+		
+		// Headers
+		for(Map.Entry<String, String> header : headers.entrySet()) {
+			output.append(header.getKey());
+			output.append(": ");
+			output.append(header.getValue());
+			output.append("\r\n");
+		}
+		
+		output.append("\r\n");
+		output.append(body);
+		
+		return output.toString().strip();
 	}
 	
 	@Override

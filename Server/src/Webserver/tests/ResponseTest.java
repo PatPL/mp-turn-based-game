@@ -129,4 +129,56 @@ public class ResponseTest {
 		Assert.assertEquals(a, b);
 	}
 	
+	@org.junit.Test
+	public void toStringResponseTest_CustomStatus() throws Exception {
+		String rawResponse = String.join("\r\n",
+			"HTTP/1.1 1234 aa bb CC DD"
+		);
+		
+		Assert.assertEquals(rawResponse, new Response(rawResponse).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringResponseTest_HtmlBody() throws Exception {
+		String rawResponse = String.join("\r\n",
+			"HTTP/1.1 400 Bad Request",
+			"Content-Type: text/html; charset=utf-8",
+			"",
+			"<u>qqqqqqqqqqqqqqqqqqqqqqqqqqqqq</u>"
+		);
+		
+		Assert.assertEquals(rawResponse, new Response(rawResponse).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringResponseTest_MultilineBody() throws Exception {
+		String rawResponse = String.join("\r\n",
+			"HTTP/1.1 200 OK",
+			"Content-Type: text/html; charset=utf-8",
+			"",
+			"<h1>Header</h1>",
+			"<p>",
+			"Paragraph contents, <b>bold</b>",
+			"</p>"
+		);
+		
+		Assert.assertEquals(rawResponse, new Response(rawResponse).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringResponseTest_CustomHeaders() throws Exception {
+		// Should order matter?
+		// Check header order if this test keeps failing
+		String rawResponse = String.join("\r\n",
+			"HTTP/1.1 409 Conflict",
+			"test3: value3",
+			"test1: value1",
+			"Content-Type: text/plain; charset=utf-8",
+			"",
+			"test4: value4"
+		);
+		
+		Assert.assertEquals(rawResponse, new Response(rawResponse).toString());
+	}
+	
 }

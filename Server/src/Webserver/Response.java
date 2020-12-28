@@ -24,6 +24,59 @@ public class Response {
 		binaryBody = new byte[0];
 	}
 	
+	// https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6
+	public Response(String rawHTTP) throws Exception {
+		if(rawHTTP.strip().length() == 0) {
+			throw new Exception("Empty response");
+		}
+		
+		// Line counter
+		int i = 0;
+		String[] lines = rawHTTP.split("\n");
+		
+		// Ignore empty leading lines
+		while(i < lines.length && lines[i].strip().length() == 0) {
+			++i;
+		}
+		
+		// Status-Line
+		String[] statusLine = lines[i++].split(" ", 3);
+		if(statusLine.length != 3) {
+			throw new Exception(String.format("Invalid Status-Line:\n%s\n", lines[i - 1]));
+		}
+		else {
+			this.statusCode = Integer.parseInt(statusLine[1].strip());
+			this.statusMessage = statusLine[2].strip();
+		}
+		
+		// general-header
+		// request-header
+		// CRLF
+		this.headers = new HashMap<String, String>();
+		while(i < lines.length && lines[i].strip().length() != 0) {
+			String[] header = lines[i].split(":", 2);
+			if(header.length != 2 || header[0].strip().length() == 0) {
+				// Invalid header
+				continue;
+			}
+			
+			headers.put(header[0].strip(), header[1].strip());
+			
+			++i;
+		}
+		
+		// lines[i] should be a CRLF here. Next line is the beginning of request's body
+		++i;
+		
+		StringBuilder bodyBuilder = new StringBuilder();
+		while(i < lines.length) {
+			bodyBuilder.append(lines[i++].strip());
+			bodyBuilder.append("\r\n");
+		}
+		this.body = bodyBuilder.toString().strip();
+		
+	}
+	
 	/**
 	 * Sets a predefinied status code and message
 	 *
@@ -118,7 +171,7 @@ public class Response {
 	// https://www.w3.org/Protocols/rfc2616/rfc2616-sec6.html#sec6
 	
 	/**
-	 * @return Built response in form of a byte array
+	 * @return Built response in form of a UTF-8 byte array
 	 */
 	public byte[] toByteArray() {
 		String output = this.toString();

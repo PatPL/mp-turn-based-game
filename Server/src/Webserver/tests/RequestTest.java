@@ -192,4 +192,49 @@ public class RequestTest {
 		Assert.assertEquals(a, b);
 	}
 	
+	@org.junit.Test
+	public void toStringRequestTest_OnlyRequestLine() throws Exception {
+		String rawRequest = String.join("\r\n",
+			"GET / HTTP/1.1"
+		);
+		
+		Assert.assertEquals(rawRequest, new Request(rawRequest).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringRequestTest_RegularRequest() throws Exception {
+		String rawRequest = String.join("\r\n",
+			"POST /list.php HTTP/2",
+			"Accept: */*",
+			"Host: example.com",
+			"",
+			"body body body"
+		);
+		
+		Assert.assertEquals(rawRequest, new Request(rawRequest).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringRequestTest_ShortRequest() throws Exception {
+		String rawRequest = String.join("\r\n",
+			"DELETE /user/abcabc HTTP/1.1",
+			"",
+			"bbbb bbbb",
+			"hfg fhfhfh"
+		);
+		
+		Assert.assertEquals(rawRequest, new Request(rawRequest).toString());
+	}
+	
+	@org.junit.Test
+	public void toStringRequestTest_NoBody() throws Exception {
+		String rawRequest = String.join("\r\n",
+			"OPTIONS /api/test/exampleendpoint HTTP/1234",
+			"Accept: application/json",
+			"Host: website.org"
+		);
+		
+		Assert.assertEquals(rawRequest, new Request(rawRequest).toString());
+	}
+	
 }

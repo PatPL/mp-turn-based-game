@@ -12,9 +12,10 @@ public class Game {
 	private final static Set<String> usedIDs = new HashSet<String>();
 	
 	public final String ID;
+	public final String host;
 	public final long createdAt;
 	
-	public Game() {
+	public Game(String host) {
 		String newID;
 		int IDLength = defaultIDLength;
 		do {
@@ -27,6 +28,7 @@ public class Game {
 		ID = newID;
 		
 		createdAt = System.currentTimeMillis();
+		this.host = host;
 	}
 	
 }

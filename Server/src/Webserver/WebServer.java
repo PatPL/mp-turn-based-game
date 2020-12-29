@@ -213,8 +213,6 @@ public class WebServer {
 			return;
 		}
 		
-		res.setHeader("Requested-URI", req.URI);
-		
 		for(String URI : handlers.keySet()) {
 			if(req.URI.startsWith(URI)) {
 				if(handlers.get(URI).handle(req, res)) {
@@ -222,6 +220,14 @@ public class WebServer {
 				}
 			}
 		}
+		
+		res.setHeader("Requested-URI", req.URI);
+		System.out.printf(
+			// https://en.wikipedia.org/wiki/ANSI_escape_code
+			"\033[91m<<<<<<<< INBOUND\033[0m\n%s\n\033[32m>>>>>>>> OUTBOUND\033[0m\n%s\n\033[96m****************\033[0m\n\n",
+			Utility.leftPad(req.toString(), "\033[91m| \033[0m"),
+			Utility.leftPad(res.toString(), "\033[32m| \033[0m")
+		);
 		
 		client.getOutputStream().write(res.toByteArray());
 		client.shutdownOutput();

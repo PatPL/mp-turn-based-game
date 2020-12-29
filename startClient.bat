@@ -1,0 +1,1 @@
+@java -cp ./Server/out/production/Server Client.ClientGUI

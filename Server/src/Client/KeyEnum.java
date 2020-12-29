@@ -5,7 +5,8 @@ package Client;
  */
 public enum KeyEnum {
 	
-	userID("userID");
+	userID("userID"),
+	nickname("nickname");
 	
 	public final String key;
 	

@@ -1,6 +1,8 @@
 package Webserver;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class Utility {
 	
@@ -39,6 +41,14 @@ public class Utility {
 			}
 		}
 		return extension;
+	}
+	
+	public static String leftPad(String input, String character, int size) {
+		return Arrays.stream(input.split("\n")).map(line -> character.repeat(size) + line).collect(Collectors.joining("\n"));
+	}
+	
+	public static String leftPad(String input, String character) {
+		return leftPad(input, character, 1);
 	}
 	
 }

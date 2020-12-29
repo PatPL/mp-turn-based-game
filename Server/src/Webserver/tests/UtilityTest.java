@@ -34,4 +34,64 @@ public class UtilityTest {
 		Assert.assertEquals(".html", Utility.getExtensionFromPath("../hfg/index.html"));
 	}
 	
+	@org.junit.Test
+	public void leftPadTest() {
+		String a = String.join("\r\n",
+			"abc"
+		);
+		String aValid = String.join("\r\n",
+			"012012012012abc"
+		);
+		
+		String b = String.join("\r\n",
+			"Example text",
+			"multiline text",
+			"",
+			"above me is an empty line"
+		);
+		String bValid = String.join("\r\n",
+			"  Example text",
+			"  multiline text",
+			"  ",
+			"  above me is an empty line"
+		);
+		
+		String c = String.join("\r\n",
+			"a",
+			"b",
+			"c"
+		);
+		String cValid = String.join("\r\n",
+			"\ta",
+			"\tb",
+			"\tc"
+		);
+		
+		String d = String.join("\r\n",
+			"123",
+			"",
+			"",
+			"   ",
+			"456",
+			".",
+			"333"
+		);
+		String dValid = String.join("\r\n",
+			"........123",
+			"........",
+			"........",
+			"........   ",
+			"........456",
+			".........",
+			"........333"
+		);
+		
+		Assert.assertEquals(aValid, Utility.leftPad(a, "012", 4));
+		Assert.assertEquals(bValid, Utility.leftPad(b, " ", 2));
+		Assert.assertEquals(cValid, Utility.leftPad(c, "\t"));
+		Assert.assertEquals(dValid, Utility.leftPad(d, ".", 8));
+		
+		
+	}
+	
 }

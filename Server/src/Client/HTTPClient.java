@@ -9,8 +9,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
 public class HTTPClient {
+	
+	public static final Map<String, String> defaultHeaders = new HashMap<String, String>();
 	
 	public interface HTTPResponseHandler {
 		void onResponse(Response res);
@@ -37,6 +41,11 @@ public class HTTPClient {
 	}
 	
 	private static void handleMessage(Request req, HTTPResponseHandler handler) throws IOException {
+		// Add default headers
+		for(Map.Entry<String, String> i : defaultHeaders.entrySet()) {
+			req.headers.put(i.getKey(), i.getValue());
+		}
+		
 		Socket serverSocket = new Socket(InetAddress.getLoopbackAddress(), 1234);
 		
 		OutputStream requestStream = serverSocket.getOutputStream();

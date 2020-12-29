@@ -1,5 +1,6 @@
 package GameServer;
 
+import Client.KeyEnum;
 import Webserver.Request;
 import Webserver.Response;
 import Webserver.WebServer;
@@ -35,6 +36,12 @@ public class GameServer {
 	}
 	
 	private boolean addGameHandler(Request req, Response res) {
+		if(!req.headers.containsKey(KeyEnum.userID.key)) {
+			res.setStatus(Status.Unauthorized_401);
+			res.setBody("No userID provided", Response.BodyType.Text);
+			return true;
+		}
+		
 		res.setStatus(Status.Created_201);
 		res.setBody(addGame(), Response.BodyType.Text);
 		

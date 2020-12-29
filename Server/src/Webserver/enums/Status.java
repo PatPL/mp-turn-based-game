@@ -2,12 +2,11 @@ package Webserver.enums;
 
 public enum Status {
 	
-	// 1xx: Informational - Webserver.Request received, continuing process
+	// 1xx: Informational - Request received, continuing process
 	Continue_100(100, "Continue"),
 	SwitchingProtocols_101(101, "Switching Protocols"),
 	
 	// 2xx: Success - The action was successfully received, understood, and accepted
-	
 	OK_200(200, "OK"),
 	Created_201(201, "Created"),
 	Accepted_202(202, "Accepted"),
@@ -55,10 +54,20 @@ public enum Status {
 	
 	public final int code;
 	public final String message;
+	public final StatusType type;
 	
 	Status(int i, String j) {
 		this.code = i;
 		this.message = j;
+		this.type = switch(i / 100) {
+			case 1 -> StatusType.Informational_1xx;
+			case 2 -> StatusType.Success_2xx;
+			case 3 -> StatusType.Redirection_3xx;
+			case 4 -> StatusType.ClientError_4xx;
+			case 5 -> StatusType.ServerError_5xx;
+			default -> StatusType.Other_xxx;
+		};
+		
 	}
 	
 }

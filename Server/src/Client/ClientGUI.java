@@ -1,20 +1,25 @@
 package Client;
 
+import Webserver.Utility;
+import Webserver.enums.StatusType;
+
 import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.prefs.Preferences;
 
 public class ClientGUI {
 	private JPanel panel1;
 	private JList test;
 	private JTable table1;
-	private JButton odświeżListęGierButton;
-	private JButton dodajGre;
+	private JButton refreshGameListButton;
+	private JButton hostGameButton;
 	
 	private List<GameListing> games = new ArrayList<GameListing>();
+	private final Preferences userPrefs = Preferences.userNodeForPackage(this.getClass());
 	
 	private class GameListing {
 		String gameCode;
@@ -30,6 +35,14 @@ public class ClientGUI {
 	}
 	
 	public ClientGUI() {
+		// Setting up an unique UserID used by server to identify users
+		if(userPrefs.get(KeyEnum.userID.key, null) == null) {
+			userPrefs.put(KeyEnum.userID.key, Utility.getRandomString(32));
+		}
+		
+		// Set a default header sent with every request to the server
+		// HTTPClient.defaultHeaders.put(KeyEnum.userID.key, userPrefs.get(KeyEnum.userID.key, null));
+		
 		table1.setModel(new TableModel() {
 			String[] cols = new String[] {"Kod gry", "Czas utworzenia"};
 			
@@ -79,7 +92,7 @@ public class ClientGUI {
 			}
 		});
 		
-		odświeżListęGierButton.addActionListener(l -> {
+		refreshGameListButton.addActionListener(l -> {
 			HTTPClient.send("/gameList", "", res -> {
 				String[] lines = res.getBody().split("\n");
 				
@@ -105,8 +118,13 @@ public class ClientGUI {
 			});
 		});
 		
-		dodajGre.addActionListener(l -> {
+		hostGameButton.addActionListener(l -> {
 			HTTPClient.send("/addGame", "", res -> {
+				if(res.getStatusType() != StatusType.Success_2xx) {
+					System.out.printf("Unsuccessful response: \n%s\n", res);
+					return;
+				}
+				
 				GameListing newListing = new GameListing();
 				newListing.gameCode = res.getBody();
 				// Just an approximation. Server value will be different

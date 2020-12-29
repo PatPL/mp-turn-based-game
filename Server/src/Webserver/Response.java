@@ -1,6 +1,7 @@
 package Webserver;
 
 import Webserver.enums.Status;
+import Webserver.enums.StatusType;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -83,6 +84,17 @@ public class Response {
 	
 	public String getStatusMessage() {
 		return statusMessage;
+	}
+	
+	public StatusType getStatusType() {
+		return switch(this.statusCode / 100) {
+			case 1 -> StatusType.Informational_1xx;
+			case 2 -> StatusType.Success_2xx;
+			case 3 -> StatusType.Redirection_3xx;
+			case 4 -> StatusType.ClientError_4xx;
+			case 5 -> StatusType.ServerError_5xx;
+			default -> StatusType.Other_xxx;
+		};
 	}
 	
 	/**

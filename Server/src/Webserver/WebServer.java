@@ -213,6 +213,8 @@ public class WebServer {
 			return;
 		}
 		
+		res.setHeader("Requested-URI", req.URI);
+		
 		for(String URI : handlers.keySet()) {
 			if(req.URI.startsWith(URI)) {
 				if(handlers.get(URI).handle(req, res)) {

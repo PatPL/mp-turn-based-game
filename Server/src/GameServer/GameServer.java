@@ -7,9 +7,7 @@ import Webserver.WebServer;
 import Webserver.enums.Status;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class GameServer {
@@ -17,7 +15,7 @@ public class GameServer {
 	private static final int defaultPort = 1234;
 	
 	private WebServer currentWebServer = null;
-	private final List<Game> gameList = new ArrayList<Game>();
+	private final Map<String, Game> gameList = new HashMap<String, Game>();
 	private final Map<String, String> nicknameAssociation = new HashMap<String, String>();
 	
 	private String getNickname(String userID) {
@@ -38,7 +36,7 @@ public class GameServer {
 	
 	public String addGame(String hostID) {
 		Game newGame = new Game(hostID);
-		gameList.add(newGame);
+		gameList.put(newGame.ID, newGame);
 		return newGame.ID;
 	}
 	
@@ -69,10 +67,10 @@ public class GameServer {
 		res.setStatus(Status.OK_200);
 		
 		StringBuilder gameListString = new StringBuilder();
-		for(Game i : gameList) {
-			gameListString.append(i.ID);
+		for(Map.Entry<String, Game> i : gameList.entrySet()) {
+			gameListString.append(i.getValue().ID);
 			gameListString.append(",");
-			gameListString.append(getNickname(i.host));
+			gameListString.append(getNickname(i.getValue().host));
 			gameListString.append("\r\n");
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);

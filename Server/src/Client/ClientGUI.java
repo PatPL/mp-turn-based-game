@@ -23,7 +23,7 @@ public class ClientGUI {
 	private JButton hostGameButton;
 	private JTextField nicknameInput;
 	
-	private List<GameListing> games = new ArrayList<GameListing>();
+	private final List<GameListing> games = new ArrayList<GameListing>();
 	private final Preferences userPrefs = Preferences.userNodeForPackage(this.getClass());
 	
 	private class GameListing {
@@ -39,46 +39,9 @@ public class ClientGUI {
 		}
 	}
 	
-	public ClientGUI() {
-		// Setting up an unique UserID used by server to identify users
-		if(userPrefs.get(KeyEnum.userID.key, null) == null) {
-			userPrefs.put(KeyEnum.userID.key, Utility.getRandomString(32));
-		}
-		// Setting up a default nickname
-		if(userPrefs.get(KeyEnum.nickname.key, null) == null) {
-			userPrefs.put(KeyEnum.nickname.key, "Player");
-		}
-		
-		// Set a default header sent with every request to the server
-		HTTPClient.defaultHeaders.put(KeyEnum.userID.key, userPrefs.get(KeyEnum.userID.key, null));
-		HTTPClient.defaultHeaders.put(KeyEnum.nickname.key, userPrefs.get(KeyEnum.nickname.key, null));
-		
-		nicknameInput.setText(userPrefs.get(KeyEnum.nickname.key, null));
-		
-		setupListeners();
-	}
-	
-	public static void main(String[] args) {
-		ClientGUI gui = new ClientGUI();
-		
-		JFrame frame = new JFrame("ClientGUI");
-		frame.setContentPane(gui.panel1);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(true);
-	}
-	
-	// Run at most once
-	private boolean setupListenersCalled = false;
-	
-	private void setupListeners() {
-		if(setupListenersCalled) {
-			return;
-		}
-		setupListenersCalled = true;
-		
-		table1.setModel(new TableModel() {
-			String[] cols = new String[] {"Kod gry", "Host"};
+	private TableModel buildGameListTableModel() {
+		return new TableModel() {
+			final String[] cols = new String[] {"Kod gry", "Host"};
 			
 			@Override
 			public int getRowCount() {
@@ -124,50 +87,95 @@ public class ClientGUI {
 			public void removeTableModelListener(TableModelListener l) {
 			
 			}
-		});
+		};
+	}
+	
+	public ClientGUI() {
+		// Setting up an unique UserID used by server to identify users
+		if(userPrefs.get(KeyEnum.userID.key, null) == null) {
+			userPrefs.put(KeyEnum.userID.key, Utility.getRandomString(32));
+		}
+		// Setting up a default nickname
+		if(userPrefs.get(KeyEnum.nickname.key, null) == null) {
+			userPrefs.put(KeyEnum.nickname.key, "Player");
+		}
 		
-		refreshGameListButton.addActionListener(l -> {
-			HTTPClient.send("/gameList", "", res -> {
-				String[] lines = res.getBody().split("\n");
-				
-				games.clear();
-				for(String line : lines) {
-					GameListing newListing = new GameListing();
-					String[] parts = line.strip().split(",");
-					try {
-						newListing.gameCode = parts[0];
-						newListing.hostNickname = parts[1];
-					}
-					catch(Exception e) {
-						continue;
-					}
-					games.add(newListing);
-				}
-				
-				// table1.invalidate();
-				// table1.repaint();
-				
-				// Redraw the table. The methods above didn't work, though they should've worked.
-				table1.tableChanged(new TableModelEvent(table1.getModel()));
-			});
-		});
+		// Set a default header sent with every request to the server
+		HTTPClient.defaultHeaders.put(KeyEnum.userID.key, userPrefs.get(KeyEnum.userID.key, null));
+		HTTPClient.defaultHeaders.put(KeyEnum.nickname.key, userPrefs.get(KeyEnum.nickname.key, null));
 		
-		hostGameButton.addActionListener(l -> {
-			HTTPClient.send("/addGame", "", res -> {
-				if(res.getStatusType() != StatusType.Success_2xx) {
-					System.out.printf("Unsuccessful response: \n%s\n", res);
-					return;
-				}
-				
+		nicknameInput.setText(userPrefs.get(KeyEnum.nickname.key, null));
+		
+		setupListeners();
+	}
+	
+	public static void main(String[] args) {
+		ClientGUI gui = new ClientGUI();
+		
+		JFrame frame = new JFrame("ClientGUI");
+		frame.setContentPane(gui.panel1);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(true);
+	}
+	
+	private void refreshGameList() {
+		HTTPClient.send("/gameList", "", res -> {
+			String[] lines = res.getBody().split("\n");
+			
+			games.clear();
+			for(String line : lines) {
 				GameListing newListing = new GameListing();
-				newListing.gameCode = res.getBody();
-				// Just an approximation. Server value will be different
-				newListing.hostNickname = userPrefs.get(KeyEnum.nickname.key, "<unknown nickname>");
-				
+				String[] parts = line.strip().split(",");
+				try {
+					newListing.gameCode = parts[0];
+					newListing.hostNickname = parts[1];
+				}
+				catch(Exception e) {
+					continue;
+				}
 				games.add(newListing);
-				table1.tableChanged(new TableModelEvent(table1.getModel()));
-			});
+			}
+			
+			// table1.invalidate();
+			// table1.repaint();
+			
+			// Redraw the table. The methods above didn't work, though they should've worked.
+			table1.tableChanged(new TableModelEvent(table1.getModel()));
 		});
+	}
+	
+	private void hostNewGame() {
+		HTTPClient.send("/addGame", "", res -> {
+			if(res.getStatusType() != StatusType.Success_2xx) {
+				System.out.printf("Unsuccessful response: \n%s\n", res);
+				return;
+			}
+			
+			GameListing newListing = new GameListing();
+			newListing.gameCode = res.getBody();
+			// Just an approximation. Server value will be different
+			newListing.hostNickname = userPrefs.get(KeyEnum.nickname.key, "<unknown nickname>");
+			
+			games.add(newListing);
+			table1.tableChanged(new TableModelEvent(table1.getModel()));
+		});
+	}
+	
+	// Run at most once
+	private boolean setupListenersCalled = false;
+	
+	private void setupListeners() {
+		// Run at most once
+		if(setupListenersCalled) {
+			return;
+		}
+		setupListenersCalled = true;
+		
+		table1.setModel(buildGameListTableModel());
+		
+		refreshGameListButton.addActionListener(l -> refreshGameList());
+		hostGameButton.addActionListener(l -> hostNewGame());
 		
 		applyDocumentListener(nicknameInput, newValue -> {
 			userPrefs.put(KeyEnum.nickname.key, newValue);

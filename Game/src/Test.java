@@ -3,7 +3,7 @@ import Units.*;
 
 import java.util.Scanner;
 
-public class Test {
+public class Game {
 	
 	//Attributes for the test
 	private final static int rows = 3;
@@ -199,7 +199,7 @@ public class Test {
 		System.out.println("***************************************MENU*****************************************");
 		System.out.println("* 1 - Top           2 - Mid           3 - Bottom          4 - Upgrade income(+10)  *");
 		System.out.println("*    By writing a number (1,2,3), you will choose a spawn location of your unit    *");
-		System.out.println("*      By writing a number 4, you will upgrade you gold income and END TURN!       *");
+		System.out.println("*      By writing a number 4, you will upgrade your gold income and END TURN!      *");
 		System.out.println("*  Write number and press enter to continue, or press only enter to skip the turn. *");
 		System.out.println("************************************************************************************");
 		
@@ -249,6 +249,8 @@ public class Test {
 	
 	//Turn for one player
 	private void turn(Base base){
+		
+		
 		//Interaction with player to continue after pressing enter
 		System.out.println(base.getTeamNumber() + "\n Player PRESS ENTER TO CONTINUE...");
 		scan.nextLine();
@@ -285,7 +287,7 @@ public class Test {
 	public static void main (String[] args) {
 		try
 		{
-			Test obj = new Test ();
+			Game obj = new Game();
 			obj.run (args);
 		}
 		catch (Exception e)
@@ -307,6 +309,7 @@ public class Test {
 		while(true){
 			
 			//Game starts
+			
 			turn(redBase);
 			turn(blueBase);
 		}

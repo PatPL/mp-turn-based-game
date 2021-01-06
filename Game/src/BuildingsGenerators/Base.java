@@ -46,6 +46,9 @@ public class Base {
         this.gold = newGold;
     }
     
+    public void setPowerBar(int powerBar) {
+        this.powerBar = powerBar;
+    }
     
     //Constructor
     public Base(int health, int teamNumber){

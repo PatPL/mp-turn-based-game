@@ -101,5 +101,6 @@ public class Unit {
     public void attackBase(Base enemyBase){
         enemyBase.setHealth(enemyBase.getHealth() - damage);
         System.out.printf("%s dealt %d damage to the %s base.\n", fromTeamNumberToTeamColor(), damage, enemyBase.fromTeamNumberToTeamColor());
+        
     }
 }

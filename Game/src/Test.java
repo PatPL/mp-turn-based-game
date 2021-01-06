@@ -3,7 +3,7 @@ import Units.*;
 
 import java.util.Scanner;
 
-public class Game {
+public class Test {
 	
 	//Attributes for the test
 	private final static int rows = 3;
@@ -287,7 +287,7 @@ public class Game {
 	public static void main (String[] args) {
 		try
 		{
-			Game obj = new Game();
+			Test obj = new Test();
 			obj.run (args);
 		}
 		catch (Exception e)
@@ -308,7 +308,7 @@ public class Game {
 		
 		while(true){
 			
-			//Game starts
+			//Test starts
 			
 			turn(redBase);
 			turn(blueBase);

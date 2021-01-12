@@ -59,14 +59,14 @@ public class Unit {
         if(team == 2) return "Blue";
         return "Red";
     }
-
-
-    //Basic constructors
     
+    
+    //Constructors
     public Unit(){
         team = 0;
         name = "";
     }
+    
     
     public Unit(int health, int newDamage, int range, String name, int cost, int speed, int team){
         this.health = health;
@@ -77,9 +77,7 @@ public class Unit {
         this.speed = speed;
         this.team = team;
     }
-
-
-    //---------------------------------------------------METHODS------------------------------------------------------\\
+    
     
     public void attackUnit(Unit enemyUnit){
     

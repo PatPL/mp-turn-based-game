@@ -29,7 +29,7 @@ public class Base {
         return goldIncome;
     }
     
-    public int getPowerBar() {
+    public int getPowerBarValue() {
         return powerBar;
     }
     
@@ -54,10 +54,10 @@ public class Base {
     public Base(int health, int teamNumber){
         this.health = health;
         this.teamNumber = teamNumber;
-        gold = 20;
+        gold = 100;
         unitGenerator = new UnitGenerator();
         goldIncome = 10;
-        powerBar = 0;
+        powerBar = 30;
     }
     
     public String fromTeamNumberToTeamColor(){

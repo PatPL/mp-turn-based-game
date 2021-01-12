@@ -87,14 +87,7 @@ public class Response {
 	}
 	
 	public StatusType getStatusType() {
-		return switch(this.statusCode / 100) {
-			case 1 -> StatusType.Informational_1xx;
-			case 2 -> StatusType.Success_2xx;
-			case 3 -> StatusType.Redirection_3xx;
-			case 4 -> StatusType.ClientError_4xx;
-			case 5 -> StatusType.ServerError_5xx;
-			default -> StatusType.Other_xxx;
-		};
+		return Status.getStatusType(this.statusCode);
 	}
 	
 	/**
@@ -148,15 +141,15 @@ public class Response {
 	public void setContentType(String mime) {
 		setHeader("Content-Type", String.format("%s; charset=utf-8", mime));
 	}
-	
-	/**
-	 * Sets contentType based on the extension of the file pointed to by given path
-	 *
-	 * @param path
-	 */
-	public void setContentTypeByFileExtension(String path) {
-		setContentType(getMimeFromExtension(Utility.getExtensionFromPath(path)));
-	}
+
+//	/**
+//	 * Sets contentType based on the extension of the file pointed to by given path
+//	 *
+//	 * @param path
+//	 */
+//	public void setContentTypeByFileExtension(String path) {
+//		setContentType(getMimeFromExtension(Utility.getExtensionFromPath(path)));
+//	}
 	
 	public enum BodyType {
 		Text,
@@ -256,85 +249,85 @@ public class Response {
 		
 		return output.toString().strip();
 	}
-	
-	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
-	private String getMimeFromExtension(String extension) {
-		return switch(extension) {
-			case ".aac" -> "audio/aac";
-			case ".abw" -> "application/x-abiword";
-			case ".arc" -> "application/x-freearc";
-			case ".avi" -> "video/x-msvideo";
-			case ".azw" -> "application/vnd.amazon.ebook";
-			case ".bin" -> "application/octet-stream";
-			case ".bmp" -> "image/bmp";
-			case ".bz" -> "application/x-bzip";
-			case ".bz2" -> "application/x-bzip2";
-			case ".csh" -> "application/x-csh";
-			case ".css" -> "text/css";
-			case ".csv" -> "text/csv";
-			case ".doc" -> "application/msword";
-			case ".docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-			case ".eot" -> "application/vnd.ms-fontobject";
-			case ".epub" -> "application/epub+zip";
-			case ".gz" -> "application/gzip";
-			case ".gif" -> "image/gif";
-			case ".htm" -> "text/html";
-			case ".html" -> "text/html";
-			case ".ico" -> "image/vnd.microsoft.icon";
-			case ".ics" -> "text/calendar";
-			case ".jar" -> "application/java-archive";
-			case ".jpg" -> "image/jpeg";
-			case ".jpeg" -> "image/jpeg";
-			case ".js" -> "text/javascript";
-			case ".json" -> "application/json";
-			case ".jsonld" -> "application/ld+json";
-			case ".mid" -> "audio/midi audio/x-midi";
-			case ".midi" -> "audio/midi audio/x-midi";
-			case ".mjs" -> "text/javascript";
-			case ".mp3" -> "audio/mpeg";
-			case ".mpeg" -> "audio/mpeg";
-			case ".mpkg" -> "application/vnd.apple.installer+xml";
-			case ".odp" -> "application/vnd.oasis.opendocument.presentation";
-			case ".ods" -> "application/vnd.oasis.opendocument.spreadsheet";
-			case ".odt" -> "application/vnd.oasis.opendocument.text";
-			case ".oga" -> "audio/ogg";
-			case ".ogv" -> "video/ogg";
-			case ".ogx" -> "application/ogg";
-			case ".opus" -> "audio/opus";
-			case ".otf" -> "font/otf";
-			case ".png" -> "image/png";
-			case ".pdf" -> "application/pdf";
-			case ".php" -> "application/php";
-			case ".ppt" -> "application/vnd.ms-powerpoint";
-			case ".pptx" -> "application/vnd.openxmlformats-officedocument.presentationml.presentation";
-			case ".rar" -> "application/x-rar-compressed";
-			case ".rtf" -> "application/rtf";
-			case ".sh" -> "application/x-sh";
-			case ".svg" -> "image/svg+xml";
-			case ".swf" -> "application/x-shockwave-flash";
-			case ".tar" -> "application/x-tar";
-			case ".tif" -> "image/tiff";
-			case ".tiff" -> "image/tiff";
-			case ".ts" -> "video/mp2t";
-			case ".ttf" -> "font/ttf";
-			case ".txt" -> "text/plain";
-			case ".vsd" -> "application/vnd.visio";
-			case ".wav" -> "audio/wav";
-			case ".weba" -> "audio/webm";
-			case ".webm" -> "video/webm";
-			case ".webp" -> "image/webp";
-			case ".woff" -> "font/woff";
-			case ".woff2" -> "font/woff2";
-			case ".xhtml" -> "application/xhtml+xml";
-			case ".xls" -> "application/vnd.ms-excel";
-			case ".xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-			case ".xml" -> "application/xml"; // or "text/xml"; idk
-			case ".xul" -> "application/vnd.mozilla.xul+xml";
-			case ".zip" -> "application/zip";
-			case ".3gp" -> "video/3gpp"; // or "audio/3gpp"; idk
-			case ".3g2" -> "video/3gpp2"; // or "audio/3gpp2"; idk
-			case ".7z" -> "application/x-7z-compressed";
-			default -> "application/octet-stream";
-		};
-	}
+
+//	// https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+//	private String getMimeFromExtension(String extension) {
+//		return switch(extension) {
+//			case ".aac" -> "audio/aac";
+//			case ".abw" -> "application/x-abiword";
+//			case ".arc" -> "application/x-freearc";
+//			case ".avi" -> "video/x-msvideo";
+//			case ".azw" -> "application/vnd.amazon.ebook";
+//			case ".bin" -> "application/octet-stream";
+//			case ".bmp" -> "image/bmp";
+//			case ".bz" -> "application/x-bzip";
+//			case ".bz2" -> "application/x-bzip2";
+//			case ".csh" -> "application/x-csh";
+//			case ".css" -> "text/css";
+//			case ".csv" -> "text/csv";
+//			case ".doc" -> "application/msword";
+//			case ".docx" -> "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+//			case ".eot" -> "application/vnd.ms-fontobject";
+//			case ".epub" -> "application/epub+zip";
+//			case ".gz" -> "application/gzip";
+//			case ".gif" -> "image/gif";
+//			case ".htm" -> "text/html";
+//			case ".html" -> "text/html";
+//			case ".ico" -> "image/vnd.microsoft.icon";
+//			case ".ics" -> "text/calendar";
+//			case ".jar" -> "application/java-archive";
+//			case ".jpg" -> "image/jpeg";
+//			case ".jpeg" -> "image/jpeg";
+//			case ".js" -> "text/javascript";
+//			case ".json" -> "application/json";
+//			case ".jsonld" -> "application/ld+json";
+//			case ".mid" -> "audio/midi audio/x-midi";
+//			case ".midi" -> "audio/midi audio/x-midi";
+//			case ".mjs" -> "text/javascript";
+//			case ".mp3" -> "audio/mpeg";
+//			case ".mpeg" -> "audio/mpeg";
+//			case ".mpkg" -> "application/vnd.apple.installer+xml";
+//			case ".odp" -> "application/vnd.oasis.opendocument.presentation";
+//			case ".ods" -> "application/vnd.oasis.opendocument.spreadsheet";
+//			case ".odt" -> "application/vnd.oasis.opendocument.text";
+//			case ".oga" -> "audio/ogg";
+//			case ".ogv" -> "video/ogg";
+//			case ".ogx" -> "application/ogg";
+//			case ".opus" -> "audio/opus";
+//			case ".otf" -> "font/otf";
+//			case ".png" -> "image/png";
+//			case ".pdf" -> "application/pdf";
+//			case ".php" -> "application/php";
+//			case ".ppt" -> "application/vnd.ms-powerpoint";
+//			case ".pptx" -> "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+//			case ".rar" -> "application/x-rar-compressed";
+//			case ".rtf" -> "application/rtf";
+//			case ".sh" -> "application/x-sh";
+//			case ".svg" -> "image/svg+xml";
+//			case ".swf" -> "application/x-shockwave-flash";
+//			case ".tar" -> "application/x-tar";
+//			case ".tif" -> "image/tiff";
+//			case ".tiff" -> "image/tiff";
+//			case ".ts" -> "video/mp2t";
+//			case ".ttf" -> "font/ttf";
+//			case ".txt" -> "text/plain";
+//			case ".vsd" -> "application/vnd.visio";
+//			case ".wav" -> "audio/wav";
+//			case ".weba" -> "audio/webm";
+//			case ".webm" -> "video/webm";
+//			case ".webp" -> "image/webp";
+//			case ".woff" -> "font/woff";
+//			case ".woff2" -> "font/woff2";
+//			case ".xhtml" -> "application/xhtml+xml";
+//			case ".xls" -> "application/vnd.ms-excel";
+//			case ".xlsx" -> "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+//			case ".xml" -> "application/xml"; // or "text/xml"; idk
+//			case ".xul" -> "application/vnd.mozilla.xul+xml";
+//			case ".zip" -> "application/zip";
+//			case ".3gp" -> "video/3gpp"; // or "audio/3gpp"; idk
+//			case ".3g2" -> "video/3gpp2"; // or "audio/3gpp2"; idk
+//			case ".7z" -> "application/x-7z-compressed";
+//			default -> "application/octet-stream";
+//		};
+//	}
 }

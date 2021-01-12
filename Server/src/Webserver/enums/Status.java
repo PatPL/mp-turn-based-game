@@ -59,15 +59,30 @@ public enum Status {
 	Status(int i, String j) {
 		this.code = i;
 		this.message = j;
-		this.type = switch(i / 100) {
-			case 1 -> StatusType.Informational_1xx;
-			case 2 -> StatusType.Success_2xx;
-			case 3 -> StatusType.Redirection_3xx;
-			case 4 -> StatusType.ClientError_4xx;
-			case 5 -> StatusType.ServerError_5xx;
-			default -> StatusType.Other_xxx;
-		};
+		this.type = getStatusType(i);
 		
+	}
+	
+	public static StatusType getStatusType(int i) {
+		int type = i / 100;
+		if(type == 1) {
+			return StatusType.Informational_1xx;
+		}
+		else if(type == 2) {
+			return StatusType.Success_2xx;
+		}
+		else if(type == 3) {
+			return StatusType.Redirection_3xx;
+		}
+		else if(type == 4) {
+			return StatusType.ClientError_4xx;
+		}
+		else if(type == 5) {
+			return StatusType.ServerError_5xx;
+		}
+		else {
+			return StatusType.Other_xxx;
+		}
 	}
 	
 }

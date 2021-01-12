@@ -1,12 +1,13 @@
-package BuildingsGenerators;
-import Units.Unit;
+package Game.BuildingsGenerators;
+
+import Game.Units.Unit;
 
 
 public class UnitGenerator {
 	
 	
 	//Constructor
-	public UnitGenerator(){
+	public UnitGenerator() {
 	
 	}
 	

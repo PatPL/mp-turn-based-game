@@ -1,17 +1,13 @@
-package GUIForms;
+package Game.GUIForms;
 
-import BuildingsGenerators.Base;
-import Units.Unit;
+import Game.BuildingsGenerators.Base;
+import Game.CustomElements.JImage;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 
 public class GameGUI {
 	
@@ -22,28 +18,36 @@ public class GameGUI {
 	private JPanel bottomPanel;
 	private JButton createUnitButton;
 	private JPanel topPanel;
-	private JLabel blueHealthImageLabel;
 	private JLabel redCurrentHealthLabel;
 	private JLabel blueCurrentHealthLabel;
 	
-	private JPanel backgroundPanel;
-	
 	private JLabel redCurrentGoldLabel;
 	private JLabel blueCurrentGoldLabel;
-	private JLabel blueGoldIconLabel;
-	private JLabel redHealthImageLabel;
-	private JLabel redGoldIconLabel;
 	private JLabel redGoldIncomeLabel;
 	private JLabel blueGoldIncomeLabel;
 	private JLabel redPowerbarLabel;
 	private JLabel bluePowerbarLabel;
 	private JProgressBar redPowerBar;
 	private JProgressBar bluePowerBar;
+	private JImage redHealthImageLabel;
+	private JImage redGoldIconLabel;
+	private JImage blueHealthImageLabel;
+	private JImage blueGoldIconLabel;
+	private JImage backgroundPanel;
+	
+	private void createUIComponents() throws IOException {
+		redHealthImageLabel = new JImage("heart2.png");
+		redGoldIconLabel = new JImage("money2.png");
+		blueHealthImageLabel = new JImage("heart2.png");
+		blueGoldIconLabel = new JImage("money2.png");
+		backgroundPanel = new JImage("background.png", true);
+	}
 	
 	//Game attributes
 	private boolean endTurn;
 	private Base redBase;
 	private Base blueBase;
+	
 	public boolean isEndTurn() {
 		return endTurn;
 	}
@@ -59,15 +63,15 @@ public class GameGUI {
 	}
 	
 	//Refresh function, just like in car project
-	public void refresh(){
+	public void refresh() {
 		
 		//For gold income
 		redGoldIncomeLabel.setText("( +" + redBase.getGoldIncome() + " per turn)");
 		blueGoldIncomeLabel.setText("( +" + redBase.getGoldIncome() + " per turn)");
 		
 		//For current gold
-		redCurrentGoldLabel.setText(redBase.getGold()+ " ");
-		blueCurrentGoldLabel.setText(blueBase.getGold()+ " ");
+		redCurrentGoldLabel.setText(redBase.getGold() + " ");
+		blueCurrentGoldLabel.setText(blueBase.getGold() + " ");
 		
 		//For current health
 		redCurrentHealthLabel.setText(redBase.getHealth() + "");
@@ -77,8 +81,8 @@ public class GameGUI {
 	}
 	
 	//Returns base from a team number
-	private Base whosTurnIs(int number){
-		if (number == 1) return redBase;
+	private Base whosTurnIs(int number) {
+		if(number == 1) return redBase;
 		return blueBase;
 	}
 	
@@ -98,7 +102,7 @@ public class GameGUI {
 	
 	
 	//Constructor
-	public GameGUI(Base red, Base blue, int whosTurn){
+	public GameGUI(Base red, Base blue, int whosTurn) {
 		
 		this.endTurn = false;
 		redBase = red;
@@ -130,7 +134,7 @@ public class GameGUI {
 				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 				
 				//Setting up size and centering Create New Unit window
-				f.setSize(486,860);
+				f.setSize(486, 860);
 				f.setPreferredSize(new Dimension(486, 860));
 				f.setLocation((dim.width - f.getSize().width) / 2, (dim.height - f.getSize().height) / 2);
 				
@@ -139,5 +143,6 @@ public class GameGUI {
 				
 			}
 		});
+		
 	}
 }

@@ -1,9 +1,10 @@
-import BuildingsGenerators.Base;
-import GUIForms.GameGUI;
-import Units.Unit;
+package Game;
+
+import Game.BuildingsGenerators.Base;
+import Game.GUIForms.GameGUI;
+import Game.Units.Unit;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Game {
 	
@@ -19,7 +20,7 @@ public class Game {
 	
 	
 	//Constructor
-	private Game(int newRows, int newColumns, int baseHealth){
+	private Game(int newRows, int newColumns, int baseHealth) {
 		this.rows = newRows;
 		this.columns = newColumns;
 		this.unitMap = new Unit[rows][columns];
@@ -29,19 +30,20 @@ public class Game {
 	}
 	
 	//Turn for one player
-	private void turn(int whosTurn){
+	private void turn(int whosTurn) {
 		
 		//Pop up window for information
 		JOptionPane.showMessageDialog(null, "Player " + whosTurn + " turn");
 		
 		//Initializing game window
 		JFrame frame = new JFrame("Game");
-		frame.setPreferredSize(new Dimension(1920, 1040));
 		GameGUI gameGUI = new GameGUI(redBase, blueBase, whosTurn);
 		frame.setContentPane(gameGUI.getMainPanel());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setVisible(true);
+		frame.setSize(800, 600);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		//Keeps the player turn until End Turn button is pressed
 		while(!gameGUI.isEndTurn()) {
@@ -57,53 +59,41 @@ public class Game {
 		}
 		frame.dispose();
 		
-		if(blueBase.getHealth() <= 0){
+		if(blueBase.getHealth() <= 0) {
 			JOptionPane.showMessageDialog(null, "Congratulations! Red team wins!");
 		}
 		
-		if(redBase.getHealth() <= 0){
+		if(redBase.getHealth() <= 0) {
 			JOptionPane.showMessageDialog(null, "Congratulations! Blue team wins!");
 		}
 		
 	}
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	//Code execution
-	public static void main (String[] args) {
-		try
-		{
+	public static void main(String[] args) {
+		try {
 			Game obj = new Game(3, 10, 100);
-			obj.run (args);
+			obj.run(args);
 		}
-		catch (Exception e)
-		{
-			e.printStackTrace ();
+		catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	
 	
-	public void run (String[] args) throws Exception {
+	public void run(String[] args) throws Exception {
 		
 		
 		//Setting every unit on map to be like "not existing"
-		for(int i = 0 ; i < rows ; i++){
-			for(int k = 0 ; k < columns; k++){
+		for(int i = 0; i < rows; i++) {
+			for(int k = 0; k < columns; k++) {
 				unitMap[i][k] = new Unit();
 			}
 		}
 		
 		//Actual game
-		while(!isGameOver){
+		while(!isGameOver) {
 			
 			//Turn-based game, remember?
 			turn(1);

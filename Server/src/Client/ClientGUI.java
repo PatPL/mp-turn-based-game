@@ -31,12 +31,17 @@ public class ClientGUI {
 		String hostNickname;
 		
 		public String getColumn(int col) {
-			return switch(col) {
-				case 0 -> this.gameCode;
-				case 1 -> this.hostNickname;
-				default -> "";
-			};
+			if(col == 0) {
+				return this.gameCode;
+			}
+			else if(col == 1) {
+				return this.hostNickname;
+			}
+			else {
+				return "";
+			}
 		}
+		
 	}
 	
 	private TableModel buildGameListTableModel() {

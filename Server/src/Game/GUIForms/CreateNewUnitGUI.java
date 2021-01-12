@@ -1,7 +1,7 @@
-package GUIForms;
+package Game.GUIForms;
 
-import BuildingsGenerators.Base;
-import Units.Unit;
+import Game.BuildingsGenerators.Base;
+import Game.Units.Unit;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,7 +51,7 @@ public class CreateNewUnitGUI extends JFrame {
 	
 	
 	//Constructorr
-	public CreateNewUnitGUI(Base base){
+	public CreateNewUnitGUI(Base base) {
 		
 		//Default units created to be abstract
 		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, base.getTeamNumber());
@@ -73,7 +73,7 @@ public class CreateNewUnitGUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if(base.getGold()>= swordsman.getCost()) {
+				if(base.getGold() >= swordsman.getCost()) {
 					archerImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(Color.YELLOW);
@@ -89,7 +89,7 @@ public class CreateNewUnitGUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if(base.getGold()>= archer.getCost()) {
+				if(base.getGold() >= archer.getCost()) {
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					archerImagePanel.setBackground(Color.YELLOW);
@@ -105,7 +105,7 @@ public class CreateNewUnitGUI extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
-				if(base.getGold()>= knight.getCost()) {
+				if(base.getGold() >= knight.getCost()) {
 					archerImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(Color.YELLOW);

@@ -1,7 +1,6 @@
 package Client;
 
 import Webserver.Utility;
-import Webserver.enums.StatusType;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -16,6 +15,9 @@ import java.util.List;
 import java.util.prefs.Preferences;
 
 public class ClientGUI {
+	
+	private final JFrame parentFrame;
+	
 	private JPanel panel1;
 	private JList test;
 	private JTable table1;
@@ -95,7 +97,9 @@ public class ClientGUI {
 		};
 	}
 	
-	public ClientGUI() {
+	public ClientGUI(JFrame parentFrame) {
+		this.parentFrame = parentFrame;
+		
 		// Setting up an unique UserID used by server to identify users
 		if(userPrefs.get(KeyEnum.userID.key, null) == null) {
 			userPrefs.put(KeyEnum.userID.key, Utility.getRandomString(32));
@@ -115,12 +119,12 @@ public class ClientGUI {
 	}
 	
 	public static void main(String[] args) {
-		ClientGUI gui = new ClientGUI();
-		
 		JFrame frame = new JFrame("ClientGUI");
+		ClientGUI gui = new ClientGUI(frame);
 		frame.setContentPane(gui.panel1);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}
 	
@@ -151,20 +155,21 @@ public class ClientGUI {
 	}
 	
 	private void hostNewGame() {
-		HTTPClient.send("/addGame", "", res -> {
-			if(res.getStatusType() != StatusType.Success_2xx) {
-				System.out.printf("Unsuccessful response: \n%s\n", res);
-				return;
-			}
-			
-			GameListing newListing = new GameListing();
-			newListing.gameCode = res.getBody();
-			// Just an approximation. Server value will be different
-			newListing.hostNickname = userPrefs.get(KeyEnum.nickname.key, "<unknown nickname>");
-			
-			games.add(newListing);
-			table1.tableChanged(new TableModelEvent(table1.getModel()));
-		});
+		new HostGameFormGUI(text -> System.out.printf("Odczytane: %s\n", text), parentFrame);
+//		HTTPClient.send("/addGame", "", res -> {
+//			if(res.getStatusType() != StatusType.Success_2xx) {
+//				System.out.printf("Unsuccessful response: \n%s\n", res);
+//				return;
+//			}
+//
+//			GameListing newListing = new GameListing();
+//			newListing.gameCode = res.getBody();
+//			// Just an approximation. Server value will be different
+//			newListing.hostNickname = userPrefs.get(KeyEnum.nickname.key, "<unknown nickname>");
+//
+//			games.add(newListing);
+//			table1.tableChanged(new TableModelEvent(table1.getModel()));
+//		});
 	}
 	
 	// Run at most once

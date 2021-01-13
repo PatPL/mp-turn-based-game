@@ -140,7 +140,6 @@ public class ClientGUI {
 		
 		setupListeners();
 		
-		
 		new Timer().schedule(new TimerTask() {
 			@Override
 			public void run() {
@@ -233,7 +232,7 @@ public class ClientGUI {
 			// W tym miejscu serwer dołączył do odpowiedniej gry
 			parentFrame.setVisible(false);
 			
-			GameGUI gameGUI = new GameGUI();
+			GameGUI gameGUI = new GameGUI(gameCode);
 			
 			JDialog gameWindow = new JDialog(parentFrame);
 			gameWindow.setContentPane(gameGUI.getMainPanel());

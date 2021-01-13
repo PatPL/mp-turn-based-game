@@ -1,13 +1,15 @@
 package Game.GUIForms;
 
-import Game.BuildingsGenerators.Base;
+import Client.HTTPClient;
 import Game.CustomElements.JImage;
+import Game.Game;
+import Webserver.enums.StatusType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class GameGUI {
 	
@@ -35,6 +37,9 @@ public class GameGUI {
 	private JImage blueGoldIconLabel;
 	private JImage backgroundPanel;
 	
+	private final String gameCode;
+	private final Game game;
+	
 	private void createUIComponents() throws IOException {
 		redHealthImageLabel = new JImage("heart2.png");
 		redGoldIconLabel = new JImage("money2.png");
@@ -43,85 +48,90 @@ public class GameGUI {
 		backgroundPanel = new JImage("background.png", true);
 	}
 	
-	//Game attributes
-	private boolean endTurn;
-	private Base redBase;
-	private Base blueBase;
-	
-	public boolean isEndTurn() {
-		return endTurn;
-	}
-	
 	//Getters
 	public JPanel getMainPanel() {
 		return mainPanel;
-	}
-	
-	//Setters
-	private void setEndTurn(boolean endTurn) {
-		this.endTurn = endTurn;
 	}
 	
 	//Refresh function, just like in car project
 	public void refresh() {
 		
 		//For gold income
-		redGoldIncomeLabel.setText("( +" + redBase.getGoldIncome() + " per turn)");
-		blueGoldIncomeLabel.setText("( +" + redBase.getGoldIncome() + " per turn)");
+		redGoldIncomeLabel.setText("( +" + game.getRedBase().getGoldIncome() + " per turn)");
+		blueGoldIncomeLabel.setText("( +" + game.getBlueBase().getGoldIncome() + " per turn)");
 		
 		//For current gold
-		redCurrentGoldLabel.setText(redBase.getGold() + " ");
-		blueCurrentGoldLabel.setText(blueBase.getGold() + " ");
+		redCurrentGoldLabel.setText(game.getRedBase().getGold() + " ");
+		blueCurrentGoldLabel.setText(game.getBlueBase().getGold() + " ");
 		
 		//For current health
-		redCurrentHealthLabel.setText(redBase.getHealth() + "");
-		blueCurrentHealthLabel.setText(blueBase.getHealth() + "");
+		redCurrentHealthLabel.setText(game.getRedBase().getHealth() + "");
+		blueCurrentHealthLabel.setText(game.getBlueBase().getHealth() + "");
 		
+		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
+		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
 		
 	}
 	
-	//Returns base from a team number
-	private Base whosTurnIs(int number) {
-		if(number == 1) return redBase;
-		return blueBase;
+	// Refreshes game state
+	public void update() {
+		HTTPClient.send("/fetchGameState", gameCode, res -> {
+			if(res.getStatusType() != StatusType.Success_2xx) {
+				System.out.printf("fetchGameState error: ", res.getBody());
+				return;
+			}
+			
+			game.deserialize(res.getBody(), 0);
+			refresh();
+		});
 	}
+
+//	//Returns base from a team number
+//	private Base whosTurnIs(int number) {
+//		if(number == 1) return redBase;
+//		return blueBase;
+//	}
 	
 	
 	//Run function to keep refreshing the values
-	public void run() {
-		while(true) {
-			refresh();
-			try {
-				Thread.sleep(200);
-			}
-			catch(InterruptedException e) {
-				return;
-			}
-		}
-	}
+//	public void run() {
+//		while(true) {
+//			refresh();
+//			try {
+//				Thread.sleep(200);
+//			}
+//			catch(InterruptedException e) {
+//				return;
+//			}
+//		}
+//	}
 	
 	
 	//Constructor
-	public GameGUI(/* Base red, Base blue, int whosTurn */) {
-		
-		this.endTurn = false;
-		// redBase = red;
-		// blueBase = blue;
+	public GameGUI(String gameCode) {
+		this.gameCode = gameCode;
+		this.game = new Game();
 		
 		// Initializing power bars
-//		redPowerBar.setValue(redBase.getPowerBarValue());
-//		bluePowerBar.setValue(blueBase.getPowerBarValue());
+		
 		bluePowerBar.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		
 		
 		//End turn button
-		endTurnButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setEndTurn(true);
-			}
-		});
+//		endTurnButton.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				setEndTurn(true);
+//			}
+//		});
 		
+		new Timer().schedule(new TimerTask() {
+			@Override
+			public void run() {
+				// Do zrobienia: Zatrzymaj ten timer kiedy okno główne znika
+				update();
+			}
+		}, 500, 2000);
 		
 		//Create unit button
 //		createUnitButton.addActionListener(new ActionListener() {

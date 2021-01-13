@@ -51,4 +51,13 @@ public class Utility {
 		return leftPad(input, character, 1);
 	}
 	
+	public static String readUntil(String input, String separator, int offset) {
+		if(offset >= input.length()) {
+			return null;
+		}
+		else {
+			return input.substring(offset).split(separator)[0];
+		}
+	}
+	
 }

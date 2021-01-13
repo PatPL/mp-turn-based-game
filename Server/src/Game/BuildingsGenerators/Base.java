@@ -2,13 +2,15 @@ package Game.BuildingsGenerators;
 
 
 import Game.Units.Unit;
+import Game.interfaces.ITextSerializable;
+import Webserver.Utility;
 
-public class Base {
+public class Base implements ITextSerializable {
 	
 	private int health;
 	private int teamNumber;                         // 1 - red team ; 2 - blue team
 	private int gold;                               // current gold
-	private static UnitGenerator unitGenerator;
+	private static final UnitGenerator unitGenerator = new UnitGenerator();
 	private int goldIncome;
 	private int powerBar;
 	
@@ -50,12 +52,14 @@ public class Base {
 		this.powerBar = powerBar;
 	}
 	
+	public Base() {
+	}
+	
 	//Constructor
 	public Base(int health, int teamNumber) {
 		this.health = health;
 		this.teamNumber = teamNumber;
 		gold = 100;
-		unitGenerator = new UnitGenerator();
 		goldIncome = 10;
 		powerBar = 30;
 	}
@@ -72,4 +76,51 @@ public class Base {
 	public Unit createUnit(String choice) {
 		return unitGenerator.createUnit(choice, teamNumber);
 	}
+	
+	@Override
+	public String serialize() {
+		StringBuilder output = new StringBuilder();
+		
+		output.append(health);
+		output.append(";");
+		output.append(teamNumber);
+		output.append(";");
+		output.append(gold);
+		output.append(";");
+		output.append(goldIncome);
+		output.append(";");
+		output.append(powerBar);
+		output.append(";");
+		
+		return output.toString();
+	}
+	
+	@Override
+	public int deserialize(String rawText, int offset) {
+		int addedOffset = 0;
+		String tmp;
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.health = Integer.parseInt(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.teamNumber = Integer.parseInt(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.gold = Integer.parseInt(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.goldIncome = Integer.parseInt(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.powerBar = Integer.parseInt(tmp);
+		
+		return addedOffset;
+	}
+	
 }

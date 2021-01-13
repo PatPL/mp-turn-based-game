@@ -91,7 +91,18 @@ public class UtilityTest {
 		Assert.assertEquals(cValid, Utility.leftPad(c, "\t"));
 		Assert.assertEquals(dValid, Utility.leftPad(d, ".", 8));
 		
-		
+	}
+	
+	@org.junit.Test
+	public void readUntilTest() {
+		Assert.assertEquals("abcd", Utility.readUntil("abcd;efgh;ijkl", ";", 0));
+		Assert.assertEquals("cd", Utility.readUntil("abcd;efgh;ijkl", ";", 2));
+		Assert.assertEquals("", Utility.readUntil("abcd;efgh;ijkl", ";", 4));
+		Assert.assertEquals("efgh", Utility.readUntil("abcd;efgh;ijkl", ";", 5));
+		Assert.assertEquals("fgh", Utility.readUntil("abcd;efgh;ijkl", ";", 6));
+		Assert.assertEquals("h", Utility.readUntil("abcd;efgh;ijkl", ";", 8));
+		Assert.assertEquals("ijkl", Utility.readUntil("abcd;efgh;ijkl", ";", 10));
+		Assert.assertNull(Utility.readUntil("abcd;efgh;ijkl", ";", 999));
 	}
 	
 }

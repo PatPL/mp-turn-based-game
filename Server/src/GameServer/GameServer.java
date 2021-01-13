@@ -15,7 +15,7 @@ public class GameServer {
 	private static final int defaultPort = 1234;
 	
 	private WebServer currentWebServer = null;
-	private final Map<String, Game> gameList = new HashMap<String, Game>();
+	private final Map<String, GameLobby> gameList = new HashMap<String, GameLobby>();
 	private final Map<String, String> nicknameAssociation = new HashMap<String, String>();
 	
 	private String getNickname(String userID) {
@@ -40,9 +40,9 @@ public class GameServer {
 		int height,
 		String name
 	) {
-		Game newGame = new Game(hostID, length, height, name);
-		gameList.put(newGame.ID, newGame);
-		return newGame.ID;
+		GameLobby newGameLobby = new GameLobby(hostID, length, height, name);
+		gameList.put(newGameLobby.ID, newGameLobby);
+		return newGameLobby.ID;
 	}
 	
 	private boolean authorize(Request req) {
@@ -94,7 +94,7 @@ public class GameServer {
 		res.setStatus(Status.OK_200);
 		
 		StringBuilder gameListString = new StringBuilder();
-		for(Map.Entry<String, Game> i : gameList.entrySet()) {
+		for(Map.Entry<String, GameLobby> i : gameList.entrySet()) {
 			gameListString.append(i.getValue().ID);
 			gameListString.append(";");
 			gameListString.append(i.getValue().length);
@@ -122,29 +122,58 @@ public class GameServer {
 		
 		String userID = req.headers.get(KeyEnum.userID.key);
 		String gameCode = req.body;
-		Game game = gameList.getOrDefault(gameCode, null);
+		GameLobby gameLobby = gameList.getOrDefault(gameCode, null);
 		
-		if(game == null) {
+		if(gameLobby == null) {
 			res.setStatus(Status.NotFound_404);
 			res.setBody(String.format("Game with code %s doesn't exist", gameCode), Response.BodyType.Text);
 			return true;
 		}
 		
-		if(game.connectedPlayers.contains(userID)) {
+		if(gameLobby.connectedPlayers.contains(userID)) {
 			res.setStatus(Status.OK_200);
 			res.setBody(String.format("You already joined this game", gameCode), Response.BodyType.Text);
 			return true;
 		}
 		
-		if(game.connectedPlayers.size() >= 2) {
+		if(gameLobby.connectedPlayers.size() >= 2) {
 			res.setStatus(Status.Forbidden_403);
 			res.setBody(String.format("Game with code %s is full", gameCode), Response.BodyType.Text);
 			return true;
 		}
 		
 		res.setStatus(Status.OK_200);
-		game.connectedPlayers.add(userID);
+		gameLobby.connectedPlayers.add(userID);
 		
+		return true;
+	}
+	
+	public boolean fetchGameStateHandler(Request req, Response res) {
+		if(!authorize(req)) {
+			res.setStatus(Status.Unauthorized_401);
+			res.setBody("No userID provided", Response.BodyType.Text);
+			return true;
+		}
+		
+		String userID = req.headers.get(KeyEnum.userID.key);
+		String gameCode = req.body;
+		GameLobby gameLobby = gameList.getOrDefault(gameCode, null);
+		
+		if(gameLobby == null) {
+			res.setStatus(Status.NotFound_404);
+			res.setBody(String.format("Game with code %s doesn't exist", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		if(!gameLobby.connectedPlayers.contains(userID)) {
+			res.setStatus(Status.Forbidden_403);
+			res.setBody(String.format("You're not in game %s", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		res.setStatus(Status.OK_200);
+		res.setBody(gameLobby.game.serialize(), Response.BodyType.Text);
+		gameLobby.game.getBlueBase().setGold((int) Math.floor(Math.random() * 100000));
 		return true;
 	}
 	
@@ -154,6 +183,7 @@ public class GameServer {
 		output.addHandler("/addGame", this::addGameHandler);
 		output.addHandler("/gameList", this::gameListHandler);
 		output.addHandler("/joinGame", this::joinGameHandler);
+		output.addHandler("/fetchGameState", this::fetchGameStateHandler);
 		
 		return output;
 	}

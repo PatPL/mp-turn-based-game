@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,8 +53,7 @@ public class HTTPClient {
 		requestStream.write(req.toByteArray());
 		serverSocket.shutdownOutput();
 		
-		BufferedReader input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream()));
-		
+		BufferedReader input = new BufferedReader(new InputStreamReader(serverSocket.getInputStream(), StandardCharsets.UTF_8));
 		// Sometimes a client establishes connection before sending any data
 		// Maximum wait time in seconds
 		final double waitTime = 10;

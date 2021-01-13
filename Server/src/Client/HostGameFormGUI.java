@@ -14,9 +14,10 @@ public class HostGameFormGUI {
 	private JLabel lengthInputLabel;
 	private JLabel heightInputLabel;
 	private JLabel boardPreviewLabel;
+	private JTextField serverNameInput;
 	
 	public interface HostGameFormSubmitHandler {
-		public void onSubmit(String a);
+		public void onSubmit(int length, int height, String name);
 	}
 	
 	public void refresh() {
@@ -54,7 +55,11 @@ public class HostGameFormGUI {
 		refresh();
 		
 		hostGameButton.addActionListener(l -> {
-			handler.onSubmit("hfg");
+			handler.onSubmit(
+				lengthInputSlider.getValue(),
+				heightInputSlider.getValue(),
+				serverNameInput.getText().replace(";", ",")
+			);
 			dialog.dispose();
 		});
 		

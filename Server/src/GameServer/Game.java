@@ -2,7 +2,9 @@ package GameServer;
 
 import Webserver.Utility;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Game {
@@ -14,8 +16,17 @@ public class Game {
 	public final String ID;
 	public final String host;
 	public final long createdAt;
+	public final int length;
+	public final int height;
+	public final String name;
+	public final List<String> connectedPlayers = new ArrayList<String>();
 	
-	public Game(String host) {
+	public Game(
+		String host,
+		int length,
+		int height,
+		String name
+	) {
 		String newID;
 		int IDLength = defaultIDLength;
 		do {
@@ -29,6 +40,9 @@ public class Game {
 		
 		createdAt = System.currentTimeMillis();
 		this.host = host;
+		this.length = length;
+		this.height = height;
+		this.name = name;
 	}
 	
 }

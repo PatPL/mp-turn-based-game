@@ -37,7 +37,7 @@ public class Game {
 		
 		//Initializing game window
 		JFrame frame = new JFrame("Game");
-		GameGUI gameGUI = new GameGUI(redBase, blueBase, whosTurn);
+		GameGUI gameGUI = new GameGUI(/*redBase, blueBase, whosTurn*/);
 		frame.setContentPane(gameGUI.getMainPanel());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();

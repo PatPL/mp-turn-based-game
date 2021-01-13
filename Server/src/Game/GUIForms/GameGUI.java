@@ -102,15 +102,15 @@ public class GameGUI {
 	
 	
 	//Constructor
-	public GameGUI(Base red, Base blue, int whosTurn) {
+	public GameGUI(/* Base red, Base blue, int whosTurn */) {
 		
 		this.endTurn = false;
-		redBase = red;
-		blueBase = blue;
+		// redBase = red;
+		// blueBase = blue;
 		
 		// Initializing power bars
-		redPowerBar.setValue(redBase.getPowerBarValue());
-		bluePowerBar.setValue(blueBase.getPowerBarValue());
+//		redPowerBar.setValue(redBase.getPowerBarValue());
+//		bluePowerBar.setValue(blueBase.getPowerBarValue());
 		bluePowerBar.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		
 		
@@ -124,25 +124,25 @@ public class GameGUI {
 		
 		
 		//Create unit button
-		createUnitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				JFrame f = new CreateNewUnitGUI(whosTurnIs(whosTurn));
-				
-				//Current screen resolution
-				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-				
-				//Setting up size and centering Create New Unit window
-				f.setSize(486, 860);
-				f.setPreferredSize(new Dimension(486, 860));
-				f.setLocation((dim.width - f.getSize().width) / 2, (dim.height - f.getSize().height) / 2);
-				
-				f.pack();
-				f.setVisible(true);
-				
-			}
-		});
+//		createUnitButton.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//
+//				JFrame f = new CreateNewUnitGUI(whosTurnIs(whosTurn));
+//
+//				//Current screen resolution
+//				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+//
+//				//Setting up size and centering Create New Unit window
+//				f.setSize(486, 860);
+//				f.setPreferredSize(new Dimension(486, 860));
+//				f.setLocation((dim.width - f.getSize().width) / 2, (dim.height - f.getSize().height) / 2);
+//
+//				f.pack();
+//				f.setVisible(true);
+//
+//			}
+//		});
 		
 	}
 }

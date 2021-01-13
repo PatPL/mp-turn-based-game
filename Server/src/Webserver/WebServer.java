@@ -8,6 +8,9 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;
@@ -165,7 +168,7 @@ public class WebServer {
 	
 	// Parses incoming request, sends back a response and closes the connection
 	private void handleRequest(Socket client) throws IOException {
-		BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream()));
+		BufferedReader input = new BufferedReader(new InputStreamReader(client.getInputStream(), StandardCharsets.UTF_8));
 		
 		// Sometimes a client establishes connection before sending any data
 		// Maximum wait time in seconds
@@ -224,7 +227,8 @@ public class WebServer {
 		res.setHeader("Requested-URI", req.URI);
 		System.out.printf(
 			// https://en.wikipedia.org/wiki/ANSI_escape_code
-			"\033[91m<<<<<<<< INBOUND\033[0m\n%s\n\033[32m>>>>>>>> OUTBOUND\033[0m\n%s\n\033[96m****************\033[0m\n\n",
+			"|>\033[93m%s\n\033[91m<<<<<<<< INBOUND\033[0m\n%s\n\033[32m>>>>>>>> OUTBOUND\033[0m\n%s\n\033[96m****************\033[0m\n\n",
+			LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME),
 			Utility.leftPad(req.toString(), "\033[91m| \033[0m"),
 			Utility.leftPad(res.toString(), "\033[32m| \033[0m")
 		);

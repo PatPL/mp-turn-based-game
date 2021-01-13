@@ -34,8 +34,13 @@ public class GameServer {
 		currentWebServer.stop();
 	}
 	
-	public String addGame(String hostID) {
-		Game newGame = new Game(hostID);
+	public String addGame(
+		String hostID,
+		int length,
+		int height,
+		String name
+	) {
+		Game newGame = new Game(hostID, length, height, name);
 		gameList.put(newGame.ID, newGame);
 		return newGame.ID;
 	}
@@ -57,8 +62,30 @@ public class GameServer {
 			return true;
 		}
 		
+		String[] params = req.body.split(";");
+		if(params.length != 3) {
+			res.setStatus(Status.BadRequest_400);
+			res.setBody("Incorrect data in request body", Response.BodyType.Text);
+			return true;
+		}
+		
+		String gameID = null;
+		try {
+			gameID = addGame(
+				req.headers.get(KeyEnum.userID.key),
+				Integer.parseInt(params[0]),
+				Integer.parseInt(params[1]),
+				params[2]
+			);
+		}
+		catch(NumberFormatException e) {
+			res.setStatus(Status.BadRequest_400);
+			res.setBody("Error while parsing number data", Response.BodyType.Text);
+			return true;
+		}
+		
 		res.setStatus(Status.Created_201);
-		res.setBody(addGame(req.headers.get(KeyEnum.userID.key)), Response.BodyType.Text);
+		res.setBody(gameID, Response.BodyType.Text);
 		
 		return true;
 	}
@@ -69,11 +96,54 @@ public class GameServer {
 		StringBuilder gameListString = new StringBuilder();
 		for(Map.Entry<String, Game> i : gameList.entrySet()) {
 			gameListString.append(i.getValue().ID);
-			gameListString.append(",");
-			gameListString.append(getNickname(i.getValue().host));
+			gameListString.append(";");
+			gameListString.append(i.getValue().length);
+			gameListString.append(";");
+			gameListString.append(i.getValue().height);
+			gameListString.append(";");
+			gameListString.append(i.getValue().name);
+			gameListString.append(";");
+			gameListString.append(i.getValue().connectedPlayers.size());
 			gameListString.append("\r\n");
+			
+			System.out.printf("%s: %s\n", i.getValue().ID, i.getValue().connectedPlayers.size());
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);
+		
+		return true;
+	}
+	
+	public boolean joinGameHandler(Request req, Response res) {
+		if(!authorize(req)) {
+			res.setStatus(Status.Unauthorized_401);
+			res.setBody("No userID provided", Response.BodyType.Text);
+			return true;
+		}
+		
+		String userID = req.headers.get(KeyEnum.userID.key);
+		String gameCode = req.body;
+		Game game = gameList.getOrDefault(gameCode, null);
+		
+		if(game == null) {
+			res.setStatus(Status.NotFound_404);
+			res.setBody(String.format("Game with code %s doesn't exist", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		if(game.connectedPlayers.contains(userID)) {
+			res.setStatus(Status.OK_200);
+			res.setBody(String.format("You already joined this game", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		if(game.connectedPlayers.size() >= 2) {
+			res.setStatus(Status.Forbidden_403);
+			res.setBody(String.format("Game with code %s is full", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		res.setStatus(Status.OK_200);
+		game.connectedPlayers.add(userID);
 		
 		return true;
 	}
@@ -83,6 +153,7 @@ public class GameServer {
 		
 		output.addHandler("/addGame", this::addGameHandler);
 		output.addHandler("/gameList", this::gameListHandler);
+		output.addHandler("/joinGame", this::joinGameHandler);
 		
 		return output;
 	}

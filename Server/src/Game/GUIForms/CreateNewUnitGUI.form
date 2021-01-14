@@ -211,14 +211,10 @@
             <properties/>
             <border type="line"/>
             <children>
-              <component id="b857" class="javax.swing.JLabel" binding="swordsmanImageLabel">
+              <component id="8d407" class="Game.CustomElements.JImage" binding="swordsmanImage" custom-create="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties>
-                  <icon value="images/sword2.png"/>
-                  <text value=""/>
-                </properties>
               </component>
             </children>
           </grid>
@@ -230,14 +226,10 @@
             <properties/>
             <border type="line"/>
             <children>
-              <component id="4d21" class="javax.swing.JLabel" binding="archerImageLabel">
+              <component id="e72b2" class="Game.CustomElements.JImage" binding="archerImage" custom-create="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties>
-                  <icon value="images/bow1.png"/>
-                  <text value=""/>
-                </properties>
               </component>
             </children>
           </grid>
@@ -249,14 +241,10 @@
             <properties/>
             <border type="line"/>
             <children>
-              <component id="b87e4" class="javax.swing.JLabel" binding="knightImageLabel">
+              <component id="7b73a" class="Game.CustomElements.JImage" binding="knightImage" custom-create="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties>
-                  <icon value="images/knight1.png"/>
-                  <text value=""/>
-                </properties>
               </component>
             </children>
           </grid>

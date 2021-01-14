@@ -3,10 +3,7 @@ package GameServer;
 import Game.Game;
 import Webserver.Utility;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class GameLobby {
 	
@@ -20,7 +17,7 @@ public class GameLobby {
 	public final int length;
 	public final int height;
 	public final String name;
-	public final List<String> connectedPlayers = new ArrayList<String>();
+	public final Map<String, Boolean> connectedPlayers = new HashMap<String, Boolean>();
 	public final Game game;
 	
 	public GameLobby(

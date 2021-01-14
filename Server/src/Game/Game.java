@@ -26,13 +26,19 @@ public class Game implements ITextSerializable {
 	
 	private Base blueBase;
 	
+	private final boolean isPlayerRed;
+	
 	private boolean isGameOver;
 	
+	private boolean isRedTurn(){
+		//tutaj skończyłem
+	}
 	
 	//Constructor
-	public Game(int newRows, int newColumns) {
+	public Game(int newRows, int newColumns, boolean isPlayerRed) {
 		this.rows = newRows;
 		this.columns = newColumns;
+		this.isPlayerRed = isPlayerRed;
 		
 		this.unitMap = new Unit[rows][columns];
 		//Setting every unit on map to be like "not existing"
@@ -48,7 +54,7 @@ public class Game implements ITextSerializable {
 	}
 	
 	public Game() {
-		this(8, 2);
+		this(8, 2, true);
 	}
 	
 	//Turn for one player

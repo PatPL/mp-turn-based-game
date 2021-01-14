@@ -229,12 +229,13 @@ public class ClientGUI {
 				return;
 			}
 			
+			Boolean isPlayerRed = Boolean.parseBoolean(res.getBody());
+			
 			// W tym miejscu serwer dołączył do odpowiedniej gry
 			parentFrame.setVisible(false);
 			
-			GameGUI gameGUI = new GameGUI(gameCode);
-			
 			JDialog gameWindow = new JDialog(parentFrame);
+			GameGUI gameGUI = new GameGUI(gameCode, gameWindow, isPlayerRed);
 			gameWindow.setContentPane(gameGUI.getMainPanel());
 			gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 			gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

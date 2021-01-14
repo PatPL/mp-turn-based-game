@@ -130,9 +130,9 @@ public class GameServer {
 			return true;
 		}
 		
-		if(gameLobby.connectedPlayers.contains(userID)) {
+		if(gameLobby.connectedPlayers.containsKey(userID)) {
 			res.setStatus(Status.OK_200);
-			res.setBody(String.format("You already joined this game", gameCode), Response.BodyType.Text);
+			res.setBody(gameLobby.connectedPlayers.get(userID).toString(), Response.BodyType.Text);
 			return true;
 		}
 		
@@ -142,8 +142,11 @@ public class GameServer {
 			return true;
 		}
 		
+		Boolean isPlayerRed = (gameLobby.connectedPlayers.size() == 0);
+		
 		res.setStatus(Status.OK_200);
-		gameLobby.connectedPlayers.add(userID);
+		res.setBody(isPlayerRed.toString(), Response.BodyType.Text);
+		gameLobby.connectedPlayers.put(userID, isPlayerRed);
 		
 		return true;
 	}

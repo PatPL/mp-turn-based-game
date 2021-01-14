@@ -7,6 +7,8 @@ import Webserver.enums.StatusType;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -39,6 +41,9 @@ public class GameGUI {
 	
 	private final String gameCode;
 	private final Game game;
+	private final boolean isRedPlayer;
+	
+	private final JDialog parentDialog;
 	
 	private void createUIComponents() throws IOException {
 		redHealthImageLabel = new JImage("heart2.png");
@@ -108,9 +113,11 @@ public class GameGUI {
 	
 	
 	//Constructor
-	public GameGUI(String gameCode) {
+	public GameGUI(String gameCode, JDialog parentDialog, boolean isPlayerRed) {
+		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
 		this.game = new Game();
+		this.parentDialog = parentDialog;
 		
 		// Initializing power bars
 		
@@ -134,25 +141,12 @@ public class GameGUI {
 		}, 500, 2000);
 		
 		//Create unit button
-//		createUnitButton.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//
-//				JFrame f = new CreateNewUnitGUI(whosTurnIs(whosTurn));
-//
-//				//Current screen resolution
-//				Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-//
-//				//Setting up size and centering Create New Unit window
-//				f.setSize(486, 860);
-//				f.setPreferredSize(new Dimension(486, 860));
-//				f.setLocation((dim.width - f.getSize().width) / 2, (dim.height - f.getSize().height) / 2);
-//
-//				f.pack();
-//				f.setVisible(true);
-//
-//			}
-//		});
+		createUnitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new CreateNewUnitGUI(parentDialog);
+			}
+		});
 		
 	}
 }

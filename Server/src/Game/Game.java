@@ -57,6 +57,8 @@ public class Game implements ITextSerializable {
 		
 		this.redBase = new Base(defaultBaseHealth, 1);
 		this.blueBase = new Base(defaultBaseHealth, 2);
+		/* TEST */
+		this.blueBase.setGold(35);
 		this.isGameOver = false;
 		this.isRedTurn = true;
 	}

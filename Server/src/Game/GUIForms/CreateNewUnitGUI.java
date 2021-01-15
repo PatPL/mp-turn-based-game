@@ -50,9 +50,9 @@ public class CreateNewUnitGUI extends JFrame {
 	
 	
 	private void createUIComponents() throws IOException {
-		swordsmanImage = new JImage("sword2");
-		archerImage = new JImage("bow1");
-		knightImage = new JImage("knight1");
+		swordsmanImage = new JImage("sword2.png");
+		archerImage = new JImage("bow1.png");
+		knightImage = new JImage("knight1.png");
 	}
 	
 	//Constructor

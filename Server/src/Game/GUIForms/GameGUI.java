@@ -116,7 +116,7 @@ public class GameGUI {
 	public GameGUI(String gameCode, JDialog parentDialog, boolean isPlayerRed) {
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
-		this.game = new Game();
+		this.game = new Game(0, 0, isPlayerRed);
 		this.parentDialog = parentDialog;
 		
 		// Initializing power bars

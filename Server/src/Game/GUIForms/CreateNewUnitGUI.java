@@ -1,15 +1,11 @@
 package Game.GUIForms;
 
-import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
-import Game.Units.Unit;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 public class CreateNewUnitGUI extends JFrame {
@@ -70,7 +66,7 @@ public class CreateNewUnitGUI extends JFrame {
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 		gameWindow.setVisible(true);
-		
+
 //		//Default units created to be abstract
 //		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, base.getTeamNumber());
 //		Unit archer = new Unit(20, 10, 3, "Archer", 30, 1, base.getTeamNumber());

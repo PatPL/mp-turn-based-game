@@ -3,7 +3,10 @@ package GameServer;
 import Game.Game;
 import Webserver.Utility;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class GameLobby {
 	
@@ -42,7 +45,7 @@ public class GameLobby {
 		this.length = length;
 		this.height = height;
 		this.name = name;
-		this.game = new Game(height, length);
+		this.game = new Game(height, length, true);
 	}
 	
 }

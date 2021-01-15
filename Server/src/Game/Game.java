@@ -14,25 +14,32 @@ public class Game implements ITextSerializable {
 	
 	private final int defaultBaseHealth = 200;
 	
+	private Base redBase;
+	
 	public Base getRedBase() {
 		return redBase;
 	}
 	
-	private Base redBase;
+	private Base blueBase;
 	
 	public Base getBlueBase() {
 		return blueBase;
 	}
 	
-	private Base blueBase;
-	
 	private final boolean isPlayerRed;
+	
+	public boolean isPlayerRed() {
+		return isPlayerRed;
+	}
+	
+	private boolean isRedTurn;
+	
+	public boolean isRedTurn() {
+		return isRedTurn;
+	}
 	
 	private boolean isGameOver;
 	
-	private boolean isRedTurn(){
-		//tutaj skończyłem
-	}
 	
 	//Constructor
 	public Game(int newRows, int newColumns, boolean isPlayerRed) {
@@ -51,6 +58,7 @@ public class Game implements ITextSerializable {
 		this.redBase = new Base(defaultBaseHealth, 1);
 		this.blueBase = new Base(defaultBaseHealth, 2);
 		this.isGameOver = false;
+		this.isRedTurn = true;
 	}
 	
 	public Game() {
@@ -101,7 +109,7 @@ public class Game implements ITextSerializable {
 	//Code execution
 	public static void main(String[] args) {
 		try {
-			Game obj = new Game(3, 10);
+			Game obj = new Game(3, 10, true);
 			obj.run(args);
 		}
 		catch(Exception e) {

@@ -168,7 +168,7 @@ public class GameServer {
 			return true;
 		}
 		
-		if(!gameLobby.connectedPlayers.contains(userID)) {
+		if(!gameLobby.connectedPlayers.containsKey(userID)) {
 			res.setStatus(Status.Forbidden_403);
 			res.setBody(String.format("You're not in game %s", gameCode), Response.BodyType.Text);
 			return true;

@@ -176,7 +176,6 @@ public class GameServer {
 		
 		res.setStatus(Status.OK_200);
 		res.setBody(gameLobby.game.serialize(), Response.BodyType.Text);
-		gameLobby.game.getBlueBase().setGold((int) Math.floor(Math.random() * 100000));
 		return true;
 	}
 	

@@ -1,14 +1,18 @@
 package Game.GUIForms;
 
+import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
+import Game.Units.Unit;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
-public class CreateNewUnitGUI extends JFrame {
+public class CreateNewUnitGUI {
 	
 	//GUI components
 	private JPanel mainPanel;
@@ -48,7 +52,6 @@ public class CreateNewUnitGUI extends JFrame {
 	
 	private boolean canBuyUnit = false;
 	
-	
 	private void createUIComponents() throws IOException {
 		swordsmanImage = new JImage("sword2.png");
 		archerImage = new JImage("bow1.png");
@@ -56,7 +59,7 @@ public class CreateNewUnitGUI extends JFrame {
 	}
 	
 	//Constructor
-	public CreateNewUnitGUI(JDialog parentDialog) {
+	public CreateNewUnitGUI(JDialog parentDialog, Base localBase) {
 		JDialog gameWindow = new JDialog(parentDialog);
 		
 		gameWindow.setContentPane(mainPanel);
@@ -65,71 +68,69 @@ public class CreateNewUnitGUI extends JFrame {
 		gameWindow.setSize(800, 600);
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
-		gameWindow.setVisible(true);
 
 //		//Default units created to be abstract
-//		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, base.getTeamNumber());
-//		Unit archer = new Unit(20, 10, 3, "Archer", 30, 1, base.getTeamNumber());
-//		Unit knight = new Unit(70, 30, 1, "Knight", 40, 1, base.getTeamNumber());
-//
-		setContentPane(mainPanel);
+		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, localBase.getTeamNumber());
+		Unit archer = new Unit(20, 10, 3, "Archer", 30, 1, localBase.getTeamNumber());
+		Unit knight = new Unit(70, 30, 1, "Knight", 40, 1, localBase.getTeamNumber());
 		
 		//Cancel Button
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				dispose();
+				gameWindow.dispose();
 			}
 		});
 		
 		//Swordsman image "button"
-//		swordsmanImage.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				super.mouseClicked(e);
-//				if(base.getGold() >= swordsman.getCost()) {
-//					archerImagePanel.setBackground(null);
-//					knightImagePanel.setBackground(null);
-//					swordsmanImagePanel.setBackground(Color.YELLOW);
-//				}
-//				else {
-//					JOptionPane.showMessageDialog(null, "Not enough gold!");
-//				}
-//			}
-//		});
-//
-//		//Archer image "button"
-//		archerImage.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				super.mouseClicked(e);
-//				if(base.getGold() >= archer.getCost()) {
-//					swordsmanImagePanel.setBackground(null);
-//					knightImagePanel.setBackground(null);
-//					archerImagePanel.setBackground(Color.YELLOW);
-//				}
-//				else {
-//					JOptionPane.showMessageDialog(null, "Not enough gold!");
-//				}
-//			}
-//		});
-//
-//		//Knight image "button"
-//		knightImage.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				super.mouseClicked(e);
-//				if(base.getGold() >= knight.getCost()) {
-//					archerImagePanel.setBackground(null);
-//					swordsmanImagePanel.setBackground(null);
-//					knightImagePanel.setBackground(Color.YELLOW);
-//				}
-//				else {
-//					JOptionPane.showMessageDialog(null, "Not enough gold!");
-//				}
-//			}
-//		});
+		swordsmanImage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if(localBase.getGold() >= swordsman.getCost()) {
+					archerImagePanel.setBackground(null);
+					knightImagePanel.setBackground(null);
+					swordsmanImagePanel.setBackground(Color.YELLOW);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Not enough gold!");
+				}
+			}
+		});
 		
+		//Archer image "button"
+		archerImage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if(localBase.getGold() >= archer.getCost()) {
+					swordsmanImagePanel.setBackground(null);
+					knightImagePanel.setBackground(null);
+					archerImagePanel.setBackground(Color.YELLOW);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Not enough gold!");
+				}
+			}
+		});
+		
+		//Knight image "button"
+		knightImage.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				super.mouseClicked(e);
+				if(localBase.getGold() >= knight.getCost()) {
+					archerImagePanel.setBackground(null);
+					swordsmanImagePanel.setBackground(null);
+					knightImagePanel.setBackground(Color.YELLOW);
+				}
+				else {
+					JOptionPane.showMessageDialog(null, "Not enough gold!");
+				}
+			}
+		});
+		
+		gameWindow.setVisible(true);
 		
 	}
 	

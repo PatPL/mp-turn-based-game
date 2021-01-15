@@ -144,7 +144,7 @@ public class GameGUI {
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CreateNewUnitGUI(parentDialog);
+				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
 			}
 		});
 		

@@ -38,6 +38,19 @@ public class Game implements ITextSerializable {
 		return isRedTurn;
 	}
 	
+	public boolean isLocalPlayerTurn() {
+		return isRedTurn == isPlayerRed;
+	}
+	
+	public Base getLocalBase() {
+		if(isPlayerRed) {
+			return redBase;
+		}
+		else {
+			return blueBase;
+		}
+	}
+	
 	private boolean isGameOver;
 	
 	

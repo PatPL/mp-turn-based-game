@@ -8,11 +8,13 @@ import Webserver.Utility;
 public class Base implements ITextSerializable {
 	
 	private int health;
-	private int teamNumber;                         // 1 - red team ; 2 - blue team
-	private int gold;                               // current gold
+	private int teamNumber;
+	private int gold;
 	private static final UnitGenerator unitGenerator = new UnitGenerator();
 	private int goldIncome;
 	private int powerBar;
+	private float attackModifier;
+	private float healthModifier;
 	
 	//Getters
 	public int getHealth() {
@@ -34,7 +36,16 @@ public class Base implements ITextSerializable {
 	public int getPowerBarValue() {
 		return powerBar;
 	}
-	
+
+	public float getAttackModifier() {
+		return attackModifier;
+	}
+
+	public float getHealthModifier() {
+		return healthModifier;
+	}
+
+
 	//Setters
 	public void setHealth(int health) {
 		this.health = health;
@@ -51,11 +62,20 @@ public class Base implements ITextSerializable {
 	public void setPowerBar(int powerBar) {
 		this.powerBar = powerBar;
 	}
-	
+
+	public void setAttackModifier(float newAttackModifier) {
+		attackModifier = newAttackModifier;
+	}
+
+	public void setHealthModifier(float newHealthModifier) {
+		healthModifier = newHealthModifier;
+	}
+
+
+	//Constructor
 	public Base() {
 	}
-	
-	//Constructor
+
 	public Base(int health, int teamNumber) {
 		this.health = health;
 		this.teamNumber = teamNumber;

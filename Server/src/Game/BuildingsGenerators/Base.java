@@ -8,11 +8,15 @@ import Webserver.Utility;
 public class Base implements ITextSerializable {
 	
 	private int health;
-	private int teamNumber;                         // 1 - red team ; 2 - blue team
-	private int gold;                               // current gold
+	private int teamNumber;
+	private int gold;
 	private static final UnitGenerator unitGenerator = new UnitGenerator();
 	private int goldIncome;
 	private int powerBar;
+	private double attackModifier;
+	private double healthModifier;
+	private int attackUpgradeCost;
+	private int healthUpgradeCost;
 	
 	//Getters
 	public int getHealth() {
@@ -34,7 +38,23 @@ public class Base implements ITextSerializable {
 	public int getPowerBarValue() {
 		return powerBar;
 	}
-	
+
+	public double getAttackModifier() {
+		return attackModifier;
+	}
+
+	public double getHealthModifier() {
+		return healthModifier;
+	}
+
+	public int getAttackUpgradeCost() {
+		return attackUpgradeCost;
+	}
+
+	public int getHealthUpgradeCost() {
+		return healthUpgradeCost;
+	}
+
 	//Setters
 	public void setHealth(int health) {
 		this.health = health;
@@ -51,17 +71,37 @@ public class Base implements ITextSerializable {
 	public void setPowerBar(int powerBar) {
 		this.powerBar = powerBar;
 	}
-	
+
+	public void setAttackModifier(double newAttackModifier) {
+		attackModifier = newAttackModifier;
+	}
+
+	public void setHealthModifier(double newHealthModifier) {
+		healthModifier = newHealthModifier;
+	}
+
+	public void setAttackUpgradeCost(int attackUpgradeCost) {
+		this.attackUpgradeCost = attackUpgradeCost;
+	}
+
+	public void setHealthUpgradeCost(int healthUpgradeCost) {
+		this.healthUpgradeCost = healthUpgradeCost;
+	}
+
+	//Constructor
 	public Base() {
 	}
-	
-	//Constructor
+
 	public Base(int health, int teamNumber) {
 		this.health = health;
 		this.teamNumber = teamNumber;
 		gold = 100;
 		goldIncome = 10;
 		powerBar = 30;
+		attackModifier = 1.0;
+		healthModifier = 1.0;
+		healthUpgradeCost = 40;
+		attackUpgradeCost = 40;
 	}
 	
 	public String fromTeamNumberToTeamColor() {
@@ -91,6 +131,14 @@ public class Base implements ITextSerializable {
 		output.append(";");
 		output.append(powerBar);
 		output.append(";");
+		output.append(attackModifier);
+		output.append(";");
+		output.append(healthModifier);
+		output.append(";");
+		output.append(attackUpgradeCost);
+		output.append(";");
+		output.append(healthUpgradeCost);
+		output.append(";");
 		
 		return output.toString();
 	}
@@ -119,6 +167,22 @@ public class Base implements ITextSerializable {
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;
 		this.powerBar = Integer.parseInt(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.attackModifier = Double.parseDouble(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.healthModifier = Double.parseDouble(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.attackUpgradeCost = Integer.parseInt(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.healthUpgradeCost = Integer.parseInt(tmp);
 		
 		return addedOffset;
 	}

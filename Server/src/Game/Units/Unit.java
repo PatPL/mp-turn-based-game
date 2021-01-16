@@ -21,7 +21,7 @@ public class Unit implements ITextSerializable {
 		return health;
 	}
 	
-	private int getDamage() {
+	public int getDamage() {
 		return damage;
 	}
 	

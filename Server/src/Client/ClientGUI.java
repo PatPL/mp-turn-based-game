@@ -139,14 +139,7 @@ public class ClientGUI {
 		nicknameInput.setText(userPrefs.get(KeyEnum.nickname.key, null));
 		
 		setupListeners();
-		
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				// Do zrobienia: Zatrzymaj ten timer kiedy okno główne znika
-				refreshGameList();
-			}
-		}, 500, 5000);
+		startRefreshInterval();
 	}
 	
 	public static void main(String[] args) {
@@ -233,6 +226,7 @@ public class ClientGUI {
 			
 			// W tym miejscu serwer dołączył do odpowiedniej gry
 			parentFrame.setVisible(false);
+			stopRefreshInterval();
 			
 			JDialog gameWindow = new JDialog(parentFrame);
 			GameGUI gameGUI = new GameGUI(gameCode, gameWindow, isPlayerRed);
@@ -245,6 +239,7 @@ public class ClientGUI {
 			gameWindow.setVisible(true);
 			
 			parentFrame.setVisible(true);
+			startRefreshInterval();
 		});
 	}
 	
@@ -310,6 +305,32 @@ public class ClientGUI {
 				handler.onChange(element.getText());
 			}
 		});
+	}
+	
+	// First function call after this many [ms]
+	private long intervalStartDelay = 500;
+	// Next function call after this many [ms]
+	private long intervalDelay = 5000;
+	private Timer refreshInterval = null;
+	
+	public void stopRefreshInterval() {
+		if(refreshInterval != null) {
+			refreshInterval.cancel();
+			refreshInterval = null;
+		}
+	}
+	
+	private void startRefreshInterval() {
+		if(refreshInterval == null) {
+			refreshInterval = new Timer();
+			refreshInterval.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					// Do zrobienia: Zatrzymaj ten timer kiedy okno główne znika
+					refreshGameList();
+				}
+			}, intervalStartDelay, intervalDelay);
+		}
 	}
 	
 }

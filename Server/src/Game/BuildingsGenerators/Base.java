@@ -131,6 +131,14 @@ public class Base implements ITextSerializable {
 		output.append(";");
 		output.append(powerBar);
 		output.append(";");
+		output.append(attackModifier);
+		output.append(";");
+		output.append(healthModifier);
+		output.append(";");
+		output.append(attackUpgradeCost);
+		output.append(";");
+		output.append(healthUpgradeCost);
+		output.append(";");
 		
 		return output.toString();
 	}
@@ -159,6 +167,22 @@ public class Base implements ITextSerializable {
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;
 		this.powerBar = Integer.parseInt(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.attackModifier = Double.parseDouble(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.healthModifier = Double.parseDouble(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.attackUpgradeCost = Integer.parseInt(tmp);
+
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.healthUpgradeCost = Integer.parseInt(tmp);
 		
 		return addedOffset;
 	}

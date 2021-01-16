@@ -116,12 +116,19 @@ public class GameGUI {
 	}
 	
 	//Constructor
-	public GameGUI(String gameCode, JDialog parentDialog, boolean isPlayerRed) {
+	public GameGUI(String gameCode, boolean isPlayerRed) {
+		JDialog gameWindow = new JDialog((Dialog) null);
+		parentDialog = gameWindow;
+		gameWindow.setContentPane(mainPanel);
+		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		gameWindow.setSize(800, 600);
+		gameWindow.setLocationRelativeTo(null);
+		
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
 		this.game = new Game(0, 0, isPlayerRed);
 		gameMapPanel.setGame(this.game);
-		this.parentDialog = parentDialog;
 		
 		// Initializing power bars
 		
@@ -170,6 +177,8 @@ public class GameGUI {
 		
 		// Always force start the fist update interval to fetch the correct initial game state
 		startUpdateInterval();
+		
+		gameWindow.setVisible(true);
 	}
 	
 	// First function call after this many [ms]

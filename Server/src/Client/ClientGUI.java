@@ -10,7 +10,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.ArrayList;
@@ -230,15 +229,7 @@ public class ClientGUI {
 			
 			// A dialog with no parent shows on windows taskbar
 			// As the parent windows hides itself anyway, it doesn't affect anything, and still works as expected
-			JDialog gameWindow = new JDialog((Dialog) null);
-			GameGUI gameGUI = new GameGUI(gameCode, gameWindow, isPlayerRed);
-			gameWindow.setContentPane(gameGUI.getMainPanel());
-			gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
-			gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-			gameWindow.setSize(800, 600);
-			gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
-			gameWindow.setLocationRelativeTo(panel1);
-			gameWindow.setVisible(true);
+			new GameGUI(gameCode, isPlayerRed);
 			
 			parentFrame.setVisible(true);
 			startRefreshInterval();

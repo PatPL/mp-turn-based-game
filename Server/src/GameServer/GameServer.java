@@ -106,8 +106,6 @@ public class GameServer {
 			gameListString.append(";");
 			gameListString.append(i.getValue().connectedPlayers.size());
 			gameListString.append("\r\n");
-			
-			System.out.printf("%s: %s\n", i.getValue().ID, i.getValue().connectedPlayers.size());
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);
 		

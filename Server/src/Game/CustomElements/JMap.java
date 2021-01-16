@@ -16,11 +16,11 @@ public class JMap extends JPanel {
 	private static final int unitMargin = 8;
 	private static final double baseWidth = 0.1;
 	private static final boolean DRAW_DEBUG_SQUARES = false;
-	private static final Color redBaseFieldColor = Color.decode ("#FF4444");
-	private static final Color blueBaseFieldColor = Color.decode ("#6666FF");
-	private static final Color regularFieldColor = Color.decode ("#668866");
+	private static final Color redBaseFieldColor = Color.decode("#FF4444");
+	private static final Color blueBaseFieldColor = Color.decode("#6666FF");
+	private static final Color regularFieldColor = Color.decode("#668866");
 	private static final int fieldBorderWidth = 2;
-	private static final Color fieldBorderColor = Color.decode ("#444444");
+	private static final Color fieldBorderColor = Color.decode("#444444");
 	
 	public JMap() throws IOException {
 		this.setOpaque(false);
@@ -66,7 +66,7 @@ public class JMap extends JPanel {
 		int baseImageSize = (int) Math.round(mapWidth() * baseWidth);
 		
 		// Debug
-		if (DRAW_DEBUG_SQUARES) {
+		if(DRAW_DEBUG_SQUARES) {
 			g.setColor(Color.red);
 			g.drawRect(0, 0, this.getWidth(), this.getHeight());
 			g.setColor(Color.magenta);
@@ -143,7 +143,7 @@ public class JMap extends JPanel {
 		for(int i = 0; i < fieldLength; ++i) {
 			for(int j = 0; j < fieldHeight; ++j) {
 				// Debug
-				if (DRAW_DEBUG_SQUARES) {
+				if(DRAW_DEBUG_SQUARES) {
 					g.setColor(Color.black);
 					g.drawRect(
 						unitStartPosX.convert(i) - unitMargin - unitWidthFreefloat,
@@ -170,11 +170,13 @@ public class JMap extends JPanel {
 					unitFieldSize
 				);
 				
-				if (i == 0) {
+				if(i == 0) {
 					g.setColor(redBaseFieldColor);
-				} else if (i == fieldLength - 1) {
+				}
+				else if(i == fieldLength - 1) {
 					g.setColor(blueBaseFieldColor);
-				} else {
+				}
+				else {
 					g.setColor(regularFieldColor);
 				}
 				g.fillRect(

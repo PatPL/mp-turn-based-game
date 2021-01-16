@@ -12,6 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
+import static javax.swing.WindowConstants.DISPOSE_ON_CLOSE;
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 public class CreateNewUnitGUI {
 	
 	//GUI components
@@ -69,7 +72,7 @@ public class CreateNewUnitGUI {
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 
-//		//Default units created to be abstract
+//		//Default units created set to be abstract
 		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, localBase.getTeamNumber());
 		Unit archer = new Unit(20, 10, 3, "Archer", 30, 1, localBase.getTeamNumber());
 		Unit knight = new Unit(70, 30, 1, "Knight", 40, 1, localBase.getTeamNumber());
@@ -91,6 +94,7 @@ public class CreateNewUnitGUI {
 					archerImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(Color.YELLOW);
+					createUnitButton.setEnabled(true);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -107,6 +111,7 @@ public class CreateNewUnitGUI {
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					archerImagePanel.setBackground(Color.YELLOW);
+					createUnitButton.setEnabled(true);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -123,6 +128,7 @@ public class CreateNewUnitGUI {
 					archerImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(Color.YELLOW);
+					createUnitButton.setEnabled(true);
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -131,7 +137,22 @@ public class CreateNewUnitGUI {
 		});
 		
 		gameWindow.setVisible(true);
-		
+
+		//Create unit button
+		createUnitButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				gameWindow.dispose();
+			}
+		});
+	}
+
+	//For testing
+	public static void main(String[] args) {
+		JDialog dialog = new JDialog();
+		Base base = new Base(100,1);
+		base.setGold(20);
+		new CreateNewUnitGUI(dialog, base);
 	}
 	
 }

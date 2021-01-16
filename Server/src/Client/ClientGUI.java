@@ -228,7 +228,9 @@ public class ClientGUI {
 			parentFrame.setVisible(false);
 			stopRefreshInterval();
 			
-			JDialog gameWindow = new JDialog(parentFrame);
+			// A dialog with no parent shows on windows taskbar
+			// As the parent windows hides itself anyway, it doesn't affect anything, and still works as expected
+			JDialog gameWindow = new JDialog((Dialog) null);
 			GameGUI gameGUI = new GameGUI(gameCode, gameWindow, isPlayerRed);
 			gameWindow.setContentPane(gameGUI.getMainPanel());
 			gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);

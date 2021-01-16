@@ -73,10 +73,25 @@ public class CreateNewUnitGUI {
 		gameWindow.setLocationRelativeTo(mainPanel);
 
 //		//Default units created set to be abstract
-		Unit swordsman = new Unit(50, 20, 1, "Swordsman", 20, 1, localBase.getTeamNumber());
-		Unit archer = new Unit(20, 10, 3, "Archer", 30, 1, localBase.getTeamNumber());
-		Unit knight = new Unit(70, 30, 1, "Knight", 40, 1, localBase.getTeamNumber());
-		
+		Unit swordsman = new Unit((50 * (int)(localBase.getHealthModifier() * 10)) / 10, 20,
+				1, "Swordsman", 20, 1, localBase.getTeamNumber());
+		Unit archer = new Unit((20 * (int)(localBase.getHealthModifier() * 10)) / 10, 10,
+				3, "Archer", 30, 1, localBase.getTeamNumber());
+		Unit knight = new Unit((70 * (int)(localBase.getHealthModifier() * 10)) / 10, 30,
+				1, "Knight", 40, 1, localBase.getTeamNumber());
+
+
+		//Setting text
+		swordsmanHealthLabel.setText(String.format("Health: %s", swordsman.getHealth()));
+		swordsmanDamageLabel.setText(String.format("Damage: %s", swordsman.getDamage()));
+
+		archerHealthLabel.setText(String.format("Health: %s", archer.getHealth()));
+		archerDamageLabel.setText(String.format("Damage: %s", archer.getDamage()));
+
+		knightHealthLabel.setText(String.format("Health: %s", knight.getHealth()));
+		knightDamageLabel.setText(String.format("Damage: %s", knight.getDamage()));
+
+
 		//Cancel Button
 		cancelButton.addActionListener(new ActionListener() {
 			@Override

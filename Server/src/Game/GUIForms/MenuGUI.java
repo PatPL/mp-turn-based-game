@@ -1,6 +1,7 @@
 package Game.GUIForms;
 
 import Game.BuildingsGenerators.Base;
+import Game.interfaces.IAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,7 +41,7 @@ public class MenuGUI {
 	}
 	
 	
-	public MenuGUI(JDialog parentDialog, Base localBase) {
+	public MenuGUI(JDialog parentDialog, Base localBase, IAction onUpdate) {
 		
 		JDialog menuWindow = new JDialog(parentDialog);
 		
@@ -94,6 +95,7 @@ public class MenuGUI {
 						localBase.getGoldIncome()));
 					currentGoldLabel.setText(String.format("Current Gold: %s", localBase.getGold()));
 					costLabel.setText(String.format("Cost: %s gold", localBase.getGoldIncome() * 25 / 10));
+					onUpdate.invoke();
 				}
 				else {
 					errorMessage();
@@ -118,7 +120,7 @@ public class MenuGUI {
 					//Refreshes text after upgrading
 					costAttackLabel.setText(String.format("Cost: %s gold", localBase.getAttackUpgradeCost()));
 					currentAttackLabel.setText(String.format("Current Attack Modifier: %sx", localBase.getAttackModifier()));
-					
+					onUpdate.invoke();
 				}
 				else {
 					errorMessage();
@@ -143,7 +145,7 @@ public class MenuGUI {
 					//Refreshes text after upgrading
 					costHealthLabel.setText(String.format("Cost: %s gold", localBase.getHealthUpgradeCost()));
 					currentHealthLabel.setText(String.format("Current Health Modifier: %sx", localBase.getHealthModifier()));
-					
+					onUpdate.invoke();
 				}
 				else {
 					errorMessage();
@@ -157,6 +159,6 @@ public class MenuGUI {
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
 		Base base = new Base(100, 1);
-		new MenuGUI(dialog, base);
+		new MenuGUI(dialog, base, () -> {});
 	}
 }

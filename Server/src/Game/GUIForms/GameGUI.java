@@ -160,7 +160,7 @@ public class GameGUI {
 		menuButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new MenuGUI(parentDialog, game.getLocalBase());
+				new MenuGUI(parentDialog, game.getLocalBase(), () -> refresh());
 			}
 		});
 		

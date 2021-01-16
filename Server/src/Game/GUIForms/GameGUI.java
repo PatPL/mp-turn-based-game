@@ -79,6 +79,10 @@ public class GameGUI {
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
 		
+		menuButton.setEnabled((game.isLocalPlayerTurn()));
+		createUnitButton.setEnabled(game.isLocalPlayerTurn());
+		endTurnButton.setEnabled(game.isLocalPlayerTurn());
+		
 		gameMapPanel.repaint();
 		
 	}

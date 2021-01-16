@@ -79,6 +79,9 @@ public class GameGUI {
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
 		
+		if (!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
+			// This players turn begins now
+		}
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
 		createUnitButton.setEnabled(game.isLocalPlayerTurn());
 		endTurnButton.setEnabled(game.isLocalPlayerTurn());

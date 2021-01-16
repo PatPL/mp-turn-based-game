@@ -17,7 +17,7 @@ public class GameGUI {
 	
 	//GUI attributes
 	private JPanel mainPanel;
-	private JButton availableUpgradesButton;
+	private JButton menuButton;
 	private JButton endTurnButton;
 	private JPanel bottomPanel;
 	private JButton createUnitButton;
@@ -147,6 +147,13 @@ public class GameGUI {
 				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
 			}
 		});
-		
+
+		//Menu button
+		menuButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				new MenuGUI(parentDialog, game.getLocalBase());
+			}
+		});
 	}
 }

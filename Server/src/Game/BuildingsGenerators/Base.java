@@ -13,8 +13,8 @@ public class Base implements ITextSerializable {
 	private static final UnitGenerator unitGenerator = new UnitGenerator();
 	private int goldIncome;
 	private int powerBar;
-	private float attackModifier;
-	private float healthModifier;
+	private double attackModifier;
+	private double healthModifier;
 	
 	//Getters
 	public int getHealth() {
@@ -37,11 +37,11 @@ public class Base implements ITextSerializable {
 		return powerBar;
 	}
 
-	public float getAttackModifier() {
+	public double getAttackModifier() {
 		return attackModifier;
 	}
 
-	public float getHealthModifier() {
+	public double getHealthModifier() {
 		return healthModifier;
 	}
 
@@ -63,11 +63,11 @@ public class Base implements ITextSerializable {
 		this.powerBar = powerBar;
 	}
 
-	public void setAttackModifier(float newAttackModifier) {
+	public void setAttackModifier(double newAttackModifier) {
 		attackModifier = newAttackModifier;
 	}
 
-	public void setHealthModifier(float newHealthModifier) {
+	public void setHealthModifier(double newHealthModifier) {
 		healthModifier = newHealthModifier;
 	}
 
@@ -82,6 +82,8 @@ public class Base implements ITextSerializable {
 		gold = 100;
 		goldIncome = 10;
 		powerBar = 30;
+		attackModifier = 1.0;
+		healthModifier = 1.0;
 	}
 	
 	public String fromTeamNumberToTeamColor() {

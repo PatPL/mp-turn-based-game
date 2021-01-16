@@ -15,6 +15,8 @@ public class Base implements ITextSerializable {
 	private int powerBar;
 	private double attackModifier;
 	private double healthModifier;
+	private int attackUpgradeCost;
+	private int healthUpgradeCost;
 	
 	//Getters
 	public int getHealth() {
@@ -45,6 +47,13 @@ public class Base implements ITextSerializable {
 		return healthModifier;
 	}
 
+	public int getAttackUpgradeCost() {
+		return attackUpgradeCost;
+	}
+
+	public int getHealthUpgradeCost() {
+		return healthUpgradeCost;
+	}
 
 	//Setters
 	public void setHealth(int health) {
@@ -71,6 +80,13 @@ public class Base implements ITextSerializable {
 		healthModifier = newHealthModifier;
 	}
 
+	public void setAttackUpgradeCost(int attackUpgradeCost) {
+		this.attackUpgradeCost = attackUpgradeCost;
+	}
+
+	public void setHealthUpgradeCost(int healthUpgradeCost) {
+		this.healthUpgradeCost = healthUpgradeCost;
+	}
 
 	//Constructor
 	public Base() {
@@ -84,6 +100,8 @@ public class Base implements ITextSerializable {
 		powerBar = 30;
 		attackModifier = 1.0;
 		healthModifier = 1.0;
+		healthUpgradeCost = 40;
+		attackUpgradeCost = 40;
 	}
 	
 	public String fromTeamNumberToTeamColor() {

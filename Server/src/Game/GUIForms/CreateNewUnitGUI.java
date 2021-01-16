@@ -135,8 +135,6 @@ public class CreateNewUnitGUI {
 				}
 			}
 		});
-		
-		gameWindow.setVisible(true);
 
 		//Create unit button
 		createUnitButton.addActionListener(new ActionListener() {
@@ -145,6 +143,8 @@ public class CreateNewUnitGUI {
 				gameWindow.dispose();
 			}
 		});
+
+		gameWindow.setVisible(true);
 	}
 
 	//For testing

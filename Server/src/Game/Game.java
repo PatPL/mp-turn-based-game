@@ -22,6 +22,14 @@ public class Game implements ITextSerializable {
 	
 	private Unit[][] unitMap;
 	
+	public Unit getUnit(int x, int y) {
+		if(x < 0 || x >= columns || y < 0 || y >= rows) {
+			return null;
+		}
+		
+		return unitMap[y][x];
+	}
+	
 	private final int defaultBaseHealth = 200;
 	
 	private Base redBase;

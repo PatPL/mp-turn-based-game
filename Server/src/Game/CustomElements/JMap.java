@@ -170,6 +170,7 @@ public class JMap extends JPanel {
 					unitFieldSize
 				);
 				
+				// Field background
 				if(i == 0) {
 					g.setColor(redBaseFieldColor);
 				}
@@ -185,6 +186,18 @@ public class JMap extends JPanel {
 					unitFieldSize - fieldBorderWidth * 2,
 					unitFieldSize - fieldBorderWidth * 2
 				);
+				
+				// Units
+				if(game.getUnit(i, j) != null) {
+					g.drawImage(
+						game.getUnit(i, j).getImage(),
+						unitStartPosX.convert(i) + fieldBorderWidth,
+						unitStartPosY.convert(j) + fieldBorderWidth,
+						unitFieldSize - fieldBorderWidth * 2,
+						unitFieldSize - fieldBorderWidth * 2,
+						this
+					);
+				}
 			}
 		}
 		

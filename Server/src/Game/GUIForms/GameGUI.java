@@ -79,7 +79,7 @@ public class GameGUI {
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
 		
-		if (!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
+		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
 			// This players turn begins now
 		}
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
@@ -116,6 +116,24 @@ public class GameGUI {
 			refreshUpdateInterval();
 			refresh();
 		});
+	}
+	
+	// For testing
+	private GameGUI(Game gameState) {
+		JDialog gameWindow = new JDialog((Dialog) null);
+		parentDialog = gameWindow;
+		gameWindow.setContentPane(mainPanel);
+		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
+		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		gameWindow.setSize(800, 600);
+		gameWindow.setLocationRelativeTo(null);
+		
+		this.isRedPlayer = true;
+		this.gameCode = "-";
+		this.game = gameState;
+		gameMapPanel.setGame(gameState);
+		
+		gameWindow.setVisible(true);
 	}
 	
 	//Constructor
@@ -220,11 +238,13 @@ public class GameGUI {
 	}
 	
 	public static void main(String[] args) {
-		GameGUI a = new GameGUI("-", true);
-		a.game.deserialize("2;8;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0" +
-			";0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;0;0;0;-" +
-			";0;0;0;0;0;0;-;0;0;0;0;0;0;-;0;0;0;200;1;100;10;30;1.0;1.0;40;40;200;2;10;20;30;1.0;1.0;40;40;false;1610" +
-			"824547942;true;", 0);
+		Game a = new Game();
+		a.deserialize("2;8;0;0;0;1;0;0;1;0;0;0;2;0;0;1;0;0;0;1;0;0;2;0;0;0;3;0;0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" +
+			";0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0" +
+			";0;0;0;0;0;0;3;0;0;2;0;0;0;2;0;0;2;200;1;100;10;30;1.0;1.0;40;40;200;2;10;20;30;1.0;1.0;40;40;false;1610" +
+			"828116491;false;", 0);
+		
+		new GameGUI(a);
 	}
 	
 }

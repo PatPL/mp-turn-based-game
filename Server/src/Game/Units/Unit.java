@@ -4,6 +4,8 @@ import Game.BuildingsGenerators.Base;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
 
+import java.awt.*;
+
 public class Unit implements ITextSerializable {
 	
 	//Attributes
@@ -35,6 +37,15 @@ public class Unit implements ITextSerializable {
 	
 	public UnitType getType() {
 		return UnitType.values()[type];
+	}
+	
+	public Image getImage() {
+		if(team <= 1) {
+			return getType().redImage;
+		}
+		else {
+			return getType().blueImage;
+		}
 	}
 	
 	public int getCost() {

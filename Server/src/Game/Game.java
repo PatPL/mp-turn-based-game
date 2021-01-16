@@ -48,6 +48,10 @@ public class Game implements ITextSerializable {
 		return isRedTurn;
 	}
 	
+	public void setRedTurn(boolean isRedTurn) {
+		this.isRedTurn = isRedTurn;
+	}
+	
 	public boolean isLocalPlayerTurn() {
 		// Returns false for an uninitialized game (rows or cols == 0)
 		return (isRedTurn == isPlayerRed) && (rows * columns != 0);
@@ -64,6 +68,15 @@ public class Game implements ITextSerializable {
 	
 	private boolean isGameOver;
 	
+	private long serverWriteTimestamp = 0;
+	
+	public long getServerWriteTimestamp() {
+		return serverWriteTimestamp;
+	}
+	
+	public void setServerWriteTimestamp(long newTimestamp) {
+		serverWriteTimestamp = newTimestamp;
+	}
 	
 	//Constructor
 	public Game(int newRows, int newColumns, boolean isPlayerRed) {
@@ -173,6 +186,12 @@ public class Game implements ITextSerializable {
 		output.append(isGameOver);
 		output.append(";");
 		
+		output.append(serverWriteTimestamp);
+		output.append(";");
+		
+		output.append(isRedTurn);
+		output.append(";");
+		
 		return output.toString();
 	}
 	
@@ -204,6 +223,14 @@ public class Game implements ITextSerializable {
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;
 		this.isGameOver = Boolean.parseBoolean(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.serverWriteTimestamp = Long.parseLong(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.isRedTurn = Boolean.parseBoolean(tmp);
 		
 		return addedOffset;
 	}

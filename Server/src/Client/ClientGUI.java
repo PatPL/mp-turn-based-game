@@ -125,7 +125,7 @@ public class ClientGUI {
 		}
 		
 		//
-		boolean LOSOWE_ID_NA_OKNO_DLA_TESTOW = false;
+		boolean LOSOWE_ID_NA_OKNO_DLA_TESTOW = true;
 		if(LOSOWE_ID_NA_OKNO_DLA_TESTOW) {
 			HTTPClient.defaultHeaders.put(KeyEnum.userID.key, Utility.getRandomString(32));
 			HTTPClient.defaultHeaders.put(KeyEnum.nickname.key, userPrefs.get(KeyEnum.nickname.key, null));

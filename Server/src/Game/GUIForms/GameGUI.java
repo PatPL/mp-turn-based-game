@@ -91,9 +91,17 @@ public class GameGUI {
 				return;
 			}
 			
+			refreshUpdateInterval();
+			
+			Game tmp = new Game();
+			tmp.deserialize(res.getBody(), 0);
+			if(game.getServerWriteTimestamp() >= tmp.getServerWriteTimestamp()) {
+				// System.out.println("Warning: Same/older game state fetched. Ignoring...");
+				return;
+			}
+			
 			if(game.isLocalPlayerTurn()) {
 				System.out.println("Warning: Attempted to overwrite local player's game state during his turn");
-				refreshUpdateInterval();
 				return;
 			}
 			
@@ -117,12 +125,28 @@ public class GameGUI {
 		
 		
 		//End turn button
-//		endTurnButton.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				setEndTurn(true);
-//			}
-//		});
+		endTurnButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				game.setRedTurn(!isPlayerRed);
+				refreshUpdateInterval();
+				HTTPClient.send(
+					"/updateGameState",
+					String.format("%s;%s", gameCode, game.serialize()),
+					res -> {
+						if(res.getStatusType() != StatusType.Success_2xx) {
+							JOptionPane.showMessageDialog(
+								mainPanel,
+								String.format("Błąd końca tury: %s", res.getBody()),
+								"Error",
+								JOptionPane.ERROR_MESSAGE
+							);
+							return;
+						}
+					}
+				);
+			}
+		});
 		
 		//Create unit button
 		createUnitButton.addActionListener(new ActionListener() {

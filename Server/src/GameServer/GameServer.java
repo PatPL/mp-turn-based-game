@@ -3,6 +3,7 @@ package GameServer;
 import Client.KeyEnum;
 import Webserver.Request;
 import Webserver.Response;
+import Webserver.Utility;
 import Webserver.WebServer;
 import Webserver.enums.Status;
 
@@ -105,8 +106,6 @@ public class GameServer {
 			gameListString.append(";");
 			gameListString.append(i.getValue().connectedPlayers.size());
 			gameListString.append("\r\n");
-			
-			System.out.printf("%s: %s\n", i.getValue().ID, i.getValue().connectedPlayers.size());
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);
 		
@@ -179,6 +178,56 @@ public class GameServer {
 		return true;
 	}
 	
+	public boolean updateGameStateHandler(Request req, Response res) {
+		if(!authorize(req)) {
+			res.setStatus(Status.Unauthorized_401);
+			res.setBody("No userID provided", Response.BodyType.Text);
+			return true;
+		}
+		
+		String userID = req.headers.get(KeyEnum.userID.key);
+		String gameCode = Utility.readUntil(req.body, ";", 0);
+		GameLobby gameLobby = gameList.getOrDefault(gameCode, null);
+		
+		if(gameLobby == null) {
+			res.setStatus(Status.NotFound_404);
+			res.setBody(String.format("Game with code %s doesn't exist", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		if(!gameLobby.connectedPlayers.containsKey(userID)) {
+			res.setStatus(Status.Forbidden_403);
+			res.setBody(String.format("You're not in game %s", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		boolean isRequestorRed = gameLobby.connectedPlayers.get(userID);
+		boolean isCurrentMoveRed = gameLobby.game.isRedTurn();
+		long previousWriteTimestamp = gameLobby.game.getServerWriteTimestamp();
+		
+		if(isCurrentMoveRed != isRequestorRed) {
+			// Player attempted to send game state update, while it's not his turn
+			res.setStatus(Status.Forbidden_403);
+			res.setBody(String.format("You can't send game update to %s, as it's not your turn", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
+		res.setStatus(Status.OK_200);
+		gameLobby.game.deserialize(req.body.substring(gameCode.length() + 1), 0);
+		if(gameLobby.game.isRedTurn() == isCurrentMoveRed) {
+			System.out.println("Player didn't change whose turn it is. Client side error?");
+			gameLobby.game.setRedTurn(!isCurrentMoveRed);
+		}
+		
+		if(gameLobby.game.getServerWriteTimestamp() != previousWriteTimestamp) {
+			System.out.println("serverWriteTimestamp mismatched. Client side error?");
+		}
+		
+		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
+		
+		return true;
+	}
+	
 	private WebServer buildServerObject(int port) throws IOException {
 		WebServer output = new WebServer(port);
 		
@@ -186,6 +235,7 @@ public class GameServer {
 		output.addHandler("/gameList", this::gameListHandler);
 		output.addHandler("/joinGame", this::joinGameHandler);
 		output.addHandler("/fetchGameState", this::fetchGameStateHandler);
+		output.addHandler("/updateGameState", this::updateGameStateHandler);
 		
 		return output;
 	}

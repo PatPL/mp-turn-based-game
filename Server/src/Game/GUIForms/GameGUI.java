@@ -2,6 +2,7 @@ package Game.GUIForms;
 
 import Client.HTTPClient;
 import Game.CustomElements.JImage;
+import Game.CustomElements.JMap;
 import Game.Game;
 import Webserver.enums.StatusType;
 
@@ -38,6 +39,7 @@ public class GameGUI {
 	private JImage blueHealthImageLabel;
 	private JImage blueGoldIconLabel;
 	private JImage backgroundPanel;
+	private JMap gameMapPanel;
 	
 	private final String gameCode;
 	private final Game game;
@@ -51,6 +53,7 @@ public class GameGUI {
 		blueHealthImageLabel = new JImage("heart2.png");
 		blueGoldIconLabel = new JImage("money2.png");
 		backgroundPanel = new JImage("background.png", true);
+		gameMapPanel = new JMap();
 	}
 	
 	//Getters
@@ -75,6 +78,8 @@ public class GameGUI {
 		
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
+		
+		gameMapPanel.repaint();
 		
 	}
 	
@@ -117,6 +122,7 @@ public class GameGUI {
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
 		this.game = new Game(0, 0, isPlayerRed);
+		gameMapPanel.setGame(this.game);
 		this.parentDialog = parentDialog;
 		
 		// Initializing power bars

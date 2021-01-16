@@ -9,7 +9,17 @@ public class Game implements ITextSerializable {
 	
 	//Neccessary parameters
 	private int rows;
+	
+	public int getRows() {
+		return rows;
+	}
+	
 	private int columns;
+	
+	public int getColumns() {
+		return columns;
+	}
+	
 	private Unit[][] unitMap;
 	
 	private final int defaultBaseHealth = 200;

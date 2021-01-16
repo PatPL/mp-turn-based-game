@@ -91,31 +91,17 @@ public class GameGUI {
 				return;
 			}
 			
+			if(game.isLocalPlayerTurn()) {
+				System.out.println("Warning: Attempted to overwrite local player's game state during his turn");
+				refreshUpdateInterval();
+				return;
+			}
+			
 			game.deserialize(res.getBody(), 0);
+			refreshUpdateInterval();
 			refresh();
 		});
 	}
-
-//	//Returns base from a team number
-//	private Base whosTurnIs(int number) {
-//		if(number == 1) return redBase;
-//		return blueBase;
-//	}
-	
-	
-	//Run function to keep refreshing the values
-//	public void run() {
-//		while(true) {
-//			refresh();
-//			try {
-//				Thread.sleep(200);
-//			}
-//			catch(InterruptedException e) {
-//				return;
-//			}
-//		}
-//	}
-	
 	
 	//Constructor
 	public GameGUI(String gameCode, JDialog parentDialog, boolean isPlayerRed) {
@@ -138,14 +124,6 @@ public class GameGUI {
 //			}
 //		});
 		
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				// Do zrobienia: Zatrzymaj ten timer kiedy okno główne znika
-				update();
-			}
-		}, 500, 2000);
-		
 		//Create unit button
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
@@ -153,7 +131,7 @@ public class GameGUI {
 				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
 			}
 		});
-
+		
 		//Menu button
 		menuButton.addActionListener(new ActionListener() {
 			@Override
@@ -161,5 +139,44 @@ public class GameGUI {
 				new MenuGUI(parentDialog, game.getLocalBase());
 			}
 		});
+		
+		// Always force start the fist update interval to fetch the correct initial game state
+		startUpdateInterval();
 	}
+	
+	// First function call after this many [ms]
+	private long intervalStartDelay = 500;
+	// Next function call after this many [ms]
+	private long intervalDelay = 2000;
+	private Timer updateInterval = null;
+	
+	private void stopUpdateInterval() {
+		if(updateInterval != null) {
+			updateInterval.cancel();
+			updateInterval = null;
+		}
+	}
+	
+	private void startUpdateInterval() {
+		if(updateInterval == null) {
+			updateInterval = new Timer();
+			updateInterval.schedule(new TimerTask() {
+				@Override
+				public void run() {
+					update();
+				}
+			}, intervalStartDelay, intervalDelay);
+		}
+	}
+	
+	private void refreshUpdateInterval() {
+		if(game.isLocalPlayerTurn()) {
+			// Local player's turn. Don't ask for updates as there can be none
+			stopUpdateInterval();
+		}
+		else {
+			startUpdateInterval();
+		}
+	}
+	
 }

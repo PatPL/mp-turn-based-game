@@ -49,7 +49,8 @@ public class Game implements ITextSerializable {
 	}
 	
 	public boolean isLocalPlayerTurn() {
-		return isRedTurn == isPlayerRed;
+		// Returns false for an uninitialized game (rows or cols == 0)
+		return (isRedTurn == isPlayerRed) && (rows * columns != 0);
 	}
 	
 	public Base getLocalBase() {

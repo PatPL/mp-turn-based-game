@@ -3,6 +3,7 @@ package Game.GUIForms;
 import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
 import Game.Units.Unit;
+import Game.Units.UnitType;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,15 +69,10 @@ public class CreateNewUnitGUI {
 		gameWindow.setSize(800, 820);
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
-
-//		//Default units created set to be abstract
-		Unit swordsman = new Unit((50 * (int) (localBase.getHealthModifier() * 10)) / 10, 20,
-			1, "Swordsman", 20, 1, localBase.getTeamNumber());
-		Unit archer = new Unit((20 * (int) (localBase.getHealthModifier() * 10)) / 10, 10,
-			3, "Archer", 30, 1, localBase.getTeamNumber());
-		Unit knight = new Unit((70 * (int) (localBase.getHealthModifier() * 10)) / 10, 30,
-			1, "Knight", 40, 1, localBase.getTeamNumber());
 		
+		Unit swordsman = new Unit(UnitType.swordsman, localBase);
+		Unit archer = new Unit(UnitType.archer, localBase);
+		Unit knight = new Unit(UnitType.knight, localBase);
 		
 		//Setting text
 		swordsmanHealthLabel.setText(String.format("Health: %s", swordsman.getHealth()));

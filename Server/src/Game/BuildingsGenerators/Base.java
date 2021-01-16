@@ -2,6 +2,7 @@ package Game.BuildingsGenerators;
 
 
 import Game.Units.Unit;
+import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
 
@@ -10,7 +11,6 @@ public class Base implements ITextSerializable {
 	private int health;
 	private int teamNumber;
 	private int gold;
-	private static final UnitGenerator unitGenerator = new UnitGenerator();
 	private int goldIncome;
 	private int powerBar;
 	private double attackModifier;
@@ -114,7 +114,8 @@ public class Base implements ITextSerializable {
 	}
 	
 	public Unit createUnit(String choice) {
-		return unitGenerator.createUnit(choice, teamNumber);
+		return new Unit(UnitType.values()[Integer.parseInt(choice)], 1, 1, teamNumber);
+		// return unitGenerator.createUnit(choice, teamNumber);
 	}
 	
 	@Override

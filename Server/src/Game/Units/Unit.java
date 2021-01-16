@@ -10,7 +10,7 @@ public class Unit implements ITextSerializable {
 	private int health;
 	private int damage;
 	private int range;      //default 1 for melee units
-	private String name;    //archer, swordsman etc
+	private int type;       //archer, swordsman etc
 	private int cost;       //gold cost of a unit
 	private int speed;      //1 = 1 field per turn
 	private int team;       //1 - red ; 2 - blue
@@ -30,7 +30,11 @@ public class Unit implements ITextSerializable {
 	}
 	
 	public String getName() {
-		return name;
+		return getType().name;
+	}
+	
+	public UnitType getType() {
+		return UnitType.values()[type];
 	}
 	
 	public int getCost() {
@@ -59,10 +63,6 @@ public class Unit implements ITextSerializable {
 		this.range = range;
 	}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
@@ -84,19 +84,37 @@ public class Unit implements ITextSerializable {
 	
 	//Constructors
 	public Unit() {
-		team = 0;
-		name = "-";
+		this(UnitType.empty);
 	}
 	
+	public Unit(UnitType type) {
+		this(type, 1, 1, 0);
+	}
 	
-	public Unit(int health, int newDamage, int range, String name, int cost, int speed, int team) {
+	public Unit(UnitType type, Base base) {
+		this(
+			type,
+			base.getHealthModifier(),
+			base.getAttackModifier(),
+			base.getTeamNumber()
+		);
+	}
+	
+	public Unit(UnitType type, double healthMultiplier, double attackMultiplier, int teamNumber) {
+		this.deserialize(type.defaultUnit.serialize(), 0);
+		this.health *= healthMultiplier;
+		this.damage *= attackMultiplier;
+		this.team = teamNumber;
+	}
+	
+	public Unit(int health, int newDamage, int range, int type, int cost, int speed) {
 		this.health = health;
 		this.damage = newDamage;
 		this.range = range;
-		this.name = name;
+		this.type = type;
 		this.cost = cost;
 		this.speed = speed;
-		this.team = team;
+		this.team = 0;
 	}
 	
 	
@@ -133,7 +151,7 @@ public class Unit implements ITextSerializable {
 		output.append(";");
 		output.append(range);
 		output.append(";");
-		output.append(name);
+		output.append(type);
 		output.append(";");
 		output.append(cost);
 		output.append(";");
@@ -164,7 +182,7 @@ public class Unit implements ITextSerializable {
 		
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;
-		this.name = tmp;
+		this.type = Integer.parseInt(tmp);
 		
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;

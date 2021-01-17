@@ -175,6 +175,9 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
+				localBase.setPowerBar(0);
+				menuWindow.dispose();
+				PlaySound.playSound(Sounds.attackPower);
 			}
 		});
 		
@@ -183,6 +186,10 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
+				localBase.setPowerBar(0);
+				menuWindow.dispose();
+				PlaySound.playSound(Sounds.heartPower);
+				
 			}
 		});
 		

@@ -6,6 +6,7 @@ import Game.CustomElements.JMap;
 import Game.Game;
 import Webserver.enums.StatusType;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -40,7 +41,8 @@ public class GameGUI {
 	private JImage blueGoldIconLabel;
 	private JImage backgroundPanel;
 	private JMap gameMapPanel;
-	
+	private JImage textImage;
+
 	private final String gameCode;
 	private final Game game;
 	private final boolean isRedPlayer;
@@ -53,6 +55,7 @@ public class GameGUI {
 		blueHealthImageLabel = new JImage("heart2.png");
 		blueGoldIconLabel = new JImage("money2.png");
 		backgroundPanel = new JImage("background.png", true);
+		textImage = new JImage("null64.png");
 		gameMapPanel = new JMap();
 	}
 	
@@ -82,7 +85,7 @@ public class GameGUI {
 
 		//Message dialog when player's turn begins
 		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
-			JOptionPane.showMessageDialog(mainPanel, "Your turn starts now");
+			JOptionPane.showMessageDialog(mainPanel, "Your turn!");
 		}
 
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
@@ -152,6 +155,7 @@ public class GameGUI {
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
 		this.game = new Game(0, 0, isPlayerRed);
+		textImage.setImage(isPlayerRed ? "redText.png" : "blueText.png");
 		gameMapPanel.setGame(this.game);
 		
 		// Initializing power bars

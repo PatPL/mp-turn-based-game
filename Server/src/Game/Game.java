@@ -216,7 +216,7 @@ public class Game implements ITextSerializable {
 					probableTarget.getTeam() != attackingUnit.getTeam()
 			) {
 				// Valid unit target in range
-				if(probableTarget.getRange() >= i && probableTarget.getRange() == 1) {
+				if(probableTarget.getRange() >= i && probableTarget.getRange() == 1 && !isFieldInBase(x)) {
 					// Valid target has the attacker in range, and can attack the attacker
 					probableTarget.addHealth(-attackingUnit.getDamage());
 					attackingUnit.addHealth(-probableTarget.getDamage());

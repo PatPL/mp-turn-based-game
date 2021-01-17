@@ -29,7 +29,8 @@ public class Game implements ITextSerializable {
 		
 		return unitMap[y][x];
 	}
-	
+
+
 	private final int defaultBaseHealth = 200;
 	
 	private Base redBase;
@@ -59,7 +60,8 @@ public class Game implements ITextSerializable {
 	public void setRedTurn(boolean isRedTurn) {
 		this.isRedTurn = isRedTurn;
 	}
-	
+
+
 	public boolean isLocalPlayerTurn() {
 		// Returns false for an uninitialized game (rows or cols == 0)
 		return (isRedTurn == isPlayerRed) && (rows * columns != 0);
@@ -73,19 +75,19 @@ public class Game implements ITextSerializable {
 			return blueBase;
 		}
 	}
-	
+
+
 	private boolean isGameOver;
 	
 	private long serverWriteTimestamp = 0;
-	
 	public long getServerWriteTimestamp() {
 		return serverWriteTimestamp;
 	}
-	
 	public void setServerWriteTimestamp(long newTimestamp) {
 		serverWriteTimestamp = newTimestamp;
 	}
-	
+
+
 	//Constructor
 	public Game(int newRows, int newColumns, boolean isPlayerRed) {
 		this.rows = newRows;
@@ -102,8 +104,7 @@ public class Game implements ITextSerializable {
 		
 		this.redBase = new Base(defaultBaseHealth, 1);
 		this.blueBase = new Base(defaultBaseHealth, 2);
-		/* TEST */
-		this.blueBase.setGold(35);
+
 		this.isGameOver = false;
 		this.isRedTurn = true;
 	}
@@ -111,71 +112,8 @@ public class Game implements ITextSerializable {
 	public Game() {
 		this(8, 2, true);
 	}
-	
-	//Turn for one player
-	private void turn(int whosTurn) {
 
-//		//Pop up window for information
-//		JOptionPane.showMessageDialog(null, "Player " + whosTurn + " turn");
-//
-//		//Initializing game window
-//		JFrame frame = new JFrame("Game");
-//		GameGUI gameGUI = new GameGUI();
-//		frame.setContentPane(gameGUI.getMainPanel());
-//		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//		frame.pack();
-//		frame.setVisible(true);
-//		frame.setSize(800, 600);
-//		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//
-//		//Keeps the player turn until End Turn button is pressed
-//		while(!gameGUI.isEndTurn()) {
-//
-//			//Keeps refreshing current gold and other things
-//			gameGUI.refresh();
-//			try {
-//				Thread.sleep(100);
-//			}
-//			catch(InterruptedException e) {
-//				System.out.println("O, jakis blad.");
-//			}
-//		}
-//		frame.dispose();
-//
-//		if(blueBase.getHealth() <= 0) {
-//			JOptionPane.showMessageDialog(null, "Congratulations! Red team wins!");
-//		}
-//
-//		if(redBase.getHealth() <= 0) {
-//			JOptionPane.showMessageDialog(null, "Congratulations! Blue team wins!");
-//		}
-		
-	}
-	
-	
-	//Code execution
-	public static void main(String[] args) {
-		try {
-			Game obj = new Game(3, 10, true);
-			obj.run(args);
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void run(String[] args) throws Exception {
-		//Actual game
-		while(!isGameOver) {
-			
-			//Turn-based game, remember?
-			turn(1);
-			if(isGameOver) break;
-			turn(2);
-		}
-	}
-	
+
 	@Override
 	public String serialize() {
 		StringBuilder output = new StringBuilder();

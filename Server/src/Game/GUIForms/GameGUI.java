@@ -75,13 +75,16 @@ public class GameGUI {
 		//For current health
 		redCurrentHealthLabel.setText(game.getRedBase().getHealth() + "");
 		blueCurrentHealthLabel.setText(game.getBlueBase().getHealth() + "");
-		
+
+		//For power bars
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
-		
+
+		//Message dialog when player's turn begins
 		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
-			// This players turn begins now
+			JOptionPane.showMessageDialog(mainPanel, "Your turn starts now");
 		}
+
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
 		createUnitButton.setEnabled(game.isLocalPlayerTurn());
 		endTurnButton.setEnabled(game.isLocalPlayerTurn());

@@ -35,7 +35,7 @@ public class MenuGUI {
 	private JTextArea powerbarTextArea;
 	private JButton damagePowerButton;
 	private JButton healPowerButton;
-
+	
 	private final static String newline = "\n";
 	
 	private void errorMessage() {
@@ -59,7 +59,7 @@ public class MenuGUI {
 		currentGoldIncomeLabel.setText(String.format("Current Gold Income: +%s per turn", localBase.getGoldIncome()));
 		currentGoldLabel.setText(String.format("Current Gold: %s", localBase.getGold()));
 		costLabel.setText(String.format("Cost: %s gold", localBase.getGoldIncome() * 25 / 10));
-
+		
 		//For attack and health pane
 		currentAttackLabel.setText(String.format("Current Attack Modifier: %sx", localBase.getAttackModifier()));
 		currentHealthLabel.setText(String.format("Current Health Modifier: %sx", localBase.getHealthModifier()));
@@ -69,13 +69,13 @@ public class MenuGUI {
 			"It doesn't apply for already" + newline + "existing units.");
 		costAttackLabel.setText(String.format("Cost: %s gold", localBase.getAttackUpgradeCost()));
 		costHealthLabel.setText(String.format("Cost: %s gold", localBase.getHealthUpgradeCost()));
-
+		
 		//For powerbar pane
 		powerbar.setValue(localBase.getPowerBarValue());
 		currentPBLabel.setText(String.format("Power Bar Level: %s%% ", localBase.getPowerBarValue()));
 		powerbarTextArea.setText("Power bar increases while defeating enemy units." + newline + "When it's fully" +
-				" charged, below buttons will be available." );
-		if(localBase.getPowerBarValue() < 100){
+			" charged, below buttons will be available.");
+		if(localBase.getPowerBarValue() < 100) {
 			healPowerButton.setEnabled(false);
 			damagePowerButton.setEnabled(false);
 		}
@@ -163,20 +163,20 @@ public class MenuGUI {
 				}
 			}
 		});
-
+		
 		//Powerbar damage button
 		damagePowerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+			
 			}
 		});
-
+		
 		//Powerbar heal button
 		healPowerButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
+			
 			}
 		});
 		

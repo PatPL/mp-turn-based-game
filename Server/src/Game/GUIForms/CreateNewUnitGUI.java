@@ -4,14 +4,15 @@ import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
 import Game.Units.Unit;
 import Game.Units.UnitType;
+import Game.interfaces.IAction;
+import Game.interfaces.IDualProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateNewUnitGUI {
 	
@@ -50,23 +51,30 @@ public class CreateNewUnitGUI {
 	private JImage swordsmanImage;
 	private JImage archerImage;
 	private JImage knightImage;
+	private JPanel positionPanel;
 	
 	private boolean canBuyUnit = false;
 	
 	private void createUIComponents() throws IOException {
-		swordsmanImage = new JImage("sword2.png");
-		archerImage = new JImage("bow1.png");
-		knightImage = new JImage("knight1.png");
+		swordsmanImage = new JImage("sword2.png", 128, 128);
+		archerImage = new JImage("bow1.png", 128, 128);
+		knightImage = new JImage("knight1.png", 128, 128);
 	}
 	
 	//Constructor
-	public CreateNewUnitGUI(JDialog parentDialog, Base localBase) {
+	public CreateNewUnitGUI(
+		JDialog parentDialog,
+		Base localBase,
+		int rows,
+		boolean isRedPlayer,
+		IDualProvider<UnitType, Integer> onConfirm
+	) {
 		JDialog gameWindow = new JDialog(parentDialog);
 		
 		gameWindow.setContentPane(mainPanel);
 		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		gameWindow.setSize(800, 820);
+		gameWindow.setSize(rows == 1 ? 400 : 500, 500);
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 		
@@ -84,6 +92,82 @@ public class CreateNewUnitGUI {
 		knightHealthLabel.setText(String.format("Health: %s", knight.getHealth()));
 		knightDamageLabel.setText(String.format("Damage: %s", knight.getDamage()));
 		
+		final UnitType[] selectedUnit = {null};
+		final int[] selectedPanel = {0};
+		List<JImage> panels = new ArrayList<JImage>();
+		
+		Color panelColor = isRedPlayer ? Color.decode("#FF4444") : Color.decode("#6666FF");
+		Color panelHoverColor = panelColor.brighter();
+		Color panelSelectColor = panelColor.darker();
+		IAction resetPanels = () -> {
+			for(int j = 0; j < panels.size(); ++j) {
+				if(j == selectedPanel[0]) {
+					if(selectedUnit[0] != null) {
+						panels.get(j).setImage(isRedPlayer ? selectedUnit[0].redImage : selectedUnit[0].blueImage);
+					}
+					else {
+						panels.get(j).setImage("null64.png");
+					}
+					
+					panels.get(j).setBackground(panelSelectColor);
+				}
+				else {
+					panels.get(j).setImage("null64.png");
+					panels.get(j).setBackground(panelColor);
+				}
+			}
+		};
+		// Row choice panels
+		for(int i = 0; i < rows; ++i) {
+			JImage panel = null;
+			try {
+				panel = new JImage("null64.png", 64, 64);
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+			panels.add(panel);
+			
+			panel.setBackground(i == 0 ? panelSelectColor : panelColor);
+			
+			int finalI = i;
+			JImage finalPanel = panel;
+			panel.addMouseListener(new MouseListener() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					selectedPanel[0] = finalI;
+					resetPanels.invoke();
+				}
+				
+				@Override
+				public void mousePressed(MouseEvent e) {
+				}
+				
+				@Override
+				public void mouseReleased(MouseEvent e) {
+				}
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					if(selectedPanel[0] != finalI) {
+						finalPanel.setBackground(panelHoverColor);
+					}
+				}
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					resetPanels.invoke();
+				}
+			});
+			
+			positionPanel.add(panel);
+			
+		}
+		
+		if(rows == 1) {
+			positionPanel.setVisible(false);
+		}
 		
 		//Cancel Button
 		cancelButton.addActionListener(new ActionListener() {
@@ -103,6 +187,8 @@ public class CreateNewUnitGUI {
 					knightImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(Color.YELLOW);
 					createUnitButton.setEnabled(true);
+					selectedUnit[0] = UnitType.swordsman;
+					resetPanels.invoke();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -120,6 +206,8 @@ public class CreateNewUnitGUI {
 					knightImagePanel.setBackground(null);
 					archerImagePanel.setBackground(Color.YELLOW);
 					createUnitButton.setEnabled(true);
+					selectedUnit[0] = UnitType.archer;
+					resetPanels.invoke();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -137,6 +225,8 @@ public class CreateNewUnitGUI {
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(Color.YELLOW);
 					createUnitButton.setEnabled(true);
+					selectedUnit[0] = UnitType.knight;
+					resetPanels.invoke();
 				}
 				else {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
@@ -148,6 +238,12 @@ public class CreateNewUnitGUI {
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				if(selectedUnit[0] == null) {
+					JOptionPane.showMessageDialog(null, "No unit has been selected", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
+				onConfirm.invoke(selectedUnit[0], selectedPanel[0]);
 				gameWindow.dispose();
 			}
 		});
@@ -160,7 +256,9 @@ public class CreateNewUnitGUI {
 		JDialog dialog = new JDialog();
 		Base base = new Base(100, 1);
 		base.setGold(20);
-		new CreateNewUnitGUI(dialog, base);
+		new CreateNewUnitGUI(dialog, base, 2, true, (value1, value2) -> {
+			System.out.printf("Choice: %s, %s\n", value1.name, value2);
+		});
 	}
 	
 }

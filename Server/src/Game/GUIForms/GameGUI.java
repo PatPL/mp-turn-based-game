@@ -6,7 +6,6 @@ import Game.CustomElements.JMap;
 import Game.Game;
 import Webserver.enums.StatusType;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,7 +41,7 @@ public class GameGUI {
 	private JImage backgroundPanel;
 	private JMap gameMapPanel;
 	private JImage textImage;
-
+	
 	private final String gameCode;
 	private final Game game;
 	private final boolean isRedPlayer;
@@ -78,16 +77,16 @@ public class GameGUI {
 		//For current health
 		redCurrentHealthLabel.setText(game.getRedBase().getHealth() + "");
 		blueCurrentHealthLabel.setText(game.getBlueBase().getHealth() + "");
-
+		
 		//For power bars
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
-
+		
 		//Message dialog when player's turn begins
 		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
 			JOptionPane.showMessageDialog(mainPanel, "Your turn!");
 		}
-
+		
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
 		createUnitButton.setEnabled(game.isLocalPlayerTurn());
 		endTurnButton.setEnabled(game.isLocalPlayerTurn());
@@ -191,7 +190,15 @@ public class GameGUI {
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
+				new CreateNewUnitGUI(
+					parentDialog,
+					game.getLocalBase(),
+					game.getRows(),
+					game.isPlayerRed(),
+					(unit, row) -> {
+						System.out.printf("Try to place a '%s' in row %s\n", unit.name, row + 1);
+					}
+				);
 			}
 		});
 		

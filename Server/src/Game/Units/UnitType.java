@@ -18,7 +18,7 @@ public enum UnitType {
 	),
 	archer(
 		"Archer",
-		new Unit(20, 10, 3, 2, 30, 3),
+		new Unit(20, 10, 3, 2, 30, 1),
 		"redArcher.png",
 		"blueArcher.png"
 	),

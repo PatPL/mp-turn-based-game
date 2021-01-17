@@ -10,8 +10,6 @@ import Webserver.enums.StatusType;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -125,6 +123,47 @@ public class GameGUI {
 		});
 	}
 	
+	public void endTurn() {
+		refreshUpdateInterval();
+		HTTPClient.send(
+			"/updateGameState",
+			String.format("%s;%s", gameCode, game.serialize()),
+			res -> {
+				if(res.getStatusType() != StatusType.Success_2xx) {
+					JOptionPane.showMessageDialog(
+						mainPanel,
+						String.format("Błąd końca tury: %s", res.getBody()),
+						"Error",
+						JOptionPane.ERROR_MESSAGE
+					);
+					return;
+				}
+				
+				game.setRedTurn(!game.isPlayerRed()); // To allow client to overwrite its state with server's calculated state
+				update();
+			}
+		);
+	}
+	
+	public void showCreateNewUnitForm() {
+		new CreateNewUnitGUI(parentDialog, game, (unit, row) -> {
+			if(!game.buyUnit(unit, row, game.getLocalBase())) {
+				JOptionPane.showMessageDialog(
+					mainPanel,
+					String.format("Nie udało się zakupić jednostki"),
+					"Error",
+					JOptionPane.ERROR_MESSAGE
+				);
+			}
+			
+			refresh();
+		});
+	}
+	
+	public void showMenuGUI() {
+		new MenuGUI(parentDialog, game.getLocalBase(), this::refresh);
+	}
+	
 	// For testing
 	private GameGUI(Game gameState) {
 		JDialog gameWindow = new JDialog((Dialog) null);
@@ -161,67 +200,27 @@ public class GameGUI {
 		gameMapPanel.setGame(this.game);
 		
 		// Initializing power bars
-		
 		bluePowerBar.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
 		
-		
 		//End turn button
-		endTurnButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PlaySound.playSound(Sounds.buttonPress);
-				game.setRedTurn(!isPlayerRed);
-				refreshUpdateInterval();
-				HTTPClient.send(
-					"/updateGameState",
-					String.format("%s;%s", gameCode, game.serialize()),
-					res -> {
-						if(res.getStatusType() != StatusType.Success_2xx) {
-							JOptionPane.showMessageDialog(
-								mainPanel,
-								String.format("Błąd końca tury: %s", res.getBody()),
-								"Error",
-								JOptionPane.ERROR_MESSAGE
-							);
-							return;
-						}
-						
-						update();
-					}
-				);
-			}
+		endTurnButton.addActionListener(e -> {
+			PlaySound.playSound(Sounds.buttonPress);
+			endTurn();
 		});
 		
 		//Create unit button
-		createUnitButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PlaySound.playSound(Sounds.buttonPress);
-				new CreateNewUnitGUI(parentDialog, game, (unit, row) -> {
-					if(!game.buyUnit(unit, row, game.getLocalBase())) {
-						JOptionPane.showMessageDialog(
-							mainPanel,
-							String.format("Nie udało się zakupić jednostki"),
-							"Error",
-							JOptionPane.ERROR_MESSAGE
-						);
-					}
-					
-					refresh();
-				});
-			}
+		createUnitButton.addActionListener(e -> {
+			PlaySound.playSound(Sounds.buttonPress);
+			showCreateNewUnitForm();
 		});
 		
 		//Menu button
-		menuButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PlaySound.playSound(Sounds.buttonPress);
-				new MenuGUI(parentDialog, game.getLocalBase(), () -> refresh());
-			}
+		menuButton.addActionListener(e -> {
+			PlaySound.playSound(Sounds.buttonPress);
+			showMenuGUI();
 		});
 		
-		// Always force start the fist update interval to fetch the correct initial game state
+		// Always force start the first update interval to fetch the correct initial game state
 		startUpdateInterval();
 		update();
 		

@@ -167,6 +167,10 @@ public class Game implements ITextSerializable {
 		return output.toString();
 	}
 	
+	public void calculateTurn() {
+		isRedTurn ^= true;
+	}
+	
 	@Override
 	public int deserialize(String rawText, int offset) {
 		int addedOffset = 0;

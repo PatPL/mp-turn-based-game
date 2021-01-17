@@ -214,15 +214,12 @@ public class GameServer {
 		
 		res.setStatus(Status.OK_200);
 		gameLobby.game.deserialize(req.body.substring(gameCode.length() + 1), 0);
-		if(gameLobby.game.isRedTurn() == isCurrentMoveRed) {
-			System.out.println("Player didn't change whose turn it is. Client side error?");
-			gameLobby.game.setRedTurn(!isCurrentMoveRed);
-		}
 		
 		if(gameLobby.game.getServerWriteTimestamp() != previousWriteTimestamp) {
 			System.out.println("serverWriteTimestamp mismatched. Client side error?");
 		}
 		
+		gameLobby.game.calculateTurn();
 		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
 		
 		return true;

@@ -195,8 +195,18 @@ public class GameGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
-				
+				new CreateNewUnitGUI(parentDialog, game, (unit, row) -> {
+					if(!game.buyUnit(unit, row, game.getLocalBase())) {
+						JOptionPane.showMessageDialog(
+							mainPanel,
+							String.format("Nie udało się zakupić jednostki"),
+							"Error",
+							JOptionPane.ERROR_MESSAGE
+						);
+					}
+					
+					refresh();
+				});
 			}
 		});
 		

@@ -139,6 +139,7 @@ public class ClientGUI {
 		
 		setupListeners();
 		startRefreshInterval();
+		refreshGameList();
 	}
 	
 	public static void main(String[] args) {
@@ -233,6 +234,7 @@ public class ClientGUI {
 			
 			parentFrame.setVisible(true);
 			startRefreshInterval();
+			refreshGameList();
 		});
 	}
 	
@@ -301,7 +303,7 @@ public class ClientGUI {
 	}
 	
 	// First function call after this many [ms]
-	private long intervalStartDelay = 500;
+	private long intervalStartDelay = 1000;
 	// Next function call after this many [ms]
 	private long intervalDelay = 5000;
 	private Timer refreshInterval = null;

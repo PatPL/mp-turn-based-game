@@ -32,7 +32,10 @@ public class MenuGUI {
 	private JTextArea healthTextArea;
 	private JLabel costAttackLabel;
 	private JLabel costHealthLabel;
-	
+	private JTextArea powerbarTextArea;
+	private JButton damagePowerButton;
+	private JButton healPowerButton;
+
 	private final static String newline = "\n";
 	
 	private void errorMessage() {
@@ -52,11 +55,12 @@ public class MenuGUI {
 		menuWindow.setLocation(-menuWindow.getWidth() / 2, -menuWindow.getHeight() / 2);
 		menuWindow.setLocationRelativeTo(mainPanel);
 		
-		//Setting up text
+		//Setting up text for gold pane
 		currentGoldIncomeLabel.setText(String.format("Current Gold Income: +%s per turn", localBase.getGoldIncome()));
 		currentGoldLabel.setText(String.format("Current Gold: %s", localBase.getGold()));
 		costLabel.setText(String.format("Cost: %s gold", localBase.getGoldIncome() * 25 / 10));
-		
+
+		//For attack and health pane
 		currentAttackLabel.setText(String.format("Current Attack Modifier: %sx", localBase.getAttackModifier()));
 		currentHealthLabel.setText(String.format("Current Health Modifier: %sx", localBase.getHealthModifier()));
 		attackTextArea.append("Attack modifier enhances" + newline + "damage dealt for all units." + newline +
@@ -65,9 +69,16 @@ public class MenuGUI {
 			"It doesn't apply for already" + newline + "existing units.");
 		costAttackLabel.setText(String.format("Cost: %s gold", localBase.getAttackUpgradeCost()));
 		costHealthLabel.setText(String.format("Cost: %s gold", localBase.getHealthUpgradeCost()));
-		
+
+		//For powerbar pane
 		powerbar.setValue(localBase.getPowerBarValue());
 		currentPBLabel.setText(String.format("Power Bar Level: %s%% ", localBase.getPowerBarValue()));
+		powerbarTextArea.setText("Power bar increases while defeating enemy units." + newline + "When it's fully" +
+				" charged, below buttons will be available." );
+		if(localBase.getPowerBarValue() < 100){
+			healPowerButton.setEnabled(false);
+			damagePowerButton.setEnabled(false);
+		}
 		
 		//Close button
 		closeButton.addActionListener(new ActionListener() {
@@ -152,6 +163,22 @@ public class MenuGUI {
 				}
 			}
 		});
+
+		//Powerbar damage button
+		damagePowerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
+
+		//Powerbar heal button
+		healPowerButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 		
 		menuWindow.setVisible(true);
 	}
@@ -159,6 +186,7 @@ public class MenuGUI {
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
 		Base base = new Base(100, 1);
+		base.setPowerBar(100);
 		new MenuGUI(dialog, base, () -> {
 		});
 	}

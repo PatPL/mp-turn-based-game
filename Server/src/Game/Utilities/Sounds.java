@@ -5,7 +5,10 @@ import javax.sound.sampled.AudioSystem;
 
 public enum Sounds {
 	buttonPress("buttonPress3.wav"),
-	backgroundMusic("background.wav");
+	backgroundMusic("background.wav"),
+	heartPower("heartPower2.wav"),
+	attackPower("attackPower2.wav");
+	
 	
 	public final AudioInputStream AUDIO_INPUT_STREAM;
 	public final String PATH;

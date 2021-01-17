@@ -12,13 +12,14 @@ public class PlaySound {
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(sound.AUDIO_INPUT_STREAM);
-			if(clip.getFrameLength() > 1500) {
+			System.out.println(clip.getFrameLength());
+			
+			//Only loop music in background
+			if(clip.getFrameLength() > 200000) {
 				clip.loop(Clip.LOOP_CONTINUOUSLY);
 			}
-			else {
-				sound.AUDIO_INPUT_STREAM.reset();
-			}
 			clip.start();
+			if(clip.getFrameLength() < 1500) sound.AUDIO_INPUT_STREAM.reset();
 		}
 		catch(Exception e) {
 			System.out.println("Couldn't play sound");

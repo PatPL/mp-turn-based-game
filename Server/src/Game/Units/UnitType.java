@@ -18,13 +18,13 @@ public enum UnitType {
 	),
 	archer(
 		"Archer",
-		new Unit(20, 10, 3, 2, 10, 3),
+		new Unit(20, 10, 3, 2, 30, 3),
 		"redArcher.png",
 		"blueArcher.png"
 	),
 	knight(
 		"Knight",
-		new Unit(70, 30, 1, 3, 30, 1),
+		new Unit(70, 30, 1, 3, 40, 1),
 		"redKnight.png",
 		"blueKnight.png"
 	);

@@ -66,6 +66,10 @@ public class Unit implements ITextSerializable {
 		this.health = health;
 	}
 	
+	public void addHealth(int deltaHealth) {
+		health += deltaHealth;
+	}
+	
 	public void setDamage(int damage) {
 		this.damage = damage;
 	}
@@ -92,6 +96,9 @@ public class Unit implements ITextSerializable {
 		return "Red";
 	}
 	
+	public void die() {
+		this.deserialize(UnitType.empty.defaultUnit.serialize(), 0);
+	}
 	
 	//Constructors
 	public Unit() {

@@ -60,6 +60,10 @@ public class Base implements ITextSerializable {
 		this.health = health;
 	}
 	
+	public void addHealth(int deltaHealth) {
+		this.health += deltaHealth;
+	}
+	
 	public void setGoldIncome(int goldIncome) {
 		this.goldIncome = goldIncome;
 	}
@@ -74,6 +78,10 @@ public class Base implements ITextSerializable {
 	
 	public void setPowerBar(int powerBar) {
 		this.powerBar = powerBar;
+	}
+	
+	public void addPowerBar(int deltaPowerBar) {
+		powerBar += deltaPowerBar;
 	}
 	
 	public void setAttackModifier(double newAttackModifier) {

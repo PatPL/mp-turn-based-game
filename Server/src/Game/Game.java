@@ -39,6 +39,10 @@ public class Game implements ITextSerializable {
 		unitMap[y][x] = unit;
 	}
 	
+	public void removeUnit(int x, int y) {
+		setUnit(x, y, new Unit());
+	}
+	
 	private final int defaultBaseHealth = 200;
 	
 	private Base redBase;
@@ -69,6 +73,9 @@ public class Game implements ITextSerializable {
 		this.isRedTurn = isRedTurn;
 	}
 	
+	public boolean isFieldInBase(int x) {
+		return x == 0 || x == columns - 1;
+	}
 	
 	public boolean isLocalPlayerTurn() {
 		// Returns false for an uninitialized game (rows or cols == 0)
@@ -84,6 +91,9 @@ public class Game implements ITextSerializable {
 		}
 	}
 	
+	public Base getCurrentTurnBase() {
+		return isRedTurn ? redBase : blueBase;
+	}
 	
 	private boolean isGameOver;
 	
@@ -167,7 +177,119 @@ public class Game implements ITextSerializable {
 		return output.toString();
 	}
 	
+	public void checkUnitDeath(Unit unit) {
+		if(unit.getHealth() <= 0) {
+			Base oponentBase = unit.getTeam() == 1 ? blueBase : redBase;
+			oponentBase.addPowerBar(unit.getCost() / 10);
+			unit.die();
+		}
+	}
+	
+	public void checkBaseDeath(Base base) {
+		if(base.getHealth() <= 0) {
+			isGameOver = true;
+		}
+	}
+	
+	public void checkUnitDeath(Unit unit1, Unit unit2) {
+		checkUnitDeath(unit1);
+		checkUnitDeath(unit2);
+	}
+	
+	private boolean unitAttack(int x, int y) {
+		Unit attackingUnit = getUnit(x, y);
+		int forward = attackingUnit.getTeam() == 1 ? 1 : -1;
+		
+		for(int i = 1; i <= attackingUnit.getRange(); ++i) {
+			if(isFieldInBase(x + i * forward)) {
+				// Attack the base
+				Base targetBase = x + i * forward == 0 ? redBase : blueBase;
+				targetBase.addHealth(-attackingUnit.getDamage());
+				checkBaseDeath(targetBase);
+				return true;
+			}
+			
+			Unit probableTarget = getUnit(x + i * forward, y);
+			if(
+				probableTarget != null &&
+					probableTarget.getTeam() != 0 &&
+					probableTarget.getTeam() != attackingUnit.getTeam()
+			) {
+				// Valid unit target in range
+				if(probableTarget.getRange() >= i && probableTarget.getRange() == 1) {
+					// Valid target has the attacker in range, and can attack the attacker
+					probableTarget.addHealth(-attackingUnit.getDamage());
+					attackingUnit.addHealth(-probableTarget.getDamage());
+					checkUnitDeath(attackingUnit, probableTarget);
+					return true;
+				}
+				
+				// Valid target can't reach the attacker, or can't fight back (range > 1)
+				probableTarget.addHealth(-attackingUnit.getDamage());
+				checkUnitDeath(probableTarget);
+				return true;
+			}
+		}
+		
+		// No valid target in range.
+		return false;
+	}
+	
+	private boolean unitMove(int x, int y) {
+		Unit movingUnit = getUnit(x, y);
+		int forward = movingUnit.getTeam() == 1 ? 1 : -1;
+		int i;
+		for(i = 1; i <= movingUnit.getSpeed(); ++i) {
+			Unit nextUnit = getUnit(x + i * forward, y);
+			if(nextUnit != null && nextUnit.getTeam() == 0 && !isFieldInBase(x + i * forward)) {
+				// Next unit is actually there, and it's empty (not a base field either)
+				continue;
+			}
+			// Can't go there
+			break;
+		}
+		// Next field is not accessible...
+		--i; // so the previous field should still be
+		
+		if(i == 0) {
+			// Can't move even a single field forward
+			return false;
+		}
+		
+		// Move i tiles forward
+		setUnit(x + i * forward, y, movingUnit);
+		removeUnit(x, y);
+		return true;
+	}
+	
 	public void calculateTurn() {
+		Base base = getCurrentTurnBase();
+		
+		base.addGold(base.getGoldIncome());
+		
+		// Unit calculations
+		for(int y = 0; y < rows; ++y) {
+			// Red units calculate in this order <- : 87654321
+			//    Blue ones the other way around -> : 12345678
+			int unitUpdateDirection = isRedTurn ? -1 : 1;
+			for(
+				int x = isRedTurn ? columns - 1 : 0;
+				isRedTurn ? x >= 0 : x < columns;
+				x += unitUpdateDirection
+			) {
+				if(getUnit(x, y).getTeam() != base.getTeamNumber()) {
+					// Not a unit belonging to this team
+					continue;
+				}
+				
+				if(!unitAttack(x, y)) {
+					unitMove(x, y);
+				}
+				
+			}
+		}
+		
+		// Keep changing the turn as the last change
 		isRedTurn ^= true;
 	}
 	

@@ -175,7 +175,6 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				
 			}
 		});
 		
@@ -184,7 +183,6 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				
 			}
 		});
 		

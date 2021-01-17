@@ -94,8 +94,8 @@ public class JMap extends JPanel {
 			baseImageSize,
 			this
 		);
-
-
+		
+		
 		// Units
 		int unitFieldWidth = mapWidth() - baseImageSize * 2;
 		// Horizontal field count

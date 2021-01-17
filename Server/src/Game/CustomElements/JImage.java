@@ -9,15 +9,15 @@ public class JImage extends JPanel {
 	
 	private Image image;
 	private final boolean center;
-
-	public void setImage(String path){
+	
+	public void setImage(String path) {
 		try {
 			image = ImageIO.read(getClass().getClassLoader().getResource(path));
 			if(!center) {
 				this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
 			}
 		}
-		catch (IOException e){
+		catch(IOException e) {
 			System.out.println("Couldn't read image ");
 			e.printStackTrace();
 		}

@@ -4,9 +4,10 @@ import Client.HTTPClient;
 import Game.CustomElements.JImage;
 import Game.CustomElements.JMap;
 import Game.Game;
+import Game.Utilities.PlaySound;
+import Game.Utilities.Sounds;
 import Webserver.enums.StatusType;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -42,7 +43,7 @@ public class GameGUI {
 	private JImage backgroundPanel;
 	private JMap gameMapPanel;
 	private JImage textImage;
-
+	
 	private final String gameCode;
 	private final Game game;
 	private final boolean isRedPlayer;
@@ -78,16 +79,16 @@ public class GameGUI {
 		//For current health
 		redCurrentHealthLabel.setText(game.getRedBase().getHealth() + "");
 		blueCurrentHealthLabel.setText(game.getBlueBase().getHealth() + "");
-
+		
 		//For power bars
 		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
-
+		
 		//Message dialog when player's turn begins
 		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
 			JOptionPane.showMessageDialog(mainPanel, "Your turn!");
 		}
-
+		
 		menuButton.setEnabled((game.isLocalPlayerTurn()));
 		createUnitButton.setEnabled(game.isLocalPlayerTurn());
 		endTurnButton.setEnabled(game.isLocalPlayerTurn());
@@ -151,6 +152,7 @@ public class GameGUI {
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		gameWindow.setSize(800, 600);
 		gameWindow.setLocationRelativeTo(null);
+		PlaySound.playSound(Sounds.backgroundMusic);
 		
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
@@ -167,6 +169,7 @@ public class GameGUI {
 		endTurnButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlaySound.playSound(Sounds.buttonPress);
 				game.setRedTurn(!isPlayerRed);
 				refreshUpdateInterval();
 				HTTPClient.send(
@@ -191,7 +194,9 @@ public class GameGUI {
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlaySound.playSound(Sounds.buttonPress);
 				new CreateNewUnitGUI(parentDialog, game.getLocalBase());
+				
 			}
 		});
 		
@@ -199,6 +204,7 @@ public class GameGUI {
 		menuButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlaySound.playSound(Sounds.buttonPress);
 				new MenuGUI(parentDialog, game.getLocalBase(), () -> refresh());
 			}
 		});

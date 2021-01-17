@@ -29,8 +29,8 @@ public class Game implements ITextSerializable {
 		
 		return unitMap[y][x];
 	}
-
-
+	
+	
 	private final int defaultBaseHealth = 200;
 	
 	private Base redBase;
@@ -60,8 +60,8 @@ public class Game implements ITextSerializable {
 	public void setRedTurn(boolean isRedTurn) {
 		this.isRedTurn = isRedTurn;
 	}
-
-
+	
+	
 	public boolean isLocalPlayerTurn() {
 		// Returns false for an uninitialized game (rows or cols == 0)
 		return (isRedTurn == isPlayerRed) && (rows * columns != 0);
@@ -75,19 +75,21 @@ public class Game implements ITextSerializable {
 			return blueBase;
 		}
 	}
-
-
+	
+	
 	private boolean isGameOver;
 	
 	private long serverWriteTimestamp = 0;
+	
 	public long getServerWriteTimestamp() {
 		return serverWriteTimestamp;
 	}
+	
 	public void setServerWriteTimestamp(long newTimestamp) {
 		serverWriteTimestamp = newTimestamp;
 	}
-
-
+	
+	
 	//Constructor
 	public Game(int newRows, int newColumns, boolean isPlayerRed) {
 		this.rows = newRows;
@@ -104,7 +106,7 @@ public class Game implements ITextSerializable {
 		
 		this.redBase = new Base(defaultBaseHealth, 1);
 		this.blueBase = new Base(defaultBaseHealth, 2);
-
+		
 		this.isGameOver = false;
 		this.isRedTurn = true;
 	}
@@ -112,8 +114,8 @@ public class Game implements ITextSerializable {
 	public Game() {
 		this(8, 2, true);
 	}
-
-
+	
+	
 	@Override
 	public String serialize() {
 		StringBuilder output = new StringBuilder();

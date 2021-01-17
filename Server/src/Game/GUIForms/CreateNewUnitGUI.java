@@ -4,6 +4,8 @@ import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
 import Game.Units.Unit;
 import Game.Units.UnitType;
+import Game.Utilities.PlaySound;
+import Game.Utilities.Sounds;
 
 import javax.swing.*;
 import java.awt.*;
@@ -89,6 +91,7 @@ public class CreateNewUnitGUI {
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlaySound.playSound(Sounds.buttonPress);
 				gameWindow.dispose();
 			}
 		});
@@ -98,6 +101,7 @@ public class CreateNewUnitGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
+				PlaySound.playSound(Sounds.buttonPress);
 				if(localBase.getGold() >= swordsman.getCost()) {
 					archerImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
@@ -115,6 +119,7 @@ public class CreateNewUnitGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
+				PlaySound.playSound(Sounds.buttonPress);
 				if(localBase.getGold() >= archer.getCost()) {
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
@@ -132,6 +137,7 @@ public class CreateNewUnitGUI {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
+				PlaySound.playSound(Sounds.buttonPress);
 				if(localBase.getGold() >= knight.getCost()) {
 					archerImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(null);
@@ -148,6 +154,7 @@ public class CreateNewUnitGUI {
 		createUnitButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				PlaySound.playSound(Sounds.buttonPress);
 				gameWindow.dispose();
 			}
 		});

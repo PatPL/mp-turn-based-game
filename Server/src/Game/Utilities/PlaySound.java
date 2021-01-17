@@ -12,7 +12,6 @@ public class PlaySound {
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(sound.AUDIO_INPUT_STREAM);
-			System.out.println(clip.getFrameLength());
 			
 			//Only loop music in background
 			if(clip.getFrameLength() > 200000) {

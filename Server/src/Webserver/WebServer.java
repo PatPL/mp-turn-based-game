@@ -57,11 +57,11 @@ public class WebServer {
 	 * @param port The port which will be scanned for incoming connections
 	 * @throws IOException Thrown when unable to open a socket. Is the [port] already in use?
 	 */
-	public WebServer(int port) throws IOException {
+	public WebServer(String address, int port) throws IOException {
 		// From docs of 'new ServerSocket (int, int)'
 		// backlog – requested maximum length of the queue of incoming connections.
 		final int backlogSize = 16;
-		server = new ServerSocket(port, backlogSize, InetAddress.getLoopbackAddress());
+		server = new ServerSocket(port, backlogSize, InetAddress.getByName(address));
 		
 		listenerThread = new Thread(this::listen);
 	}
@@ -241,7 +241,7 @@ public class WebServer {
 	public static void main(String[] args) {
 		WebServer s;
 		try {
-			s = new WebServer(80);
+			s = new WebServer("127.0.0.1", 80);
 		}
 		catch(IOException e) {
 			System.out.printf("Couldn't start the server.\n%s\n", e);

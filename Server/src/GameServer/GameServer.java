@@ -23,8 +23,8 @@ public class GameServer {
 		return nicknameAssociation.getOrDefault(userID, "<unknown nickname>");
 	}
 	
-	public GameServer() throws IOException {
-		currentWebServer = buildServerObject(defaultPort);
+	public GameServer(String address, int port) throws IOException {
+		currentWebServer = buildServerObject(address, port);
 	}
 	
 	public void start() {
@@ -225,8 +225,8 @@ public class GameServer {
 		return true;
 	}
 	
-	private WebServer buildServerObject(int port) throws IOException {
-		WebServer output = new WebServer(port);
+	private WebServer buildServerObject(String address, int port) throws IOException {
+		WebServer output = new WebServer(address, port);
 		
 		output.addHandler("/addGame", this::addGameHandler);
 		output.addHandler("/gameList", this::gameListHandler);
@@ -238,9 +238,31 @@ public class GameServer {
 	}
 	
 	public static void main(String[] args) {
+		String address = "127.0.0.1";
+		int port = defaultPort;
+		
+		if(args.length >= 1) {
+			String[] tmp = args[0].split(":", 2);
+			if(tmp.length == 2) {
+				try {
+					int tmpPort = Integer.parseInt(tmp[1]);
+					address = tmp[0];
+					port = tmpPort;
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else {
+			System.out.println("[server] ip:port - start server with custom ip/port");
+			System.out.println("Example: 'java GameServer 192.168.0.1:22222'");
+			System.out.println(" ");
+		}
+		
 		GameServer server;
 		try {
-			server = new GameServer();
+			server = new GameServer(address, port);
 		}
 		catch(IOException e) {
 			System.out.printf("Couldn't start the game server:\n%s\n", e);

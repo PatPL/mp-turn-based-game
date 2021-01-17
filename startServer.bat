@@ -1,1 +1,1 @@
-@java -cp ./Server/out/production/Server GameServer.GameServer
+@java -cp ./Server/out/production/Server GameServer.GameServer 127.0.0.1:1234

@@ -143,6 +143,31 @@ public class ClientGUI {
 	}
 	
 	public static void main(String[] args) {
+		String address = "127.0.0.1";
+		int port = 1234;
+		
+		if(args.length >= 1) {
+			String[] tmp = args[0].split(":", 2);
+			if(tmp.length == 2) {
+				try {
+					int tmpPort = Integer.parseInt(tmp[1]);
+					address = tmp[0];
+					port = tmpPort;
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else {
+			System.out.println("[client] ip:port - choose custom server ip/port");
+			System.out.println("Example: 'java ClientGUI 192.168.0.1:22222'");
+			System.out.println(" ");
+		}
+		
+		HTTPClient.setServerAddress(address);
+		HTTPClient.setServerPort(port);
+		
 		JFrame frame = new JFrame("ClientGUI");
 		ClientGUI gui = new ClientGUI(frame);
 		frame.setContentPane(gui.panel1);

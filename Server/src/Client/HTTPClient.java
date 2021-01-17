@@ -16,9 +16,19 @@ import java.util.Map;
 public class HTTPClient {
 	
 	public static final Map<String, String> defaultHeaders = new HashMap<String, String>();
+	private static String address = "127.0.0.1";
+	private static int port = 1234;
 	
 	public interface HTTPResponseHandler {
 		void onResponse(Response res);
+	}
+	
+	public static void setServerAddress(String address) {
+		HTTPClient.address = address;
+	}
+	
+	public static void setServerPort(int port) {
+		HTTPClient.port = port;
 	}
 	
 	public static void send(String URI, String body, HTTPResponseHandler handler) {
@@ -47,7 +57,7 @@ public class HTTPClient {
 			req.headers.put(i.getKey(), i.getValue());
 		}
 		
-		Socket serverSocket = new Socket(InetAddress.getLoopbackAddress(), 1234);
+		Socket serverSocket = new Socket(InetAddress.getByName(address), port);
 		
 		OutputStream requestStream = serverSocket.getOutputStream();
 		requestStream.write(req.toByteArray());

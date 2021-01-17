@@ -185,6 +185,8 @@ public class GameGUI {
 							);
 							return;
 						}
+						
+						update();
 					}
 				);
 			}
@@ -221,6 +223,7 @@ public class GameGUI {
 		
 		// Always force start the fist update interval to fetch the correct initial game state
 		startUpdateInterval();
+		update();
 		
 		gameWindow.setVisible(true);
 	}

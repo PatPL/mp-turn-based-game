@@ -138,6 +138,9 @@ public class CreateNewUnitGUI {
 			panel.addMouseListener(new MouseListener() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
+					if (selectedPanel[0] != finalI) {
+						PlaySound.playSound(Sounds.buttonPress);
+					}
 					selectedPanel[0] = finalI;
 					resetPanels.invoke();
 				}

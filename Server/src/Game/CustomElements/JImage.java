@@ -9,6 +9,8 @@ public class JImage extends JPanel {
 	
 	private Image image;
 	private Color background;
+	private int width;
+	private int height;
 	private final boolean center;
 	
 	public void setImage(String path) {
@@ -24,7 +26,9 @@ public class JImage extends JPanel {
 	public void setImage(Image img) {
 		image = img;
 		if(!center) {
-			this.setPreferredSize(new Dimension(image.getWidth(this), image.getHeight(this)));
+			int finalWidth = width < 0 ? image.getWidth(this) : width;
+			int finalHeight = height < 0 ? image.getHeight(this) : height;
+			this.setPreferredSize(new Dimension(finalWidth, finalHeight));
 		}
 		this.repaint();
 	}
@@ -54,6 +58,8 @@ public class JImage extends JPanel {
 		image = ImageIO.read(getClass().getClassLoader().getResource(path));
 		this.center = center;
 		this.background = background;
+		this.width = width;
+		this.height = height;
 		if(!center) {
 			int finalWidth = width < 0 ? image.getWidth(this) : width;
 			int finalHeight = height < 0 ? image.getHeight(this) : height;

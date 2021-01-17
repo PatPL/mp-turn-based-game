@@ -2,6 +2,7 @@ package Game;
 
 import Game.BuildingsGenerators.Base;
 import Game.Units.Unit;
+import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
 
@@ -30,6 +31,13 @@ public class Game implements ITextSerializable {
 		return unitMap[y][x];
 	}
 	
+	public void setUnit(int x, int y, Unit unit) {
+		if(x < 0 || x >= columns || y < 0 || y >= rows) {
+			throw new IndexOutOfBoundsException();
+		}
+		
+		unitMap[y][x] = unit;
+	}
 	
 	private final int defaultBaseHealth = 200;
 	
@@ -89,6 +97,22 @@ public class Game implements ITextSerializable {
 		serverWriteTimestamp = newTimestamp;
 	}
 	
+	public boolean buyUnit(UnitType unit, int row, Base base) {
+		if(unit.defaultUnit.getCost() > base.getGold()) {
+			// Not enough gold
+			return false;
+		}
+		
+		int baseFieldX = isPlayerRed ? 0 : columns - 1;
+		if(getUnit(baseFieldX, row).getTeam() != 0) {
+			// There's already a unit there
+			return false;
+		}
+		
+		base.addGold(-unit.defaultUnit.getCost());
+		setUnit(baseFieldX, row, new Unit(unit, base));
+		return true;
+	}
 	
 	//Constructor
 	public Game(int newRows, int newColumns, boolean isPlayerRed) {

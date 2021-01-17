@@ -68,6 +68,10 @@ public class Base implements ITextSerializable {
 		this.gold = newGold;
 	}
 	
+	public void addGold(int deltaGold) {
+		this.gold += deltaGold;
+	}
+	
 	public void setPowerBar(int powerBar) {
 		this.powerBar = powerBar;
 	}

@@ -1,7 +1,7 @@
 package Game.GUIForms;
 
-import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
+import Game.Game;
 import Game.Units.Unit;
 import Game.Units.UnitType;
 import Game.Utilities.PlaySound;
@@ -64,25 +64,19 @@ public class CreateNewUnitGUI {
 	}
 	
 	//Constructor
-	public CreateNewUnitGUI(
-		JDialog parentDialog,
-		Base localBase,
-		int rows,
-		boolean isRedPlayer,
-		IDualProvider<UnitType, Integer> onConfirm
-	) {
+	public CreateNewUnitGUI(JDialog parentDialog, Game game, IDualProvider<UnitType, Integer> onConfirm) {
 		JDialog gameWindow = new JDialog(parentDialog);
 		
 		gameWindow.setContentPane(mainPanel);
 		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		gameWindow.setSize(rows == 1 ? 400 : 500, 500);
+		gameWindow.setSize(game.getRows() == 1 ? 400 : 500, 500);
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 		
-		Unit swordsman = new Unit(UnitType.swordsman, localBase);
-		Unit archer = new Unit(UnitType.archer, localBase);
-		Unit knight = new Unit(UnitType.knight, localBase);
+		Unit swordsman = new Unit(UnitType.swordsman, game.getLocalBase());
+		Unit archer = new Unit(UnitType.archer, game.getLocalBase());
+		Unit knight = new Unit(UnitType.knight, game.getLocalBase());
 		
 		//Setting text
 		swordsmanHealthLabel.setText(String.format("Health: %s", swordsman.getHealth()));
@@ -95,17 +89,28 @@ public class CreateNewUnitGUI {
 		knightDamageLabel.setText(String.format("Damage: %s", knight.getDamage()));
 		
 		final UnitType[] selectedUnit = {null};
-		final int[] selectedPanel = {0};
+		final int[] selectedPanel = {-1};
 		List<JImage> panels = new ArrayList<JImage>();
 		
-		Color panelColor = isRedPlayer ? Color.decode("#FF4444") : Color.decode("#6666FF");
+		Color panelColor = game.isPlayerRed() ? Color.decode("#FF4444") : Color.decode("#6666FF");
 		Color panelHoverColor = panelColor.brighter();
 		Color panelSelectColor = panelColor.darker();
+		Color panelDisabledColor = Color.decode("#666666");
+		int baseFieldX = game.isPlayerRed() ? 0 : game.getColumns() - 1;
 		IAction resetPanels = () -> {
 			for(int j = 0; j < panels.size(); ++j) {
+				if(game.getUnit(baseFieldX, j).getTeam() != 0) {
+					// A unit is already there
+					panels.get(j).setBackground(panelDisabledColor);
+					panels.get(j).setImage(game.getUnit(baseFieldX, j).getImage());
+					continue;
+				}
+				
 				if(j == selectedPanel[0]) {
+					// This is the selected panel
 					if(selectedUnit[0] != null) {
-						panels.get(j).setImage(isRedPlayer ? selectedUnit[0].redImage : selectedUnit[0].blueImage);
+						// Draw selected unit
+						panels.get(j).setImage(game.isPlayerRed() ? selectedUnit[0].redImage : selectedUnit[0].blueImage);
 					}
 					else {
 						panels.get(j).setImage("null64.png");
@@ -114,13 +119,14 @@ public class CreateNewUnitGUI {
 					panels.get(j).setBackground(panelSelectColor);
 				}
 				else {
+					// Other not selected panels
 					panels.get(j).setImage("null64.png");
 					panels.get(j).setBackground(panelColor);
 				}
 			}
 		};
 		// Row choice panels
-		for(int i = 0; i < rows; ++i) {
+		for(int i = 0; i < game.getRows(); ++i) {
 			JImage panel = null;
 			try {
 				panel = new JImage("null64.png", 64, 64);
@@ -129,16 +135,28 @@ public class CreateNewUnitGUI {
 				e.printStackTrace();
 				continue;
 			}
-			panels.add(panel);
 			
-			panel.setBackground(i == 0 ? panelSelectColor : panelColor);
+			panels.add(panel);
+			positionPanel.add(panel);
+			
+			if(game.getUnit(baseFieldX, i).getTeam() != 0) {
+				// A unit is already there
+				panel.setBackground(panelDisabledColor);
+				panel.setImage(game.getUnit(baseFieldX, i).getImage());
+				continue;
+			}
+			
+			if(selectedPanel[0] < 0) {
+				selectedPanel[0] = i;
+			}
+			panel.setBackground(i == selectedPanel[0] ? panelSelectColor : panelColor);
 			
 			int finalI = i;
 			JImage finalPanel = panel;
 			panel.addMouseListener(new MouseListener() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if (selectedPanel[0] != finalI) {
+					if(selectedPanel[0] != finalI) {
 						PlaySound.playSound(Sounds.buttonPress);
 					}
 					selectedPanel[0] = finalI;
@@ -165,12 +183,9 @@ public class CreateNewUnitGUI {
 					resetPanels.invoke();
 				}
 			});
-			
-			positionPanel.add(panel);
-			
 		}
 		
-		if(rows == 1) {
+		if(game.getRows() == 1) {
 			positionPanel.setVisible(false);
 		}
 		
@@ -189,7 +204,7 @@ public class CreateNewUnitGUI {
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= swordsman.getCost()) {
+				if(game.getLocalBase().getGold() >= swordsman.getCost()) {
 					archerImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(Color.YELLOW);
@@ -209,7 +224,7 @@ public class CreateNewUnitGUI {
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= archer.getCost()) {
+				if(game.getLocalBase().getGold() >= archer.getCost()) {
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(null);
 					archerImagePanel.setBackground(Color.YELLOW);
@@ -229,7 +244,7 @@ public class CreateNewUnitGUI {
 			public void mouseClicked(MouseEvent e) {
 				super.mouseClicked(e);
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= knight.getCost()) {
+				if(game.getLocalBase().getGold() >= knight.getCost()) {
 					archerImagePanel.setBackground(null);
 					swordsmanImagePanel.setBackground(null);
 					knightImagePanel.setBackground(Color.YELLOW);
@@ -253,6 +268,11 @@ public class CreateNewUnitGUI {
 					return;
 				}
 				
+				if(selectedPanel[0] < 0) {
+					JOptionPane.showMessageDialog(null, "No free space to place a unit", "Error", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
+				
 				onConfirm.invoke(selectedUnit[0], selectedPanel[0]);
 				gameWindow.dispose();
 			}
@@ -264,9 +284,7 @@ public class CreateNewUnitGUI {
 	//For testing
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
-		Base base = new Base(100, 1);
-		base.setGold(20);
-		new CreateNewUnitGUI(dialog, base, 2, true, (value1, value2) -> {
+		new CreateNewUnitGUI(dialog, new Game(), (value1, value2) -> {
 			System.out.printf("Choice: %s, %s\n", value1.name, value2);
 		});
 	}

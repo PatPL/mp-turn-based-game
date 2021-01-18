@@ -81,9 +81,9 @@
             </constraints>
             <properties>
               <background color="-4473925"/>
-              <maximum value="3"/>
+              <maximum value="5"/>
               <minimum value="1"/>
-              <value value="2"/>
+              <value value="3"/>
             </properties>
           </component>
           <component id="babd3" class="javax.swing.JLabel" binding="lengthInputLabel">

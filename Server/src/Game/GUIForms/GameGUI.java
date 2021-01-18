@@ -136,7 +136,7 @@ public class GameGUI {
 				if(res.getStatusType() != StatusType.Success_2xx) {
 					JOptionPane.showMessageDialog(
 						mainPanel,
-						String.format("Błąd końca tury: %s", res.getBody()),
+						String.format("End turn error: %s", res.getBody()),
 						"Error",
 						JOptionPane.ERROR_MESSAGE
 					);
@@ -154,7 +154,7 @@ public class GameGUI {
 			if(!game.buyUnit(unit, row, game.getLocalBase())) {
 				JOptionPane.showMessageDialog(
 					mainPanel,
-					String.format("Nie udało się zakupić jednostki"),
+					String.format("Failed to buy a unit"),
 					"Error",
 					JOptionPane.ERROR_MESSAGE
 				);

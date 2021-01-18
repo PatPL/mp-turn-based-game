@@ -33,7 +33,7 @@ public class ClientGUI {
 	private final List<GameListing> games = new ArrayList<GameListing>();
 	private final Preferences userPrefs = Preferences.userNodeForPackage(this.getClass());
 	
-	public final static String[] gameListingCols = new String[] {"Nazwa", "Kod", "Rozmiar", "Gracze"};
+	public final static String[] gameListingCols = new String[] {"Name", "Code", "Size", "Players"};
 	
 	private class GameListing {
 		String gameCode;
@@ -219,7 +219,7 @@ public class ClientGUI {
 					if(res.getStatusType() != StatusType.Success_2xx) {
 						JOptionPane.showMessageDialog(
 							this.panel1,
-							String.format("Nie udało się utworzyć gry: %s", res.getBody()),
+							String.format("Failed to create game: %s", res.getBody()),
 							"Błąd",
 							JOptionPane.ERROR_MESSAGE
 						);
@@ -240,7 +240,7 @@ public class ClientGUI {
 			if(res.getStatusType() != StatusType.Success_2xx) {
 				JOptionPane.showMessageDialog(
 					this.panel1,
-					String.format("Nie udało się dołączyć do gry %s: %s", gameCode, res.getBody()),
+					String.format("Failed to join game %s: %s", gameCode, res.getBody()),
 					"Błąd",
 					JOptionPane.ERROR_MESSAGE
 				);

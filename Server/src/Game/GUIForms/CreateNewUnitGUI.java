@@ -28,6 +28,8 @@ public class CreateNewUnitGUI {
 	private JButton createUnitButton;
 	private JPanel leftPanel;
 	private JPanel positionPanel;
+	private JPanel positionPanelContainer;
+	private JScrollPane positionPanelContainerScroll;
 	
 	private boolean canBuyUnit = false;
 	
@@ -38,7 +40,7 @@ public class CreateNewUnitGUI {
 		gameWindow.setContentPane(mainPanel);
 		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		gameWindow.setSize(game.getRows() == 1 ? 400 : 500, 500);
+		gameWindow.setSize(game.getRows() == 1 ? 320 : 450, 650);
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 		
@@ -48,6 +50,9 @@ public class CreateNewUnitGUI {
 		List<JUnit> jUnits = new ArrayList<JUnit>();
 		List<JImage> panels = new ArrayList<JImage>();
 		
+		positionPanelContainerScroll.setBorder(BorderFactory.createEmptyBorder());
+		positionPanelContainer.setLayout(new BoxLayout(positionPanelContainer, BoxLayout.Y_AXIS));
+		positionPanelContainer.setOpaque(false);
 		Color panelColor = game.isPlayerRed() ? Color.decode("#FF4444") : Color.decode("#6666FF");
 		Color panelHoverColor = panelColor.brighter();
 		Color panelSelectColor = panelColor.darker();
@@ -84,8 +89,10 @@ public class CreateNewUnitGUI {
 		// Row choice panels
 		for(int i = 0; i < game.getRows(); ++i) {
 			JImage panel = null;
+			JImage spacer = null;
 			try {
 				panel = new JImage("null64.png", 96, 96);
+				spacer = new JImage("null64.png", 96, 8);
 			}
 			catch(Exception e) {
 				e.printStackTrace();
@@ -93,8 +100,11 @@ public class CreateNewUnitGUI {
 			}
 			
 			// panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
+			panel.setAlignmentX(0.5f);
+			panel.setAlignmentY(0);
 			panels.add(panel);
-			positionPanel.add(panel);
+			positionPanelContainer.add(panel);
+			positionPanelContainer.add(spacer); // Spacer. BoxLayout just squished elements together otherwise.
 			
 			if(game.getUnit(baseFieldX, i).getTeam() != 0) {
 				// A unit is already there
@@ -232,7 +242,7 @@ public class CreateNewUnitGUI {
 	//For testing
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
-		new CreateNewUnitGUI(dialog, new Game(3, 8, false), (value1, value2) -> {
+		new CreateNewUnitGUI(dialog, new Game(5, 8, false), (value1, value2) -> {
 			System.out.printf("Choice: %s, %s\n", value1.name, value2);
 		});
 	}

@@ -64,6 +64,7 @@ public class JImage extends JPanel {
 			int finalWidth = width < 0 ? image.getWidth(this) : width;
 			int finalHeight = height < 0 ? image.getHeight(this) : height;
 			this.setPreferredSize(new Dimension(finalWidth, finalHeight));
+			this.setMaximumSize(new Dimension(finalWidth, finalHeight));
 		}
 		setOpaque(false);
 	}

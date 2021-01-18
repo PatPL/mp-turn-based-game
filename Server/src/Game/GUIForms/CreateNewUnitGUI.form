@@ -35,22 +35,44 @@
           </component>
         </children>
       </grid>
-      <grid id="e2657" binding="positionPanel" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+      <grid id="e2657" binding="positionPanel" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
           <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="0" anchor="0" fill="3" indent="0" use-parent-layout="false">
-            <preferred-size width="110" height="-1"/>
-            <maximum-size width="110" height="-1"/>
+            <preferred-size width="128" height="-1"/>
+            <maximum-size width="128" height="-1"/>
           </grid>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
-          <component id="d281f" class="javax.swing.JLabel">
-            <constraints/>
+          <component id="57243" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
             <properties>
               <text value="&lt;html&gt;&lt;center&gt;Choose&lt;br /&gt;deployment&lt;br /&gt;location&lt;/center&gt;&lt;/html&gt;"/>
             </properties>
           </component>
+          <scrollpane id="805ad" binding="positionPanelContainerScroll">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <horizontalScrollBarPolicy value="31"/>
+              <opaque value="false"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <grid id="57212" binding="positionPanelContainer" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints/>
+                <properties/>
+                <border type="none"/>
+                <children/>
+              </grid>
+            </children>
+          </scrollpane>
         </children>
       </grid>
       <scrollpane id="d3a21">

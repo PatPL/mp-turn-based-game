@@ -8,8 +8,11 @@ import Game.Utilities.PlaySound;
 import Game.Utilities.Sounds;
 import Webserver.enums.StatusType;
 
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -47,6 +50,7 @@ public class GameGUI {
 	private final boolean isRedPlayer;
 	
 	private final JDialog parentDialog;
+	private final Clip backgroundMusicClip;
 	
 	private void createUIComponents() throws IOException {
 		redHealthImageLabel = new JImage("heart2.png");
@@ -177,6 +181,7 @@ public class GameGUI {
 		this.isRedPlayer = true;
 		this.gameCode = "-";
 		this.game = gameState;
+		this.backgroundMusicClip = null;
 		gameMapPanel.setGame(gameState);
 		
 		gameWindow.setVisible(true);
@@ -191,7 +196,7 @@ public class GameGUI {
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		gameWindow.setSize(800, 600);
 		gameWindow.setLocationRelativeTo(null);
-		PlaySound.playSound(Sounds.backgroundMusic);
+		this.backgroundMusicClip = PlaySound.repeatSound(Sounds.backgroundMusic);
 		
 		this.isRedPlayer = isPlayerRed;
 		this.gameCode = gameCode;
@@ -218,6 +223,17 @@ public class GameGUI {
 		menuButton.addActionListener(e -> {
 			PlaySound.playSound(Sounds.buttonPress);
 			showMenuGUI();
+		});
+		
+		// Window close event for cleanup
+		gameWindow.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent e) {
+				stopUpdateInterval();
+				backgroundMusicClip.stop();
+				backgroundMusicClip.flush();
+				backgroundMusicClip.close();
+			}
 		});
 		
 		// Always force start the first update interval to fetch the correct initial game state

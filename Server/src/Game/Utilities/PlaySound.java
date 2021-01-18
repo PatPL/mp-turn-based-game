@@ -8,17 +8,29 @@ public class PlaySound {
 	public PlaySound() {
 	}
 	
+	// Play a given sound on repeat
+	public static Clip repeatSound(Sounds sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(sound.getAudioInputStream());
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			clip.start();
+			return clip;
+		}
+		catch(Exception e) {
+			System.out.println("Couldn't play sound");
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	// Play a given sound once
 	public static void playSound(Sounds sound) {
 		try {
 			Clip clip = AudioSystem.getClip();
+			sound.AUDIO_INPUT_STREAM.reset();
 			clip.open(sound.AUDIO_INPUT_STREAM);
-			
-			//Only loop music in background
-			if(clip.getFrameLength() > 200000) {
-				clip.loop(Clip.LOOP_CONTINUOUSLY);
-			}
 			clip.start();
-			if(clip.getFrameLength() < 1500) sound.AUDIO_INPUT_STREAM.reset();
 		}
 		catch(Exception e) {
 			System.out.println("Couldn't play sound");

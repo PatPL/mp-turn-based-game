@@ -237,12 +237,14 @@ public class GameServer {
 			// "Thinking" time so that a player has some time to see the result of his own turn
 			// Handler runs on its own thread, so this doesn't block the server
 			// Run after 2-4 seconds
-			new Timer(2000 + (int) (Math.random() * 2000), e -> {
+			Timer timer = new Timer(2000 + (int) (Math.random() * 2000), e -> {
 				// AI's turn here
 				
 				gameLobby.game.calculateTurn();
 				gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
-			}).start();
+			});
+			timer.setRepeats(false);
+			timer.start();
 		}
 		
 		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());

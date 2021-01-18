@@ -241,8 +241,10 @@ public class CreateNewUnitGUI {
 	
 	//For testing
 	public static void main(String[] args) {
-		JDialog dialog = new JDialog();
-		new CreateNewUnitGUI(dialog, new Game(5, 8, false), (value1, value2) -> {
+		new CreateNewUnitGUI(null, new Game(3, 8, false), (value1, value2) -> {
+			System.out.printf("Choice: %s, %s\n", value1.name, value2);
+		});
+		new CreateNewUnitGUI(null, new Game(5, 8, true), (value1, value2) -> {
 			System.out.printf("Choice: %s, %s\n", value1.name, value2);
 		});
 	}

@@ -13,20 +13,20 @@ public enum UnitType {
 	swordsman(
 		"Swordsman",
 		new Unit(50, 20, 1, 1, 20, 1),
-		"redSwordsman.png",
-		"blueSwordsman.png"
+		"units/redSwordsman.png",
+		"units/blueSwordsman.png"
 	),
 	archer(
 		"Archer",
 		new Unit(20, 10, 3, 2, 30, 1),
-		"redArcher.png",
-		"blueArcher.png"
+		"units/redArcher.png",
+		"units/blueArcher.png"
 	),
 	knight(
 		"Knight",
 		new Unit(70, 30, 1, 3, 40, 1),
-		"redKnight.png",
-		"blueKnight.png"
+		"units/redKnight.png",
+		"units/blueKnight.png"
 	);
 	
 	public final String name;

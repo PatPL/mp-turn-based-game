@@ -24,6 +24,10 @@ public class Unit implements ITextSerializable {
 		return health;
 	}
 	
+	public int getMaxHealth() {
+		return maxHealth;
+	}
+	
 	public int getDamage() {
 		return damage;
 	}

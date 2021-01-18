@@ -1,6 +1,7 @@
 package Game.CustomElements;
 
 import Game.Game;
+import Game.Units.Unit;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,6 +22,23 @@ public class JMap extends JPanel {
 	private static final Color regularFieldColor = Color.decode("#668866");
 	private static final int fieldBorderWidth = 2;
 	private static final Color fieldBorderColor = Color.decode("#444444");
+	private static final int unitFieldPadding = 4;
+	private static final boolean healthbarVertical = false;
+	private static final double healthbarHeight = 0.1;
+	private static final int healthbarBorderWidth = 2;
+	private static final Color healthbarBorderColor = Color.decode("#444444");
+	private static final Color healthbarFullColor = Color.green;
+	private static final Color healthbarEmptyColor = Color.red;
+	
+	private Color getHealthbarColor(Unit unit) {
+		double fullMultiplier = ((double) unit.getHealth()) / ((double) unit.getMaxHealth());
+		double emptyMultiplier = ((double) (unit.getMaxHealth() - unit.getHealth())) / ((double) unit.getMaxHealth());
+		return new Color(
+			(int) (healthbarFullColor.getRed() * fullMultiplier + healthbarEmptyColor.getRed() * emptyMultiplier),
+			(int) (healthbarFullColor.getGreen() * fullMultiplier + healthbarEmptyColor.getGreen() * emptyMultiplier),
+			(int) (healthbarFullColor.getBlue() * fullMultiplier + healthbarEmptyColor.getBlue() * emptyMultiplier)
+		);
+	}
 	
 	public JMap() throws IOException {
 		this.setOpaque(false);
@@ -188,18 +206,57 @@ public class JMap extends JPanel {
 				);
 				
 				// Units
-				if(game.getUnit(i, j) != null) {
+				Unit unit = game.getUnit(i, j);
+				if(unit != null) {
 					g.drawImage(
-						game.getUnit(i, j).getImage(),
+						unit.getImage(),
 						unitStartPosX.convert(i) + fieldBorderWidth,
 						unitStartPosY.convert(j) + fieldBorderWidth,
 						unitFieldSize - fieldBorderWidth * 2,
 						unitFieldSize - fieldBorderWidth * 2,
 						this
 					);
+					
+					if(unit.getTeam() != 0) {
+						int healthbarSize = Math.max((int) (unitFieldSize * healthbarHeight), healthbarBorderWidth * 3);
+						g.setColor(healthbarBorderColor);
+						if(healthbarVertical) {
+							g.fillRect(
+								unitStartPosX.convert(i) + fieldBorderWidth + unitFieldPadding,
+								unitStartPosY.convert(j) + fieldBorderWidth + unitFieldPadding,
+								healthbarSize,
+								unitFieldSize - (fieldBorderWidth + unitFieldPadding) * 2
+							);
+							g.setColor(getHealthbarColor(unit));
+							int fullHeight = unitFieldSize - (fieldBorderWidth + unitFieldPadding + healthbarBorderWidth) * 2;
+							int height = fullHeight * unit.getHealth() / unit.getMaxHealth();
+							g.fillRect(
+								unitStartPosX.convert(i) + fieldBorderWidth + unitFieldPadding + healthbarBorderWidth,
+								unitStartPosY.convert(j) + fieldBorderWidth + unitFieldPadding + healthbarBorderWidth + fullHeight - height,
+								healthbarSize - healthbarBorderWidth * 2,
+								height
+							);
+						}
+						else {
+							g.fillRect(
+								unitStartPosX.convert(i) + fieldBorderWidth + unitFieldPadding,
+								unitStartPosY.convert(j) + unitFieldSize - fieldBorderWidth - unitFieldPadding - healthbarSize,
+								unitFieldSize - (fieldBorderWidth + unitFieldPadding) * 2,
+								healthbarSize
+							);
+							g.setColor(getHealthbarColor(unit));
+							int fullWidth = unitFieldSize - (fieldBorderWidth + unitFieldPadding + healthbarBorderWidth) * 2;
+							int width = fullWidth * unit.getHealth() / unit.getMaxHealth();
+							g.fillRect(
+								unitStartPosX.convert(i) + fieldBorderWidth + unitFieldPadding + healthbarBorderWidth,
+								unitStartPosY.convert(j) + unitFieldSize - fieldBorderWidth - unitFieldPadding - healthbarSize + healthbarBorderWidth,
+								width,
+								healthbarSize - healthbarBorderWidth * 2
+							);
+						}
+					}
 				}
 			}
 		}
-		
 	}
 }

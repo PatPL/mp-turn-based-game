@@ -200,6 +200,12 @@ public class Game implements ITextSerializable {
 		Unit attackingUnit = getUnit(x, y);
 		int forward = attackingUnit.getTeam() == 1 ? 1 : -1;
 		
+		if(attackingUnit.getDamage() <= 0) {
+			// This unit can't attack.
+			// Stop here to avoid unnecessary counterattack damage
+			return false;
+		}
+		
 		for(int i = 1; i <= attackingUnit.getRange(); ++i) {
 			if(isFieldInBase(x + i * forward)) {
 				// Attack the base

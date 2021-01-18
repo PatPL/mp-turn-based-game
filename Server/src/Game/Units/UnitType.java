@@ -12,7 +12,7 @@ public enum UnitType {
 	),
 	swordsman(
 		"Swordsman",
-		new Unit(50, 20, 1, 20, 1),
+		new Unit(40, 15, 1, 20, 1),
 		"units/redSwordsman.png",
 		"units/blueSwordsman.png"
 	),
@@ -24,7 +24,7 @@ public enum UnitType {
 	),
 	knight(
 		"Knight",
-		new Unit(70, 30, 1, 40, 1),
+		new Unit(60, 25, 1, 50, 1),
 		"units/redKnight.png",
 		"units/blueKnight.png"
 	),
@@ -42,7 +42,7 @@ public enum UnitType {
 	),
 	tank(
 		"Tank",
-		new Unit(160, 5, 1, 75, 1),
+		new Unit(120, 0, 1, 70, 1),
 		"units/redTank.png",
 		"units/blueTank.png"
 	),

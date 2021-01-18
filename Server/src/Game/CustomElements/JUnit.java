@@ -25,6 +25,7 @@ public class JUnit {
 	private JPanel labelPanel;
 	private JLabel nameLabel;
 	private boolean selected = false;
+	private boolean enabled;
 	private UnitType unitType;
 	
 	public UnitType getUnitType() {
@@ -32,17 +33,28 @@ public class JUnit {
 	}
 	
 	public void hover() {
-		mainPanel.setBackground(Color.decode("#EEEEEE"));
+		if(this.enabled) {
+			mainPanel.setBackground(Color.decode("#EEEEEE"));
+		}
 	}
 	
 	public void reset() {
+		if(this.enabled) {
+			selected = false;
+			mainPanel.setBackground(Color.decode("#DDDDDD"));
+		}
+	}
+	
+	public void disable() {
 		selected = false;
-		mainPanel.setBackground(Color.decode("#DDDDDD"));
+		mainPanel.setBackground(Color.decode("#888888"));
 	}
 	
 	public void select() {
-		selected = true;
-		mainPanel.setBackground(Color.decode("#BBBBBB"));
+		if(this.enabled) {
+			selected = true;
+			mainPanel.setBackground(Color.decode("#BBBBBB"));
+		}
 	}
 	
 	public JPanel getMainPanel() {
@@ -53,12 +65,26 @@ public class JUnit {
 		unitImage = new JImage("null64.png", 128, 128);
 	}
 	
-	public JUnit(UnitType unitType, Base base, IConsumer<Boolean> onClick) {
+	public JUnit(UnitType unitType, Base base, boolean enabled, IConsumer<Boolean> onClick) {
 		Unit unit = new Unit(unitType, base);
 		this.unitType = unitType;
 		
 		labelPanel.setOpaque(false);
 		unitImage.setImage(unit.getImage());
+		
+		nameLabel.setText(unitType.name);
+		healthLabel.setText(String.valueOf(unit.getMaxHealth()));
+		damageLabel.setText(String.valueOf(unit.getDamage()));
+		rangeLabel.setText(String.valueOf(unit.getRange()));
+		speedLabel.setText(String.valueOf(unit.getSpeed()));
+		costLabel.setText(String.valueOf(unit.getCost()));
+		
+		this.enabled = enabled;
+		if(!enabled) {
+			disable();
+			return;
+		}
+		
 		mainPanel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -85,13 +111,6 @@ public class JUnit {
 				}
 			}
 		});
-		
-		nameLabel.setText(unitType.name);
-		healthLabel.setText(String.valueOf(unit.getMaxHealth()));
-		damageLabel.setText(String.valueOf(unit.getDamage()));
-		rangeLabel.setText(String.valueOf(unit.getRange()));
-		speedLabel.setText(String.valueOf(unit.getSpeed()));
-		costLabel.setText(String.valueOf(unit.getCost()));
 		
 		reset();
 	}

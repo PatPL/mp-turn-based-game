@@ -178,7 +178,7 @@ public class CreateNewUnitGUI {
 				continue;
 			}
 			
-			JUnit jUnit = new JUnit(i, base, () -> {
+			JUnit jUnit = new JUnit(i, base, base.getGold() >= i.defaultUnit.getCost(), () -> {
 				if(base.getGold() < i.defaultUnit.getCost()) {
 					JOptionPane.showMessageDialog(null, "Not enough gold!");
 					return false;

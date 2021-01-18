@@ -10,6 +10,7 @@ public class Unit implements ITextSerializable {
 	
 	//Attributes
 	private int health;
+	private int maxHealth;
 	private int damage;
 	private int range;      //default 1 for melee units
 	private int type;       //archer, swordsman etc
@@ -121,12 +122,14 @@ public class Unit implements ITextSerializable {
 	public Unit(UnitType type, double healthMultiplier, double attackMultiplier, int teamNumber) {
 		this.deserialize(type.defaultUnit.serialize(), 0);
 		this.health *= healthMultiplier;
+		this.maxHealth *= healthMultiplier;
 		this.damage *= attackMultiplier;
 		this.team = teamNumber;
 	}
 	
 	public Unit(int health, int newDamage, int range, int type, int cost, int speed) {
 		this.health = health;
+		this.maxHealth = health;
 		this.damage = newDamage;
 		this.range = range;
 		this.type = type;
@@ -165,6 +168,8 @@ public class Unit implements ITextSerializable {
 		
 		output.append(health);
 		output.append(";");
+		output.append(maxHealth);
+		output.append(";");
 		output.append(damage);
 		output.append(";");
 		output.append(range);
@@ -189,6 +194,10 @@ public class Unit implements ITextSerializable {
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;
 		this.health = Integer.parseInt(tmp);
+		
+		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
+		addedOffset += tmp.length() + 1;
+		this.maxHealth = Integer.parseInt(tmp);
 		
 		tmp = Utility.readUntil(rawText, ";", offset + addedOffset);
 		addedOffset += tmp.length() + 1;

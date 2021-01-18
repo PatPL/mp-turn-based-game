@@ -83,6 +83,10 @@ public class Unit implements ITextSerializable {
 		this.range = range;
 	}
 	
+	public void setType(int type) {
+		this.type = type;
+	}
+	
 	public void setCost(int cost) {
 		this.cost = cost;
 	}
@@ -131,12 +135,11 @@ public class Unit implements ITextSerializable {
 		this.team = teamNumber;
 	}
 	
-	public Unit(int health, int newDamage, int range, int type, int cost, int speed) {
+	public Unit(int health, int newDamage, int range, int cost, int speed) {
 		this.health = health;
 		this.maxHealth = health;
 		this.damage = newDamage;
 		this.range = range;
-		this.type = type;
 		this.cost = cost;
 		this.speed = speed;
 		this.team = 0;

@@ -1,8 +1,9 @@
 package Game.GUIForms;
 
+import Game.BuildingsGenerators.Base;
 import Game.CustomElements.JImage;
+import Game.CustomElements.JUnit;
 import Game.Game;
-import Game.Units.Unit;
 import Game.Units.UnitType;
 import Game.Utilities.PlaySound;
 import Game.Utilities.Sounds;
@@ -11,8 +12,10 @@ import Game.interfaces.IDualProvider;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.io.IOException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,45 +26,10 @@ public class CreateNewUnitGUI {
 	private JPanel bottomPanel;
 	private JButton cancelButton;
 	private JButton createUnitButton;
-	private JPanel rightPanel;
 	private JPanel leftPanel;
-	private JPanel swordsmanImagePanel;
-	private JPanel archerImagePanel;
-	private JPanel knightImagePanel;
-	private JPanel knightTextPanel;
-	private JPanel swordsmanTextPanel;
-	private JPanel archerTextPanel;
-	private JLabel swordsmanNameLabel;
-	private JLabel knightNameLabel;
-	private JLabel archerNameLabel;
-	private JLabel swordsmanHealthLabel;
-	private JLabel swordsmanDamageLabel;
-	private JLabel swordsmanRangeLabel;
-	private JLabel swordsmanSpeedLabel;
-	private JLabel swordsmanCostLabel;
-	private JLabel knightCostLabel;
-	private JLabel knightSpeedLabel;
-	private JLabel knightRangeLabel;
-	private JLabel knightDamageLabel;
-	private JLabel knightHealthLabel;
-	private JLabel archerCostLabel;
-	private JLabel archerSpeedLabel;
-	private JLabel archerRangeLabel;
-	private JLabel archerDamageLabel;
-	private JLabel archerHealthLabel;
-	
-	private JImage swordsmanImage;
-	private JImage archerImage;
-	private JImage knightImage;
 	private JPanel positionPanel;
 	
 	private boolean canBuyUnit = false;
-	
-	private void createUIComponents() throws IOException {
-		swordsmanImage = new JImage("sword2.png", 128, 128);
-		archerImage = new JImage("bow1.png", 128, 128);
-		knightImage = new JImage("knight1.png", 128, 128);
-	}
 	
 	//Constructor
 	public CreateNewUnitGUI(JDialog parentDialog, Game game, IDualProvider<UnitType, Integer> onConfirm) {
@@ -74,22 +42,10 @@ public class CreateNewUnitGUI {
 		gameWindow.setLocation(-gameWindow.getWidth() / 2, -gameWindow.getHeight() / 2);
 		gameWindow.setLocationRelativeTo(mainPanel);
 		
-		Unit swordsman = new Unit(UnitType.swordsman, game.getLocalBase());
-		Unit archer = new Unit(UnitType.archer, game.getLocalBase());
-		Unit knight = new Unit(UnitType.knight, game.getLocalBase());
-		
-		//Setting text
-		swordsmanHealthLabel.setText(String.format("Health: %s", swordsman.getHealth()));
-		swordsmanDamageLabel.setText(String.format("Damage: %s", swordsman.getDamage()));
-		
-		archerHealthLabel.setText(String.format("Health: %s", archer.getHealth()));
-		archerDamageLabel.setText(String.format("Damage: %s", archer.getDamage()));
-		
-		knightHealthLabel.setText(String.format("Health: %s", knight.getHealth()));
-		knightDamageLabel.setText(String.format("Damage: %s", knight.getDamage()));
-		
+		Base base = game.getLocalBase();
 		final UnitType[] selectedUnit = {null};
 		final int[] selectedPanel = {-1};
+		List<JUnit> jUnits = new ArrayList<JUnit>();
 		List<JImage> panels = new ArrayList<JImage>();
 		
 		Color panelColor = game.isPlayerRed() ? Color.decode("#FF4444") : Color.decode("#6666FF");
@@ -129,13 +85,14 @@ public class CreateNewUnitGUI {
 		for(int i = 0; i < game.getRows(); ++i) {
 			JImage panel = null;
 			try {
-				panel = new JImage("null64.png", 64, 64);
+				panel = new JImage("null64.png", 96, 96);
 			}
 			catch(Exception e) {
 				e.printStackTrace();
 				continue;
 			}
 			
+			// panel.setBorder(BorderFactory.createEmptyBorder(8, 0, 0, 0));
 			panels.add(panel);
 			positionPanel.add(panel);
 			
@@ -189,6 +146,37 @@ public class CreateNewUnitGUI {
 			positionPanel.setVisible(false);
 		}
 		
+		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+		IAction resetJUnits = () -> {
+			for(JUnit i : jUnits) {
+				if(i.getUnitType() == selectedUnit[0]) {
+					continue;
+				}
+				
+				i.reset();
+			}
+		};
+		
+		for(UnitType i : UnitType.values()) {
+			if(i == UnitType.empty) {
+				continue;
+			}
+			
+			JUnit jUnit = new JUnit(i, base, () -> {
+				if(base.getGold() < i.defaultUnit.getCost()) {
+					JOptionPane.showMessageDialog(null, "Not enough gold!");
+					return false;
+				}
+				selectedUnit[0] = i;
+				createUnitButton.setEnabled(true);
+				resetJUnits.invoke();
+				resetPanels.invoke();
+				return true;
+			});
+			leftPanel.add(jUnit.getMainPanel());
+			jUnits.add(jUnit);
+		}
+		
 		//Cancel Button
 		cancelButton.addActionListener(new ActionListener() {
 			@Override
@@ -197,66 +185,26 @@ public class CreateNewUnitGUI {
 				gameWindow.dispose();
 			}
 		});
-		
-		//Swordsman image "button"
-		swordsmanImage.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				PlaySound.playSound(Sounds.buttonPress);
-				if(game.getLocalBase().getGold() >= swordsman.getCost()) {
-					archerImagePanel.setBackground(null);
-					knightImagePanel.setBackground(null);
-					swordsmanImagePanel.setBackground(Color.YELLOW);
-					createUnitButton.setEnabled(true);
-					selectedUnit[0] = UnitType.swordsman;
-					resetPanels.invoke();
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "Not enough gold!");
-				}
-			}
-		});
-		
-		//Archer image "button"
-		archerImage.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				PlaySound.playSound(Sounds.buttonPress);
-				if(game.getLocalBase().getGold() >= archer.getCost()) {
-					swordsmanImagePanel.setBackground(null);
-					knightImagePanel.setBackground(null);
-					archerImagePanel.setBackground(Color.YELLOW);
-					createUnitButton.setEnabled(true);
-					selectedUnit[0] = UnitType.archer;
-					resetPanels.invoke();
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "Not enough gold!");
-				}
-			}
-		});
-		
-		//Knight image "button"
-		knightImage.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				super.mouseClicked(e);
-				PlaySound.playSound(Sounds.buttonPress);
-				if(game.getLocalBase().getGold() >= knight.getCost()) {
-					archerImagePanel.setBackground(null);
-					swordsmanImagePanel.setBackground(null);
-					knightImagePanel.setBackground(Color.YELLOW);
-					createUnitButton.setEnabled(true);
-					selectedUnit[0] = UnitType.knight;
-					resetPanels.invoke();
-				}
-				else {
-					JOptionPane.showMessageDialog(null, "Not enough gold!");
-				}
-			}
-		});
+
+//		//Knight image "button"
+//		knightImage.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				super.mouseClicked(e);
+//				PlaySound.playSound(Sounds.buttonPress);
+//				if(game.getLocalBase().getGold() >= knight.getCost()) {
+//					archerImagePanel.setBackground(null);
+//					swordsmanImagePanel.setBackground(null);
+//					knightImagePanel.setBackground(Color.YELLOW);
+//					createUnitButton.setEnabled(true);
+//					selectedUnit[0] = UnitType.knight;
+//					resetPanels.invoke();
+//				}
+//				else {
+//					JOptionPane.showMessageDialog(null, "Not enough gold!");
+//				}
+//			}
+//		});
 		
 		//Create unit button
 		createUnitButton.addActionListener(new ActionListener() {
@@ -284,7 +232,7 @@ public class CreateNewUnitGUI {
 	//For testing
 	public static void main(String[] args) {
 		JDialog dialog = new JDialog();
-		new CreateNewUnitGUI(dialog, new Game(), (value1, value2) -> {
+		new CreateNewUnitGUI(dialog, new Game(3, 8, false), (value1, value2) -> {
 			System.out.printf("Choice: %s, %s\n", value1.name, value2);
 		});
 	}

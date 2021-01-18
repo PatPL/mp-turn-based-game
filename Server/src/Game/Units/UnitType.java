@@ -39,6 +39,24 @@ public enum UnitType {
 		new Unit(40, 20, 2, 40, 1),
 		"units/redMage.png",
 		"units/blueMage.png"
+	),
+	tank(
+		"Tank",
+		new Unit(160, 5, 1, 75, 1),
+		"units/redTank.png",
+		"units/blueTank.png"
+	),
+	horseman(
+		"Horseman",
+		new Unit(70, 20, 1, 80, 2),
+		"units/redHorseman.png",
+		"units/blueHorseman.png"
+	),
+	lancer(
+		"Lancer",
+		new Unit(85, 30, 1, 125, 2),
+		"units/redLancer.png",
+		"units/blueLancer.png"
 	);
 	
 	public final String name;

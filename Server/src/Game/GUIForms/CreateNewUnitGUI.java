@@ -17,6 +17,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CreateNewUnitGUI {
@@ -167,7 +168,12 @@ public class CreateNewUnitGUI {
 			}
 		};
 		
+		List<UnitType> sortedUnits = new ArrayList<UnitType>();
 		for(UnitType i : UnitType.values()) {
+			sortedUnits.add(i);
+		}
+		sortedUnits.sort(Comparator.comparingInt((UnitType o) -> o.defaultUnit.getCost()).thenComparing(o -> o.name));
+		for(UnitType i : sortedUnits) {
 			if(i == UnitType.empty) {
 				continue;
 			}
@@ -195,26 +201,6 @@ public class CreateNewUnitGUI {
 				gameWindow.dispose();
 			}
 		});
-
-//		//Knight image "button"
-//		knightImage.addMouseListener(new MouseAdapter() {
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				super.mouseClicked(e);
-//				PlaySound.playSound(Sounds.buttonPress);
-//				if(game.getLocalBase().getGold() >= knight.getCost()) {
-//					archerImagePanel.setBackground(null);
-//					swordsmanImagePanel.setBackground(null);
-//					knightImagePanel.setBackground(Color.YELLOW);
-//					createUnitButton.setEnabled(true);
-//					selectedUnit[0] = UnitType.knight;
-//					resetPanels.invoke();
-//				}
-//				else {
-//					JOptionPane.showMessageDialog(null, "Not enough gold!");
-//				}
-//			}
-//		});
 		
 		//Create unit button
 		createUnitButton.addActionListener(new ActionListener() {

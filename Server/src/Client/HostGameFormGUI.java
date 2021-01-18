@@ -15,9 +15,10 @@ public class HostGameFormGUI {
 	private JLabel heightInputLabel;
 	private JLabel boardPreviewLabel;
 	private JTextField serverNameInput;
+	private JCheckBox aiOponentCheckbox;
 	
 	public interface HostGameFormSubmitHandler {
-		public void onSubmit(int length, int height, String name);
+		public void onSubmit(int length, int height, String name, boolean ai);
 	}
 	
 	public void refresh() {
@@ -58,7 +59,8 @@ public class HostGameFormGUI {
 			handler.onSubmit(
 				lengthInputSlider.getValue(),
 				heightInputSlider.getValue(),
-				serverNameInput.getText().replace(";", ",")
+				serverNameInput.getText().replace(";", ","),
+				aiOponentCheckbox.isSelected()
 			);
 			dialog.dispose();
 		});

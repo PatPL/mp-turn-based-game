@@ -51,7 +51,6 @@ public enum UnitType {
 		this.defaultUnit = defaultUnit;
 		// For whatever reason enum can't access its static stuff in the constructor
 		// so it needs to use another class...                         java, i guess
-		System.out.printf("%s, %s\n", name, UnitTypeEnumCounterContainer.indexCounter);
 		this.defaultUnit.setType(UnitTypeEnumCounterContainer.indexCounter++);
 		
 		Image tmpRedImage = null;

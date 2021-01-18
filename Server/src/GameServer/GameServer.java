@@ -7,6 +7,7 @@ import Webserver.Utility;
 import Webserver.WebServer;
 import Webserver.enums.Status;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,9 +40,10 @@ public class GameServer {
 		String hostID,
 		int length,
 		int height,
-		String name
+		String name,
+		boolean ai
 	) {
-		GameLobby newGameLobby = new GameLobby(hostID, length, height, name);
+		GameLobby newGameLobby = new GameLobby(hostID, length, height, name, ai);
 		gameList.put(newGameLobby.ID, newGameLobby);
 		return newGameLobby.ID;
 	}
@@ -64,7 +66,7 @@ public class GameServer {
 		}
 		
 		String[] params = req.body.split(";");
-		if(params.length != 3) {
+		if(params.length != 4) {
 			res.setStatus(Status.BadRequest_400);
 			res.setBody("Incorrect data in request body", Response.BodyType.Text);
 			return true;
@@ -76,7 +78,8 @@ public class GameServer {
 				req.headers.get(KeyEnum.userID.key),
 				Integer.parseInt(params[0]),
 				Integer.parseInt(params[1]),
-				params[2]
+				params[2],
+				Boolean.parseBoolean(params[3])
 			);
 		}
 		catch(NumberFormatException e) {
@@ -146,6 +149,15 @@ public class GameServer {
 		res.setStatus(Status.OK_200);
 		res.setBody(isPlayerRed.toString(), Response.BodyType.Text);
 		gameLobby.connectedPlayers.put(userID, isPlayerRed);
+		
+		if(gameLobby.ai) {
+			if(gameLobby.connectedPlayers.size() != 1) {
+				System.out.println("ERROR: This shouldn't ever happen");
+				return true;
+			}
+			
+			gameLobby.connectedPlayers.put("-", false);
+		}
 		
 		return true;
 	}
@@ -220,6 +232,19 @@ public class GameServer {
 		}
 		
 		gameLobby.game.calculateTurn();
+		
+		if(gameLobby.ai) {
+			// "Thinking" time so that a player has some time to see the result of his own turn
+			// Handler runs on its own thread, so this doesn't block the server
+			// Run after 2-4 seconds
+			new Timer(2000 + (int) (Math.random() * 2000), e -> {
+				// AI's turn here
+				
+				gameLobby.game.calculateTurn();
+				gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
+			}).start();
+		}
+		
 		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
 		
 		return true;

@@ -22,12 +22,14 @@ public class GameLobby {
 	public final String name;
 	public final Map<String, Boolean> connectedPlayers = new HashMap<String, Boolean>();
 	public final Game game;
+	public final boolean ai;
 	
 	public GameLobby(
 		String host,
 		int length,
 		int height,
-		String name
+		String name,
+		boolean ai
 	) {
 		String newID;
 		int IDLength = defaultIDLength;
@@ -45,6 +47,7 @@ public class GameLobby {
 		this.length = length;
 		this.height = height;
 		this.name = name;
+		this.ai = ai;
 		this.game = new Game(height, length, true);
 		this.game.setServerWriteTimestamp(createdAt);
 	}

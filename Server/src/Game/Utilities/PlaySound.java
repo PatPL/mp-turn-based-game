@@ -4,10 +4,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 
 public class PlaySound {
-	
-	public PlaySound() {
-	}
-	
 	// Play a given sound on repeat
 	public static Clip repeatSound(Sounds sound) {
 		try {

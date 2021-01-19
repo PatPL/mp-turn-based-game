@@ -27,14 +27,6 @@ public enum Sounds {
 	
 	Sounds(String path) {
 		this.PATH = path;
-		AudioInputStream tryAudioInputStream = null;
-		try {
-			tryAudioInputStream = AudioSystem.getAudioInputStream(new BufferedInputStream(getClass().getClassLoader().getResourceAsStream(path)));
-		}
-		catch(Exception e) {
-			System.out.println("Couldn't load sound file.");
-			e.printStackTrace();
-		}
-		this.AUDIO_INPUT_STREAM = tryAudioInputStream;
+		this.AUDIO_INPUT_STREAM = getAudioInputStream();
 	}
 }

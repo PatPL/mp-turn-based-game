@@ -182,7 +182,7 @@ public class Game implements ITextSerializable {
 		return output.toString();
 	}
 	
-	public void checkUnitDeath(Unit unit) {
+	private void checkUnitDeath(Unit unit) {
 		if(unit.getHealth() <= 0) {
 			Base oponentBase = unit.getTeam() == 1 ? blueBase : redBase;
 			oponentBase.addPowerBar(unit.getCost() / 10);
@@ -190,13 +190,13 @@ public class Game implements ITextSerializable {
 		}
 	}
 	
-	public void checkBaseDeath(Base base) {
+	private void checkBaseDeath(Base base) {
 		if(base.getHealth() <= 0) {
 			isGameOver = true;
 		}
 	}
 	
-	public void checkUnitDeath(Unit unit1, Unit unit2) {
+	private void checkUnitDeath(Unit unit1, Unit unit2) {
 		checkUnitDeath(unit1);
 		checkUnitDeath(unit2);
 	}

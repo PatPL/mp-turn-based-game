@@ -10,11 +10,15 @@ import Webserver.enums.Status;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GameServer {
 	
 	private static final int defaultPort = 1234;
+	private final static long idleGameLifetime = 30 * 60 * 1000; // 30 minutes
+	private final static int gamePurgeInterval = 10 * 60 * 1000; // 10 minutes
 	
 	private WebServer currentWebServer = null;
 	private final Map<String, GameLobby> gameList = new HashMap<String, GameLobby>();
@@ -264,6 +268,26 @@ public class GameServer {
 		return output;
 	}
 	
+	private void purgeIdleGames() {
+		// Removes all games, which didn't have an update in [idleGameLifetime]ms
+		Set<String> toPurge = new HashSet<String>();
+		long now = System.currentTimeMillis();
+		for(Map.Entry<String, GameLobby> i : gameList.entrySet()) {
+			if(now >= i.getValue().game.getServerWriteTimestamp() + idleGameLifetime) {
+				toPurge.add(i.getKey());
+			}
+		}
+		
+		if(toPurge.size() > 0) {
+			System.out.printf("Removed %s idle games:\n", toPurge.size());
+			for(String i : toPurge) {
+				System.out.printf(" -%s\n", i);
+				gameList.remove(i);
+			}
+			System.out.println(" ");
+		}
+	}
+	
 	public static void main(String[] args) {
 		String address = "127.0.0.1";
 		int port = defaultPort;
@@ -298,6 +322,7 @@ public class GameServer {
 		
 		server.start();
 		System.out.printf("Game server listening at %s\n\n", server.currentWebServer.getAddress());
+		new Timer(gamePurgeInterval, (e) -> server.purgeIdleGames()).start();
 	}
 	
 }

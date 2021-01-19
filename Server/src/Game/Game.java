@@ -113,6 +113,11 @@ public class Game implements ITextSerializable {
 			return false;
 		}
 		
+		if(row < rows) {
+			// This field doesn't exits
+			return false;
+		}
+		
 		int baseFieldX = isPlayerRed ? 0 : columns - 1;
 		if(getUnit(baseFieldX, row).getTeam() != 0) {
 			// There's already a unit there

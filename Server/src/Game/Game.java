@@ -113,7 +113,7 @@ public class Game implements ITextSerializable {
 			return false;
 		}
 		
-		if(row < rows) {
+		if(row >= rows) {
 			// This field doesn't exits
 			return false;
 		}

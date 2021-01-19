@@ -228,6 +228,13 @@ public class GameServer {
 			return true;
 		}
 		
+		if(gameLobby.game.isGameOver()) {
+			// Player attempted to send game state update, while it's not his turn
+			res.setStatus(Status.Gone_410);
+			res.setBody(String.format("You can't send game update to %s. The game is over", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
 		res.setStatus(Status.OK_200);
 		gameLobby.game.deserialize(req.body.substring(gameCode.length() + 1), 0);
 		
@@ -237,7 +244,7 @@ public class GameServer {
 		
 		gameLobby.game.calculateTurn();
 		
-		if(gameLobby.ai) {
+		if(gameLobby.ai && !gameLobby.game.isGameOver()) {
 			// "Thinking" time so that a player has some time to see the result of his own turn
 			// Handler runs on its own thread, so this doesn't block the server
 			// Run after 2-4 seconds
@@ -252,7 +259,14 @@ public class GameServer {
 		}
 		
 		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
-		
+		if(gameLobby.game.isGameOver()) {
+			Timer timer = new Timer(20 * 1000, e -> {
+				System.out.printf("Removed finished game: %s\n", gameCode);
+				gameList.remove(gameCode);
+			});
+			timer.setRepeats(false);
+			timer.start();
+		}
 		return true;
 	}
 	

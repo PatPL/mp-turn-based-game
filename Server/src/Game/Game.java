@@ -97,6 +97,10 @@ public class Game implements ITextSerializable {
 	
 	private boolean isGameOver;
 	
+	public boolean isGameOver() {
+		return this.isGameOver;
+	}
+	
 	private long serverWriteTimestamp = 0;
 	
 	public long getServerWriteTimestamp() {

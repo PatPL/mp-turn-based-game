@@ -101,6 +101,11 @@ public class Game implements ITextSerializable {
 		return this.isGameOver;
 	}
 	
+	public boolean isRedWinner() {
+		// Returns nonsense, if isGameOver == false
+		return blueBase.getHealth() <= 0;
+	}
+	
 	private long serverWriteTimestamp = 0;
 	
 	public long getServerWriteTimestamp() {

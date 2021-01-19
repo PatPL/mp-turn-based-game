@@ -87,7 +87,7 @@ public class GameGUI {
 		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
 		
 		//Message dialog when player's turn begins
-		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
+		if(!menuButton.isEnabled() && game.isLocalPlayerTurn() && !game.isGameOver()) {
 			JOptionPane.showMessageDialog(mainPanel, "Your turn!");
 		}
 		
@@ -124,6 +124,18 @@ public class GameGUI {
 			game.deserialize(res.getBody(), 0);
 			refreshUpdateInterval();
 			refresh();
+			
+			if(game.isGameOver()) {
+				boolean isRedWinner = game.isRedWinner();
+				boolean isLocalWinner = game.isRedWinner() == game.isPlayerRed();
+				JOptionPane.showMessageDialog(
+					mainPanel,
+					String.format("Game over!\nWinner: %s.\nYou %s.", isRedWinner ? "RED" : "BLUE", isLocalWinner ? "won" : "lost"),
+					"Game over",
+					JOptionPane.INFORMATION_MESSAGE
+				);
+				parentDialog.dispose();
+			}
 		});
 	}
 	
@@ -269,8 +281,9 @@ public class GameGUI {
 	}
 	
 	private void refreshUpdateInterval() {
-		if(game.isLocalPlayerTurn()) {
+		if(game.isLocalPlayerTurn() || game.isGameOver()) {
 			// Local player's turn. Don't ask for updates as there can be none
+			// either that or the game is over, either way don't seek updates.
 			stopUpdateInterval();
 		}
 		else {

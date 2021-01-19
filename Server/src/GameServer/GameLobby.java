@@ -48,7 +48,7 @@ public class GameLobby {
 		this.height = height;
 		this.name = name;
 		this.ai = ai;
-		this.game = new Game(height, length, true);
+		this.game = new Game(height, length, false);
 		this.game.setServerWriteTimestamp(createdAt);
 	}
 	

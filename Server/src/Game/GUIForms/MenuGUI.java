@@ -96,18 +96,12 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= (localBase.getGoldIncome() * 25 / 10)) {
-					
-					//Changes value of gold and gold income after upgrading gold income
-					localBase.setGold(localBase.getGold() - (localBase.getGoldIncome() * 25 / 10));
-					localBase.setGoldIncome(localBase.getGoldIncome() + 10);
-					
+				if(localBase.upgradeGold()) {
 					//Message dialog
 					JOptionPane.showMessageDialog(null, "Gold income upgraded!");
 					
 					//Refreshes text after upgrading
-					currentGoldIncomeLabel.setText(String.format("Current Gold Income: +%s per turn",
-						localBase.getGoldIncome()));
+					currentGoldIncomeLabel.setText(String.format("Current Gold Income: +%s per turn", localBase.getGoldIncome()));
 					currentGoldLabel.setText(String.format("Current Gold: %s", localBase.getGold()));
 					costLabel.setText(String.format("Cost: %s gold", localBase.getGoldIncome() * 25 / 10));
 					onUpdate.invoke();
@@ -123,13 +117,7 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= (localBase.getAttackUpgradeCost())) {
-					
-					//Changes value attack modifier and it's cost
-					localBase.setGold(localBase.getGold() - (localBase.getAttackUpgradeCost()));
-					localBase.setAttackModifier(localBase.getAttackModifier() + 0.5);
-					localBase.setAttackUpgradeCost(localBase.getAttackUpgradeCost() + 40);
-					
+				if(localBase.upgradeAttack()) {
 					//Message dialog
 					JOptionPane.showMessageDialog(null, "Attack for your units upgraded!");
 					
@@ -149,13 +137,7 @@ public class MenuGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				PlaySound.playSound(Sounds.buttonPress);
-				if(localBase.getGold() >= (localBase.getHealthUpgradeCost())) {
-					
-					//Changes value attack modifier and it's cost
-					localBase.setGold(localBase.getGold() - (localBase.getHealthUpgradeCost()));
-					localBase.setHealthModifier(localBase.getHealthModifier() + 0.5);
-					localBase.setHealthUpgradeCost(localBase.getHealthUpgradeCost() + 40);
-					
+				if(localBase.upgradeHealth()) {
 					//Message dialog
 					JOptionPane.showMessageDialog(null, "Health for your units upgraded!");
 					

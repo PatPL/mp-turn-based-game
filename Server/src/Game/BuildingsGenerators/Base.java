@@ -130,6 +130,41 @@ public class Base implements ITextSerializable {
 		// return unitGenerator.createUnit(choice, teamNumber);
 	}
 	
+	public boolean upgradeGold() {
+		if(gold >= (goldIncome * 25 / 10)) {
+			//Changes value of gold and gold income after upgrading gold income
+			gold -= goldIncome * 25 / 10;
+			goldIncome += 10;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean upgradeAttack() {
+		if(gold >= attackUpgradeCost) {
+			//Changes value attack modifier and it's cost
+			gold -= attackUpgradeCost;
+			attackModifier += 0.5;
+			attackUpgradeCost += 40;
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public boolean upgradeHealth() {
+		if(gold >= healthUpgradeCost) {
+			//Changes value attack modifier and it's cost
+			gold -= healthUpgradeCost;
+			healthModifier += 0.5;
+			healthUpgradeCost += 40;
+			return true;
+		}
+		
+		return false;
+	}
+	
 	@Override
 	public String serialize() {
 		StringBuilder output = new StringBuilder();

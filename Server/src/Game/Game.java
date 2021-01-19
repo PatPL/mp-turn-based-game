@@ -268,6 +268,35 @@ public class Game implements ITextSerializable {
 		return true;
 	}
 	
+	public void aiTurn() {
+		Base base = getLocalBase();
+		// AI's turn here
+		// Examples of available methods:
+		// All purchase-related methods have their own checks in place, you don't need to check if you can afford an
+		// upgrade before calling the method. It will return false, if for whatever reason you can't buy the thing.
+		//
+		// >Tries to buy a unit, and tries to place it on a given row.
+		// >Returns true if successful
+		// buyUnit(UnitType.swordsman, [0:(rows-1)], base);
+		//
+		// >Tries to upgrade an aspect of a base
+		// >Returns true if successful
+		// base.upgradeGold();
+		// base.upgradeHealth();
+		// base.upgradeAttack();
+		//
+		// >Returns a unit in a given spot
+		// >Returns null, if this field doesn't exist
+		// >Check unit's team with Unit.getTeam()
+		// >Unit.getTeam() == base.getTeamNumber() <- Unit belongs to your team
+		// >Unit.getTeam() != base.getTeamNumber() <- Unit doesn't belong to your team
+		// >Unit.getTeam() == 0 <- Empty space with no unit on it
+		// game.getUnit([0:(columns-1)], [0:(rows-1)]);
+		
+		// Example: AI will always try to upgrade its gold income. It won't do anything else
+		base.upgradeGold();
+	}
+	
 	public void calculateTurn() {
 		Base base = getCurrentTurnBase();
 		

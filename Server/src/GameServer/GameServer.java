@@ -94,7 +94,7 @@ public class GameServer {
 		return true;
 	}
 	
-	public boolean gameListHandler(Request req, Response res) {
+	private boolean gameListHandler(Request req, Response res) {
 		res.setStatus(Status.OK_200);
 		
 		StringBuilder gameListString = new StringBuilder();
@@ -115,7 +115,7 @@ public class GameServer {
 		return true;
 	}
 	
-	public boolean joinGameHandler(Request req, Response res) {
+	private boolean joinGameHandler(Request req, Response res) {
 		if(!authorize(req)) {
 			res.setStatus(Status.Unauthorized_401);
 			res.setBody("No userID provided", Response.BodyType.Text);
@@ -162,7 +162,7 @@ public class GameServer {
 		return true;
 	}
 	
-	public boolean fetchGameStateHandler(Request req, Response res) {
+	private boolean fetchGameStateHandler(Request req, Response res) {
 		if(!authorize(req)) {
 			res.setStatus(Status.Unauthorized_401);
 			res.setBody("No userID provided", Response.BodyType.Text);
@@ -190,7 +190,7 @@ public class GameServer {
 		return true;
 	}
 	
-	public boolean updateGameStateHandler(Request req, Response res) {
+	private boolean updateGameStateHandler(Request req, Response res) {
 		if(!authorize(req)) {
 			res.setStatus(Status.Unauthorized_401);
 			res.setBody("No userID provided", Response.BodyType.Text);

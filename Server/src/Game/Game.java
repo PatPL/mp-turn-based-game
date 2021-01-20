@@ -5,6 +5,7 @@ import Game.Units.Unit;
 import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
+import java.util.Random;
 
 public class Game implements ITextSerializable {
 	
@@ -21,6 +22,7 @@ public class Game implements ITextSerializable {
 		return columns;
 	}
 	
+	// two-dimensional array of units
 	private Unit[][] unitMap;
 	
 	public Unit getUnit(int x, int y) {
@@ -297,6 +299,105 @@ public class Game implements ITextSerializable {
 		// >Unit.getTeam() != base.getTeamNumber() <- Unit doesn't belong to your team
 		// >Unit.getTeam() == 0 <- Empty space with no unit on it
 		// game.getUnit([0:(columns-1)], [0:(rows-1)]);
+		
+		// My AI generally doesn't care if certain operation didn't work
+		// just goes further on and does other things
+		
+		Random generator = new Random();
+		int numberOfStrategies = 3; // implemented number of AI patterns of behavior
+		int strategyCode = generator.nextInt(3);
+		int howLongToOperate = 10; // a value of how many times will AI code loop to try to upgrade/place units
+		
+		// 0 strategy represents a strategy that is ment to be more passive
+		// it prefers upragedes over buying units
+		// it prefers cheaper units but in bigger amount
+		if (strategyCode == 0) {
+			
+			int i = 0;
+			// for now AI will do 10 i iterations
+			// but it can factor in
+			// * number of tures
+			// * amount of gold
+			while ( i<=howLongToOperate ) {
+				base.upgradeGold();
+				base.upgradeHealth();
+				base.upgradeAttack();
+				for ( int j=0; j<=getRows(); j++ ) {
+					buyUnit(UnitType.swordsman,j,base);
+					buyUnit(UnitType.scout,j,base);
+					buyUnit(UnitType.archer,j,base);
+					buyUnit(UnitType.mage,j,base);
+					buyUnit(UnitType.knight,j,base);
+					buyUnit(UnitType.tank,j,base);
+					buyUnit(UnitType.horseman,j,base);
+					buyUnit(UnitType.lancer,j,base);
+				}
+				i++;
+			}
+		}
+		
+		// 1 strategy will prefer buying units first
+		// then upgrades
+		// also will prefer buying some mediocre ones
+		if (strategyCode == 1) {
+			
+			int i = 0;
+			
+			while ( i<=howLongToOperate ) {
+				
+				// first buying some average units
+				buyUnit(UnitType.mage,i,base);
+				buyUnit(UnitType.archer,i,base);
+				buyUnit(UnitType.scout,i,base);
+				buyUnit(UnitType.swordsman,i,base);
+				
+				// then adding some modyfiers
+				base.upgradeGold();
+				base.upgradeHealth();
+				base.upgradeAttack();
+				
+				// then the more expensive ones
+				buyUnit(UnitType.knight,i,base);
+				buyUnit(UnitType.tank,i,base);
+				buyUnit(UnitType.horseman,i,base);
+				buyUnit(UnitType.lancer,i,base);
+				
+				i++;
+			}
+			
+		}
+		
+		// 2 strategy will strongly prefer buying units first
+		// then upgrades
+		// also will prefer buying more expensive ones
+		// can be called the most aggresive
+		if (strategyCode == 2) {
+			
+			int i = 0;
+			
+			while ( i <= howLongToOperate ) {
+				
+				int iFromTop = getRows()-i; // aggresive strategy will try to spawn units from top first
+				
+				// first buying heavy, expensive units
+				buyUnit(UnitType.lancer,iFromTop,base);
+				buyUnit(UnitType.horseman,iFromTop,base);
+				buyUnit(UnitType.tank,iFromTop,base);
+				buyUnit(UnitType.knight,iFromTop,base);
+				
+				// then the mediocre ones
+				buyUnit(UnitType.mage,iFromTop,base);
+				buyUnit(UnitType.archer,iFromTop,base);
+				buyUnit(UnitType.scout,iFromTop,base);
+				buyUnit(UnitType.swordsman,iFromTop,base);
+				
+				// upgrades are least singificant
+				base.upgradeAttack();
+				base.upgradeGold();
+				base.upgradeHealth();
+				
+			}
+		}
 		
 		// Example: AI will always try to upgrade its gold income. It won't do anything else
 		base.upgradeGold();

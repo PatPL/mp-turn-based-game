@@ -191,23 +191,30 @@ public class Game implements ITextSerializable {
 		return output.toString();
 	}
 	
-	private void checkUnitDeath(Unit unit) {
+	private boolean checkUnitDeath(Unit unit) {
 		if(unit.getHealth() <= 0) {
 			Base oponentBase = unit.getTeam() == 1 ? blueBase : redBase;
 			oponentBase.addPowerBar(unit.getCost() / 10);
 			unit.die();
+			return true;
 		}
+		
+		return false;
+	}
+	
+	private boolean checkUnitDeath(Unit unit1, Unit unit2) {
+		// IMPORTANT:
+		// Use '|' operator instead of '||'.
+		// '||' evaluates only the first expression, if it returns true. 2nd method may not be called.
+		// '|' always evaluates the entire thing.
+		// Check here: https://www.online-java.com/4JZlDjQo1W
+		return checkUnitDeath(unit1) | checkUnitDeath(unit2);
 	}
 	
 	private void checkBaseDeath(Base base) {
 		if(base.getHealth() <= 0) {
 			isGameOver = true;
 		}
-	}
-	
-	private void checkUnitDeath(Unit unit1, Unit unit2) {
-		checkUnitDeath(unit1);
-		checkUnitDeath(unit2);
 	}
 	
 	private boolean unitAttack(int x, int y) {
@@ -240,14 +247,16 @@ public class Game implements ITextSerializable {
 					// Valid target has the attacker in range, and can attack the attacker
 					probableTarget.addHealth(-attackingUnit.getDamage());
 					attackingUnit.addHealth(-probableTarget.getDamage());
-					checkUnitDeath(attackingUnit, probableTarget);
-					return true;
+					// Attack with a killing blow counts as no attack at all, so that the attacking unit
+					// (if it survived) can move after a lethal attack
+					return !checkUnitDeath(attackingUnit, probableTarget);
 				}
 				
 				// Valid target can't reach the attacker, or can't fight back (range > 1)
 				probableTarget.addHealth(-attackingUnit.getDamage());
-				checkUnitDeath(probableTarget);
-				return true;
+				// Attack with a killing blow counts as no attack at all, so that the attacking unit
+				// (if it survived) can move after a lethal attack
+				return !checkUnitDeath(probableTarget);
 			}
 		}
 		
@@ -257,6 +266,12 @@ public class Game implements ITextSerializable {
 	
 	private boolean unitMove(int x, int y) {
 		Unit movingUnit = getUnit(x, y);
+		
+		if(movingUnit.getTeam() == 0) {
+			// Empty unit tried moving
+			return false;
+		}
+		
 		int forward = movingUnit.getTeam() == 1 ? 1 : -1;
 		int i;
 		for(i = 1; i <= movingUnit.getSpeed(); ++i) {

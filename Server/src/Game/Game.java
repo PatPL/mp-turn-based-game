@@ -5,9 +5,9 @@ import Game.Units.Unit;
 import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
-import java.util.Random;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 public class Game implements ITextSerializable {
@@ -338,26 +338,26 @@ public class Game implements ITextSerializable {
 		// 0 strategy represents a strategy that is ment to be more passive
 		// it prefers upragedes over buying units
 		// it prefers cheaper units but in bigger amount
-		if (strategyCode == 0) {
+		if(strategyCode == 0) {
 			
 			int i = 0;
 			// for now AI will do 10 i iterations
 			// but it can factor in
 			// * number of tures
 			// * amount of gold
-			while ( i<=howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				base.upgradeGold();
 				base.upgradeHealth();
 				base.upgradeAttack();
-				for ( int j=0; j<=getRows(); j++ ) {
-					buyUnit(UnitType.swordsman,j,base);
-					buyUnit(UnitType.scout,j,base);
-					buyUnit(UnitType.archer,j,base);
-					buyUnit(UnitType.mage,j,base);
-					buyUnit(UnitType.knight,j,base);
-					buyUnit(UnitType.tank,j,base);
-					buyUnit(UnitType.horseman,j,base);
-					buyUnit(UnitType.lancer,j,base);
+				for(int j = 0; j <= getRows(); j++) {
+					buyUnit(UnitType.swordsman, j, base);
+					buyUnit(UnitType.scout, j, base);
+					buyUnit(UnitType.archer, j, base);
+					buyUnit(UnitType.mage, j, base);
+					buyUnit(UnitType.knight, j, base);
+					buyUnit(UnitType.tank, j, base);
+					buyUnit(UnitType.horseman, j, base);
+					buyUnit(UnitType.lancer, j, base);
 				}
 				i++;
 			}
@@ -366,17 +366,17 @@ public class Game implements ITextSerializable {
 		// 1 strategy will prefer buying units first
 		// then upgrades
 		// also will prefer buying some mediocre ones
-		if (strategyCode == 1) {
+		if(strategyCode == 1) {
 			
 			int i = 0;
 			
-			while ( i<=howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				
 				// first buying some average units
-				buyUnit(UnitType.mage,i,base);
-				buyUnit(UnitType.archer,i,base);
-				buyUnit(UnitType.scout,i,base);
-				buyUnit(UnitType.swordsman,i,base);
+				buyUnit(UnitType.mage, i, base);
+				buyUnit(UnitType.archer, i, base);
+				buyUnit(UnitType.scout, i, base);
+				buyUnit(UnitType.swordsman, i, base);
 				
 				// then adding some modyfiers
 				base.upgradeGold();
@@ -384,10 +384,10 @@ public class Game implements ITextSerializable {
 				base.upgradeAttack();
 				
 				// then the more expensive ones
-				buyUnit(UnitType.knight,i,base);
-				buyUnit(UnitType.tank,i,base);
-				buyUnit(UnitType.horseman,i,base);
-				buyUnit(UnitType.lancer,i,base);
+				buyUnit(UnitType.knight, i, base);
+				buyUnit(UnitType.tank, i, base);
+				buyUnit(UnitType.horseman, i, base);
+				buyUnit(UnitType.lancer, i, base);
 				
 				i++;
 			}
@@ -398,25 +398,25 @@ public class Game implements ITextSerializable {
 		// then upgrades
 		// also will prefer buying more expensive ones
 		// can be called the most aggresive
-		if (strategyCode == 2) {
+		if(strategyCode == 2) {
 			
 			int i = 0;
 			
-			while ( i <= howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				
-				int iFromTop = getRows()-i; // aggresive strategy will try to spawn units from top first
+				int iFromTop = getRows() - i; // aggresive strategy will try to spawn units from top first
 				
 				// first buying heavy, expensive units
-				buyUnit(UnitType.lancer,iFromTop,base);
-				buyUnit(UnitType.horseman,iFromTop,base);
-				buyUnit(UnitType.tank,iFromTop,base);
-				buyUnit(UnitType.knight,iFromTop,base);
+				buyUnit(UnitType.lancer, iFromTop, base);
+				buyUnit(UnitType.horseman, iFromTop, base);
+				buyUnit(UnitType.tank, iFromTop, base);
+				buyUnit(UnitType.knight, iFromTop, base);
 				
 				// then the mediocre ones
-				buyUnit(UnitType.mage,iFromTop,base);
-				buyUnit(UnitType.archer,iFromTop,base);
-				buyUnit(UnitType.scout,iFromTop,base);
-				buyUnit(UnitType.swordsman,iFromTop,base);
+				buyUnit(UnitType.mage, iFromTop, base);
+				buyUnit(UnitType.archer, iFromTop, base);
+				buyUnit(UnitType.scout, iFromTop, base);
+				buyUnit(UnitType.swordsman, iFromTop, base);
 				
 				// upgrades are least singificant
 				base.upgradeAttack();

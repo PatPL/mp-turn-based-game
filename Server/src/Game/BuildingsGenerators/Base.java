@@ -131,6 +131,8 @@ public class Base implements ITextSerializable {
 	}
 	
 	public boolean upgradeGold() {
+		// gold is current amount of gold this base has
+		// goldIncome is amount of gold that will be added every turn
 		if(gold >= (goldIncome * 25 / 10)) {
 			//Changes value of gold and gold income after upgrading gold income
 			gold -= goldIncome * 25 / 10;

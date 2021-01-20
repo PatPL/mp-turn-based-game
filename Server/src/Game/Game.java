@@ -6,6 +6,9 @@ import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Game implements ITextSerializable {
 	
 	//Neccessary parameters
@@ -264,12 +267,12 @@ public class Game implements ITextSerializable {
 		return false;
 	}
 	
-	private boolean unitMove(int x, int y) {
+	private int unitMove(int x, int y) {
 		Unit movingUnit = getUnit(x, y);
 		
 		if(movingUnit.getTeam() == 0) {
 			// Empty unit tried moving
-			return false;
+			return 0;
 		}
 		
 		int forward = movingUnit.getTeam() == 1 ? 1 : -1;
@@ -288,13 +291,13 @@ public class Game implements ITextSerializable {
 		
 		if(i == 0) {
 			// Can't move even a single field forward
-			return false;
+			return 0;
 		}
 		
 		// Move i tiles forward
 		setUnit(x + i * forward, y, movingUnit);
 		removeUnit(x, y);
-		return true;
+		return i;
 	}
 	
 	public void aiTurn() {
@@ -331,11 +334,35 @@ public class Game implements ITextSerializable {
 		
 		base.addGold(base.getGoldIncome());
 		
-		// Unit calculations
+		Set<Integer> performedNonLethalAttack = new HashSet<Integer>();
 		for(int y = 0; y < rows; ++y) {
+			// Unit calculations - Attacks
+			// Back-most units try to attack first
+			// Red units calculate in this order -> : 12345678
+			//    Blue ones the other way around <- : 87654321
+			int unitUpdateDirection = !isRedTurn ? -1 : 1;
+			performedNonLethalAttack.clear();
+			for(
+				int x = !isRedTurn ? columns - 1 : 0;
+				!isRedTurn ? x >= 0 : x < columns;
+				x += unitUpdateDirection
+			) {
+				if(getUnit(x, y).getTeam() != base.getTeamNumber()) {
+					// Not a unit belonging to this team
+					continue;
+				}
+				
+				
+				if(unitAttack(x, y)) {
+					performedNonLethalAttack.add(x);
+				}
+				
+			}
+			
+			// Unit calculations - Movement
 			// Red units calculate in this order <- : 87654321
 			//    Blue ones the other way around -> : 12345678
-			int unitUpdateDirection = isRedTurn ? -1 : 1;
+			unitUpdateDirection *= -1;
 			for(
 				int x = isRedTurn ? columns - 1 : 0;
 				isRedTurn ? x >= 0 : x < columns;
@@ -346,10 +373,12 @@ public class Game implements ITextSerializable {
 					continue;
 				}
 				
-				if(!unitAttack(x, y)) {
-					unitMove(x, y);
+				if(performedNonLethalAttack.contains(x)) {
+					// This unit attacked, and its target survived. This unit is not allowed to move forward
+					continue;
 				}
 				
+				unitMove(x, y);
 			}
 		}
 		

@@ -10442,7 +10442,7 @@
 											"top": 1739,
 											"width": 391.98046875,
 											"height": 13,
-											"text": "-unitMove(x: int, y: int): boolean",
+											"text": "-unitMove(x: int, y: int): int",
 											"horizontalAlignment": 0
 										},
 										{
@@ -21234,7 +21234,7 @@
 											"_parent": {
 												"$ref": "AAAAAAF3GwSVx5tPPww="
 											},
-											"type": "boolean",
+											"type": "int",
 											"direction": "return"
 										}
 									]

@@ -10,11 +10,15 @@ import Webserver.enums.Status;
 import javax.swing.*;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class GameServer {
 	
 	private static final int defaultPort = 1234;
+	private final static long idleGameLifetime = 30 * 60 * 1000; // 30 minutes
+	private final static int gamePurgeInterval = 10 * 60 * 1000; // 10 minutes
 	
 	private WebServer currentWebServer = null;
 	private final Map<String, GameLobby> gameList = new HashMap<String, GameLobby>();
@@ -108,6 +112,8 @@ public class GameServer {
 			gameListString.append(i.getValue().name);
 			gameListString.append(";");
 			gameListString.append(i.getValue().connectedPlayers.size());
+			gameListString.append(";");
+			gameListString.append(getNickname(i.getValue().host));
 			gameListString.append("\r\n");
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);
@@ -224,6 +230,13 @@ public class GameServer {
 			return true;
 		}
 		
+		if(gameLobby.game.isGameOver()) {
+			// Player attempted to send game state update, while it's not his turn
+			res.setStatus(Status.Gone_410);
+			res.setBody(String.format("You can't send game update to %s. The game is over", gameCode), Response.BodyType.Text);
+			return true;
+		}
+		
 		res.setStatus(Status.OK_200);
 		gameLobby.game.deserialize(req.body.substring(gameCode.length() + 1), 0);
 		
@@ -233,7 +246,7 @@ public class GameServer {
 		
 		gameLobby.game.calculateTurn();
 		
-		if(gameLobby.ai) {
+		if(gameLobby.ai && !gameLobby.game.isGameOver()) {
 			// "Thinking" time so that a player has some time to see the result of his own turn
 			// Handler runs on its own thread, so this doesn't block the server
 			// Run after 2-4 seconds
@@ -248,7 +261,14 @@ public class GameServer {
 		}
 		
 		gameLobby.game.setServerWriteTimestamp(System.currentTimeMillis());
-		
+		if(gameLobby.game.isGameOver()) {
+			Timer timer = new Timer(20 * 1000, e -> {
+				System.out.printf("Removed finished game: %s\n", gameCode);
+				gameList.remove(gameCode);
+			});
+			timer.setRepeats(false);
+			timer.start();
+		}
 		return true;
 	}
 	
@@ -262,6 +282,26 @@ public class GameServer {
 		output.addHandler("/updateGameState", this::updateGameStateHandler);
 		
 		return output;
+	}
+	
+	private void purgeIdleGames() {
+		// Removes all games, which didn't have an update in [idleGameLifetime]ms
+		Set<String> toPurge = new HashSet<String>();
+		long now = System.currentTimeMillis();
+		for(Map.Entry<String, GameLobby> i : gameList.entrySet()) {
+			if(now >= i.getValue().game.getServerWriteTimestamp() + idleGameLifetime) {
+				toPurge.add(i.getKey());
+			}
+		}
+		
+		if(toPurge.size() > 0) {
+			System.out.printf("Removed %s idle games:\n", toPurge.size());
+			for(String i : toPurge) {
+				System.out.printf(" -%s\n", i);
+				gameList.remove(i);
+			}
+			System.out.println(" ");
+		}
 	}
 	
 	public static void main(String[] args) {
@@ -298,6 +338,7 @@ public class GameServer {
 		
 		server.start();
 		System.out.printf("Game server listening at %s\n\n", server.currentWebServer.getAddress());
+		new Timer(gamePurgeInterval, (e) -> server.purgeIdleGames()).start();
 	}
 	
 }

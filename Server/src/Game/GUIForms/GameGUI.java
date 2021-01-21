@@ -33,10 +33,6 @@ public class GameGUI {
 	private JLabel blueCurrentGoldLabel;
 	private JLabel redGoldIncomeLabel;
 	private JLabel blueGoldIncomeLabel;
-	private JLabel redPowerbarLabel;
-	private JLabel bluePowerbarLabel;
-	private JProgressBar redPowerBar;
-	private JProgressBar bluePowerBar;
 	private JImage redHealthImageLabel;
 	private JImage redGoldIconLabel;
 	private JImage blueHealthImageLabel;
@@ -55,7 +51,7 @@ public class GameGUI {
 	private void createUIComponents() throws IOException {
 		redHealthImageLabel = new JImage("heart2.png");
 		redGoldIconLabel = new JImage("money2.png");
-		blueHealthImageLabel = new JImage("heart2.png");
+		blueHealthImageLabel = new JImage("heart2b.png");
 		blueGoldIconLabel = new JImage("money2.png");
 		backgroundPanel = new JImage("background.png", true);
 		textImage = new JImage("null64.png");
@@ -71,23 +67,19 @@ public class GameGUI {
 	public void refresh() {
 		
 		//For gold income
-		redGoldIncomeLabel.setText("( +" + game.getRedBase().getGoldIncome() + " per turn)");
-		blueGoldIncomeLabel.setText("( +" + game.getBlueBase().getGoldIncome() + " per turn)");
+		redGoldIncomeLabel.setText("(+" + game.getRedBase().getGoldIncome() + ")");
+		blueGoldIncomeLabel.setText("(+" + game.getBlueBase().getGoldIncome() + ")");
 		
 		//For current gold
-		redCurrentGoldLabel.setText(game.getRedBase().getGold() + " ");
-		blueCurrentGoldLabel.setText(game.getBlueBase().getGold() + " ");
+		redCurrentGoldLabel.setText(String.valueOf(game.getRedBase().getGold()));
+		blueCurrentGoldLabel.setText(String.valueOf(game.getBlueBase().getGold()));
 		
 		//For current health
-		redCurrentHealthLabel.setText(game.getRedBase().getHealth() + "");
-		blueCurrentHealthLabel.setText(game.getBlueBase().getHealth() + "");
-		
-		//For power bars
-		redPowerBar.setValue(game.getRedBase().getPowerBarValue());
-		bluePowerBar.setValue(game.getBlueBase().getPowerBarValue());
+		redCurrentHealthLabel.setText(String.valueOf(game.getRedBase().getHealth()));
+		blueCurrentHealthLabel.setText(String.valueOf(game.getBlueBase().getHealth()));
 		
 		//Message dialog when player's turn begins
-		if(!menuButton.isEnabled() && game.isLocalPlayerTurn()) {
+		if(!menuButton.isEnabled() && game.isLocalPlayerTurn() && !game.isGameOver()) {
 			JOptionPane.showMessageDialog(mainPanel, "Your turn!");
 		}
 		
@@ -124,6 +116,18 @@ public class GameGUI {
 			game.deserialize(res.getBody(), 0);
 			refreshUpdateInterval();
 			refresh();
+			
+			if(game.isGameOver()) {
+				boolean isRedWinner = game.isRedWinner();
+				boolean isLocalWinner = game.isRedWinner() == game.isPlayerRed();
+				JOptionPane.showMessageDialog(
+					mainPanel,
+					String.format("Game over!\nWinner: %s.\nYou %s.", isRedWinner ? "RED" : "BLUE", isLocalWinner ? "won" : "lost"),
+					"Game over",
+					JOptionPane.INFORMATION_MESSAGE
+				);
+				parentDialog.dispose();
+			}
 		});
 	}
 	
@@ -194,7 +198,7 @@ public class GameGUI {
 		gameWindow.setContentPane(mainPanel);
 		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		gameWindow.setSize(800, 600);
+		gameWindow.setSize(1000, 600);
 		gameWindow.setLocationRelativeTo(null);
 		this.backgroundMusicClip = PlaySound.repeatSound(Sounds.backgroundMusic);
 		
@@ -203,9 +207,7 @@ public class GameGUI {
 		this.game = new Game(0, 0, isPlayerRed);
 		textImage.setImage(isPlayerRed ? "redText.png" : "blueText.png");
 		gameMapPanel.setGame(this.game);
-		
-		// Initializing power bars
-		bluePowerBar.applyComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+		gameMapPanel.setTopPanel(topPanel);
 		
 		//End turn button
 		endTurnButton.addActionListener(e -> {
@@ -235,6 +237,18 @@ public class GameGUI {
 				backgroundMusicClip.close();
 			}
 		});
+
+//		// Doesn't work after another dialog was opened and closed. No idea why.
+//		mainPanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "onEnter");
+//		mainPanel.getActionMap().put("onEnter", new AbstractAction() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// ENTER was pressed
+//				if (game.isLocalPlayerTurn()) {
+//					endTurn();
+//				}
+//			}
+//		});
 		
 		// Always force start the first update interval to fetch the correct initial game state
 		startUpdateInterval();
@@ -269,8 +283,9 @@ public class GameGUI {
 	}
 	
 	private void refreshUpdateInterval() {
-		if(game.isLocalPlayerTurn()) {
+		if(game.isLocalPlayerTurn() || game.isGameOver()) {
 			// Local player's turn. Don't ask for updates as there can be none
+			// either that or the game is over, either way don't seek updates.
 			stopUpdateInterval();
 		}
 		else {

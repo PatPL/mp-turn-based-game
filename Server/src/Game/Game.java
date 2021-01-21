@@ -5,7 +5,10 @@ import Game.Units.Unit;
 import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
+
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 public class Game implements ITextSerializable {
 	
@@ -99,6 +102,15 @@ public class Game implements ITextSerializable {
 	
 	private boolean isGameOver;
 	
+	public boolean isGameOver() {
+		return this.isGameOver;
+	}
+	
+	public boolean isRedWinner() {
+		// Returns nonsense, if isGameOver == false
+		return blueBase.getHealth() <= 0;
+	}
+	
 	private long serverWriteTimestamp = 0;
 	
 	public long getServerWriteTimestamp() {
@@ -184,23 +196,30 @@ public class Game implements ITextSerializable {
 		return output.toString();
 	}
 	
-	private void checkUnitDeath(Unit unit) {
+	private boolean checkUnitDeath(Unit unit) {
 		if(unit.getHealth() <= 0) {
 			Base oponentBase = unit.getTeam() == 1 ? blueBase : redBase;
 			oponentBase.addPowerBar(unit.getCost() / 10);
 			unit.die();
+			return true;
 		}
+		
+		return false;
+	}
+	
+	private boolean checkUnitDeath(Unit unit1, Unit unit2) {
+		// IMPORTANT:
+		// Use '|' operator instead of '||'.
+		// '||' evaluates only the first expression, if it returns true. 2nd method may not be called.
+		// '|' always evaluates the entire thing.
+		// Check here: https://www.online-java.com/4JZlDjQo1W
+		return checkUnitDeath(unit1) | checkUnitDeath(unit2);
 	}
 	
 	private void checkBaseDeath(Base base) {
 		if(base.getHealth() <= 0) {
 			isGameOver = true;
 		}
-	}
-	
-	private void checkUnitDeath(Unit unit1, Unit unit2) {
-		checkUnitDeath(unit1);
-		checkUnitDeath(unit2);
 	}
 	
 	private boolean unitAttack(int x, int y) {
@@ -233,14 +252,16 @@ public class Game implements ITextSerializable {
 					// Valid target has the attacker in range, and can attack the attacker
 					probableTarget.addHealth(-attackingUnit.getDamage());
 					attackingUnit.addHealth(-probableTarget.getDamage());
-					checkUnitDeath(attackingUnit, probableTarget);
-					return true;
+					// Attack with a killing blow counts as no attack at all, so that the attacking unit
+					// (if it survived) can move after a lethal attack
+					return !checkUnitDeath(attackingUnit, probableTarget);
 				}
 				
 				// Valid target can't reach the attacker, or can't fight back (range > 1)
 				probableTarget.addHealth(-attackingUnit.getDamage());
-				checkUnitDeath(probableTarget);
-				return true;
+				// Attack with a killing blow counts as no attack at all, so that the attacking unit
+				// (if it survived) can move after a lethal attack
+				return !checkUnitDeath(probableTarget);
 			}
 		}
 		
@@ -248,8 +269,14 @@ public class Game implements ITextSerializable {
 		return false;
 	}
 	
-	private boolean unitMove(int x, int y) {
+	private int unitMove(int x, int y) {
 		Unit movingUnit = getUnit(x, y);
+		
+		if(movingUnit.getTeam() == 0) {
+			// Empty unit tried moving
+			return 0;
+		}
+		
 		int forward = movingUnit.getTeam() == 1 ? 1 : -1;
 		int i;
 		for(i = 1; i <= movingUnit.getSpeed(); ++i) {
@@ -266,13 +293,13 @@ public class Game implements ITextSerializable {
 		
 		if(i == 0) {
 			// Can't move even a single field forward
-			return false;
+			return 0;
 		}
 		
 		// Move i tiles forward
 		setUnit(x + i * forward, y, movingUnit);
 		removeUnit(x, y);
-		return true;
+		return i;
 	}
 	
 	public void aiTurn() {
@@ -311,26 +338,26 @@ public class Game implements ITextSerializable {
 		// 0 strategy represents a strategy that is ment to be more passive
 		// it prefers upragedes over buying units
 		// it prefers cheaper units but in bigger amount
-		if (strategyCode == 0) {
+		if(strategyCode == 0) {
 			
 			int i = 0;
 			// for now AI will do 10 i iterations
 			// but it can factor in
 			// * number of tures
 			// * amount of gold
-			while ( i<=howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				base.upgradeGold();
 				base.upgradeHealth();
 				base.upgradeAttack();
-				for ( int j=0; j<=getRows(); j++ ) {
-					buyUnit(UnitType.swordsman,j,base);
-					buyUnit(UnitType.scout,j,base);
-					buyUnit(UnitType.archer,j,base);
-					buyUnit(UnitType.mage,j,base);
-					buyUnit(UnitType.knight,j,base);
-					buyUnit(UnitType.tank,j,base);
-					buyUnit(UnitType.horseman,j,base);
-					buyUnit(UnitType.lancer,j,base);
+				for(int j = 0; j <= getRows(); j++) {
+					buyUnit(UnitType.swordsman, j, base);
+					buyUnit(UnitType.scout, j, base);
+					buyUnit(UnitType.archer, j, base);
+					buyUnit(UnitType.mage, j, base);
+					buyUnit(UnitType.knight, j, base);
+					buyUnit(UnitType.tank, j, base);
+					buyUnit(UnitType.horseman, j, base);
+					buyUnit(UnitType.lancer, j, base);
 				}
 				i++;
 			}
@@ -339,17 +366,17 @@ public class Game implements ITextSerializable {
 		// 1 strategy will prefer buying units first
 		// then upgrades
 		// also will prefer buying some mediocre ones
-		if (strategyCode == 1) {
+		if(strategyCode == 1) {
 			
 			int i = 0;
 			
-			while ( i<=howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				
 				// first buying some average units
-				buyUnit(UnitType.mage,i,base);
-				buyUnit(UnitType.archer,i,base);
-				buyUnit(UnitType.scout,i,base);
-				buyUnit(UnitType.swordsman,i,base);
+				buyUnit(UnitType.mage, i, base);
+				buyUnit(UnitType.archer, i, base);
+				buyUnit(UnitType.scout, i, base);
+				buyUnit(UnitType.swordsman, i, base);
 				
 				// then adding some modyfiers
 				base.upgradeGold();
@@ -357,10 +384,10 @@ public class Game implements ITextSerializable {
 				base.upgradeAttack();
 				
 				// then the more expensive ones
-				buyUnit(UnitType.knight,i,base);
-				buyUnit(UnitType.tank,i,base);
-				buyUnit(UnitType.horseman,i,base);
-				buyUnit(UnitType.lancer,i,base);
+				buyUnit(UnitType.knight, i, base);
+				buyUnit(UnitType.tank, i, base);
+				buyUnit(UnitType.horseman, i, base);
+				buyUnit(UnitType.lancer, i, base);
 				
 				i++;
 			}
@@ -371,25 +398,25 @@ public class Game implements ITextSerializable {
 		// then upgrades
 		// also will prefer buying more expensive ones
 		// can be called the most aggresive
-		if (strategyCode == 2) {
+		if(strategyCode == 2) {
 			
 			int i = 0;
 			
-			while ( i <= howLongToOperate ) {
+			while(i <= howLongToOperate) {
 				
-				int iFromTop = getRows()-i; // aggresive strategy will try to spawn units from top first
+				int iFromTop = getRows() - i; // aggresive strategy will try to spawn units from top first
 				
 				// first buying heavy, expensive units
-				buyUnit(UnitType.lancer,iFromTop,base);
-				buyUnit(UnitType.horseman,iFromTop,base);
-				buyUnit(UnitType.tank,iFromTop,base);
-				buyUnit(UnitType.knight,iFromTop,base);
+				buyUnit(UnitType.lancer, iFromTop, base);
+				buyUnit(UnitType.horseman, iFromTop, base);
+				buyUnit(UnitType.tank, iFromTop, base);
+				buyUnit(UnitType.knight, iFromTop, base);
 				
 				// then the mediocre ones
-				buyUnit(UnitType.mage,iFromTop,base);
-				buyUnit(UnitType.archer,iFromTop,base);
-				buyUnit(UnitType.scout,iFromTop,base);
-				buyUnit(UnitType.swordsman,iFromTop,base);
+				buyUnit(UnitType.mage, iFromTop, base);
+				buyUnit(UnitType.archer, iFromTop, base);
+				buyUnit(UnitType.scout, iFromTop, base);
+				buyUnit(UnitType.swordsman, iFromTop, base);
 				
 				// upgrades are least singificant
 				base.upgradeAttack();
@@ -410,11 +437,35 @@ public class Game implements ITextSerializable {
 		
 		base.addGold(base.getGoldIncome());
 		
-		// Unit calculations
+		Set<Integer> performedNonLethalAttack = new HashSet<Integer>();
 		for(int y = 0; y < rows; ++y) {
+			// Unit calculations - Attacks
+			// Back-most units try to attack first
+			// Red units calculate in this order -> : 12345678
+			//    Blue ones the other way around <- : 87654321
+			int unitUpdateDirection = !isRedTurn ? -1 : 1;
+			performedNonLethalAttack.clear();
+			for(
+				int x = !isRedTurn ? columns - 1 : 0;
+				!isRedTurn ? x >= 0 : x < columns;
+				x += unitUpdateDirection
+			) {
+				if(getUnit(x, y).getTeam() != base.getTeamNumber()) {
+					// Not a unit belonging to this team
+					continue;
+				}
+				
+				
+				if(unitAttack(x, y)) {
+					performedNonLethalAttack.add(x);
+				}
+				
+			}
+			
+			// Unit calculations - Movement
 			// Red units calculate in this order <- : 87654321
 			//    Blue ones the other way around -> : 12345678
-			int unitUpdateDirection = isRedTurn ? -1 : 1;
+			unitUpdateDirection *= -1;
 			for(
 				int x = isRedTurn ? columns - 1 : 0;
 				isRedTurn ? x >= 0 : x < columns;
@@ -425,10 +476,12 @@ public class Game implements ITextSerializable {
 					continue;
 				}
 				
-				if(!unitAttack(x, y)) {
-					unitMove(x, y);
+				if(performedNonLethalAttack.contains(x)) {
+					// This unit attacked, and its target survived. This unit is not allowed to move forward
+					continue;
 				}
 				
+				unitMove(x, y);
 			}
 		}
 		

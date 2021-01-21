@@ -33,11 +33,12 @@ public class ClientGUI {
 	private final List<GameListing> games = new ArrayList<GameListing>();
 	private final Preferences userPrefs = Preferences.userNodeForPackage(this.getClass());
 	
-	public final static String[] gameListingCols = new String[] {"Name", "Code", "Size", "Players"};
+	public final static String[] gameListingCols = new String[] {"Name", "Code", "Host", "Size", "Players"};
 	
 	private class GameListing {
 		String gameCode;
 		String gameName;
+		String gameHost;
 		int length;
 		int height;
 		int connectedPlayerCount;
@@ -50,9 +51,12 @@ public class ClientGUI {
 				return this.gameCode;
 			}
 			else if(col == 2) {
-				return String.format("%sx%s", length, height);
+				return this.gameHost;
 			}
 			else if(col == 3) {
+				return String.format("%sx%s", length, height);
+			}
+			else if(col == 4) {
 				return String.format("%s/2", connectedPlayerCount);
 			}
 			else {
@@ -191,6 +195,7 @@ public class ClientGUI {
 					newListing.height = Integer.parseInt(parts[2]);
 					newListing.gameName = parts[3];
 					newListing.connectedPlayerCount = Integer.parseInt(parts[4]);
+					newListing.gameHost = parts[5];
 				}
 				catch(Exception e) {
 					continue;
@@ -226,9 +231,7 @@ public class ClientGUI {
 						return;
 					}
 					
-					// <- connect
-					refreshGameList();
-					
+					joinGame(res.getBody());
 				}
 			);
 		}, parentFrame);
@@ -236,6 +239,10 @@ public class ClientGUI {
 	
 	private void joinSelectedGame() {
 		String gameCode = games.get(table1.getSelectedRow()).gameCode;
+		joinGame(gameCode);
+	}
+	
+	private void joinGame(String gameCode) {
 		HTTPClient.send("/joinGame", gameCode, res -> {
 			if(res.getStatusType() != StatusType.Success_2xx) {
 				JOptionPane.showMessageDialog(

@@ -237,6 +237,18 @@ public class GameGUI {
 				backgroundMusicClip.close();
 			}
 		});
+
+//		// Doesn't work after another dialog was opened and closed. No idea why.
+//		mainPanel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "onEnter");
+//		mainPanel.getActionMap().put("onEnter", new AbstractAction() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				// ENTER was pressed
+//				if (game.isLocalPlayerTurn()) {
+//					endTurn();
+//				}
+//			}
+//		});
 		
 		// Always force start the first update interval to fetch the correct initial game state
 		startUpdateInterval();

@@ -21,9 +21,6 @@ public class MenuGUI {
 	private JLabel currentGoldLabel;
 	private JButton upgradeGoldIncomeButton;
 	private JLabel costLabel;
-	private JProgressBar powerbar;
-	private JPanel powerbarPanel;
-	private JLabel currentPBLabel;
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JLabel currentAttackLabel;
@@ -34,9 +31,6 @@ public class MenuGUI {
 	private JTextArea healthTextArea;
 	private JLabel costAttackLabel;
 	private JLabel costHealthLabel;
-	private JTextArea powerbarTextArea;
-	private JButton damagePowerButton;
-	private JButton healPowerButton;
 	
 	private final static String newline = "\n";
 	
@@ -71,16 +65,6 @@ public class MenuGUI {
 			"It doesn't apply for already" + newline + "existing units.");
 		costAttackLabel.setText(String.format("Cost: %s gold", localBase.getAttackUpgradeCost()));
 		costHealthLabel.setText(String.format("Cost: %s gold", localBase.getHealthUpgradeCost()));
-		
-		//For powerbar pane
-		powerbar.setValue(localBase.getPowerBarValue());
-		currentPBLabel.setText(String.format("Power Bar Level: %s%% ", localBase.getPowerBarValue()));
-		powerbarTextArea.setText("Power bar increases while defeating enemy units." + newline + "When it's fully" +
-			" charged, below buttons will be available.");
-		if(localBase.getPowerBarValue() < 100) {
-			healPowerButton.setEnabled(false);
-			damagePowerButton.setEnabled(false);
-		}
 		
 		//Close button
 		closeButton.addActionListener(new ActionListener() {
@@ -149,29 +133,6 @@ public class MenuGUI {
 				else {
 					errorMessage();
 				}
-			}
-		});
-		
-		//Powerbar damage button
-		damagePowerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PlaySound.playSound(Sounds.buttonPress);
-				localBase.setPowerBar(0);
-				menuWindow.dispose();
-				PlaySound.playSound(Sounds.attackPower);
-			}
-		});
-		
-		//Powerbar heal button
-		healPowerButton.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				PlaySound.playSound(Sounds.buttonPress);
-				localBase.setPowerBar(0);
-				menuWindow.dispose();
-				PlaySound.playSound(Sounds.heartPower);
-				
 			}
 		});
 		

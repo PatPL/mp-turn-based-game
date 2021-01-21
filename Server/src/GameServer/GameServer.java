@@ -112,6 +112,8 @@ public class GameServer {
 			gameListString.append(i.getValue().name);
 			gameListString.append(";");
 			gameListString.append(i.getValue().connectedPlayers.size());
+			gameListString.append(";");
+			gameListString.append(getNickname(i.getValue().host));
 			gameListString.append("\r\n");
 		}
 		res.setBody(gameListString.toString(), Response.BodyType.Text);

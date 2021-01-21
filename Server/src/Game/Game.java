@@ -6,9 +6,7 @@ import Game.Units.UnitType;
 import Game.interfaces.ITextSerializable;
 import Webserver.Utility;
 
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class Game implements ITextSerializable {
 	
@@ -428,6 +426,138 @@ public class Game implements ITextSerializable {
 		
 		// Example: AI will always try to upgrade its gold income. It won't do anything else
 		base.upgradeGold();
+	}
+	
+	public void ai2Turn() {
+		Base base = getLocalBase();
+		int forward = base.getTeamNumber() == 1 ? 1 : -1;
+		int baseX = base.getTeamNumber() == 1 ? 0 : columns - 1;
+		// First of all, the AI will always try to buy 2 income upgrades, and then one health and one attack upgrade
+		// It's an optimal strategy regardless of anything else.
+		
+		if(base.getGoldIncome() < 30) {
+			// (ROUND 1)
+			// Buy 2 upgrades, always
+			base.upgradeGold();
+			base.upgradeGold();
+			return;
+		}
+		
+		if(base.getAttackModifier() < 1.5) {
+			// (ROUND 2)
+			// Always purchase the first attack upgrade
+			base.upgradeAttack();
+			return;
+		}
+		
+		if(base.getHealthModifier() < 1.5) {
+			// (ROUND 3)
+			// Always purchase the first health upgrade
+			base.upgradeHealth();
+			return;
+		}
+		
+		// (ROUND 4), leaves earlygame
+		// We're left off with 35 gold. Now start the regular strategy
+		// Strategy: Spawn units to exceed oponent's health value in each lane.
+		int[] healthAdvantage = new int[rows];
+		for(int y = 0; y < rows; ++y) {
+			// AI's inner will to overwhelm the enemy by 10HP/lane
+			healthAdvantage[y] = -10;
+			for(int x = 0; x < columns; ++x) {
+				Unit unit = getUnit(x, y);
+				if(unit.getTeam() == 0) {
+					// Empty field
+					continue;
+				}
+				
+				healthAdvantage[y] += unit.getHealth() * (unit.getTeam() == base.getTeamNumber() ? 1 : -1);
+			}
+		}
+		
+		int totalRowLoss = 0;
+		List<Integer> lossRows = new ArrayList<Integer>();
+		for(int i = 0; i < rows; ++i) {
+			if(healthAdvantage[i] >= 0) {
+				continue;
+			}
+			
+			if(getUnit(baseX, i).getTeam() != 0) {
+				// Field is not empty. Can't buy a unit there, so ignore the lane
+				continue;
+			}
+			
+			totalRowLoss -= healthAdvantage[i];
+			lossRows.add(i);
+		}
+		lossRows.sort(Comparator.comparingInt(o -> healthAdvantage[o]));
+		
+		// Boost to ranged unit's usefullness, if it would be spawed right behind another unit
+		double rangedUsefulnessBoost = 1.6;
+		// Units available to AI sorted by usefulness
+		UnitType[] units = new UnitType[] {
+			UnitType.lancer,
+			UnitType.horseman,
+			UnitType.knight,
+			UnitType.mage,
+			UnitType.swordsman,
+			UnitType.archer
+		};
+		
+		int totalBudget = base.getGold();
+		for(int i : lossRows) {
+			int lineBudget = (totalBudget * -healthAdvantage[i] / totalRowLoss) / 10;
+			lineBudget *= 10;
+			
+			UnitType chosenUnit = UnitType.empty;
+			int maxUsefulness = 0;
+			for(UnitType j : units) {
+				if(j.defaultUnit.getCost() > lineBudget) {
+					continue;
+				}
+				
+				int usefulness = j.defaultUnit.getCost();
+				if(j.defaultUnit.getRange() > 1) {
+					Unit forwardUnit1 = getUnit(baseX + forward, i);
+					Unit forwardUnit2 = getUnit(baseX + forward * 2, i);
+					if(
+						(forwardUnit1.getTeam() == base.getTeamNumber() && forwardUnit1.getRange() == 1) ||
+							(forwardUnit2.getTeam() == base.getTeamNumber() && forwardUnit2.getRange() == 1)
+					) {
+						// Send ranged units when they would spawn behind a friendly melee unit
+						usefulness *= rangedUsefulnessBoost;
+					}
+					else {
+						// Don't send ranged units first to their death
+						usefulness /= rangedUsefulnessBoost;
+					}
+				}
+				
+				if(usefulness > maxUsefulness) {
+					maxUsefulness = usefulness;
+					chosenUnit = j;
+				}
+			}
+			
+			if(chosenUnit != UnitType.empty) {
+				buyUnit(chosenUnit, i, base);
+			}
+			
+			totalRowLoss += healthAdvantage[i];
+			totalBudget = base.getGold();
+		}
+		
+		// Try to upgrade the income, if possible. It's always worth it in the long run
+		base.upgradeGold();
+		
+		// Upgrade attack & health, but leave some breathing room to prioritize income upgrades, even if more expensive
+		if(base.getGold() >= base.getAttackUpgradeCost() * 1.4) {
+			base.upgradeAttack();
+		}
+		
+		if(base.getGold() >= base.getHealthUpgradeCost() * 1.6) {
+			base.upgradeHealth();
+		}
 	}
 	
 	public void calculateTurn() {

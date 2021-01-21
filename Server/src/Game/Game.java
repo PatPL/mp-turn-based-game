@@ -396,6 +396,8 @@ public class Game implements ITextSerializable {
 				base.upgradeGold();
 				base.upgradeHealth();
 				
+				i++;
+				
 			}
 		}
 		

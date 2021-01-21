@@ -249,8 +249,8 @@ public class GameServer {
 		if(gameLobby.ai && !gameLobby.game.isGameOver()) {
 			// "Thinking" time so that a player has some time to see the result of his own turn
 			// Handler runs on its own thread, so this doesn't block the server
-			// Run after 2-4 seconds
-			Timer timer = new Timer(2000 + (int) (Math.random() * 2000), e -> {
+			// Run after 1-1.5 seconds
+			Timer timer = new Timer(1000 + (int) (Math.random() * 500), e -> {
 				gameLobby.game.aiTurn();
 				
 				gameLobby.game.calculateTurn();

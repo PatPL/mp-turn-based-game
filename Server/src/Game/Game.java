@@ -347,7 +347,7 @@ public class Game implements ITextSerializable {
 				base.upgradeGold();
 				base.upgradeHealth();
 				base.upgradeAttack();
-				for(int j = 0; j <= getRows(); j++) {
+				for(int j = 0; j < getRows(); j++) {
 					buyUnit(UnitType.swordsman, j, base);
 					buyUnit(UnitType.scout, j, base);
 					buyUnit(UnitType.archer, j, base);
@@ -370,22 +370,25 @@ public class Game implements ITextSerializable {
 			
 			while(i <= howLongToOperate) {
 				
-				// first buying some average units
-				buyUnit(UnitType.mage, i, base);
-				buyUnit(UnitType.archer, i, base);
-				buyUnit(UnitType.scout, i, base);
-				buyUnit(UnitType.swordsman, i, base);
-				
-				// then adding some modyfiers
-				base.upgradeGold();
-				base.upgradeHealth();
-				base.upgradeAttack();
-				
-				// then the more expensive ones
-				buyUnit(UnitType.knight, i, base);
-				buyUnit(UnitType.tank, i, base);
-				buyUnit(UnitType.horseman, i, base);
-				buyUnit(UnitType.lancer, i, base);
+				for(int j = 0; j < getRows(); j++) {
+					// first buying some average units
+					buyUnit(UnitType.mage, i, base);
+					buyUnit(UnitType.archer, i, base);
+					buyUnit(UnitType.scout, i, base);
+					buyUnit(UnitType.swordsman, i, base);
+					
+					// then adding some modyfiers
+					base.upgradeGold();
+					base.upgradeHealth();
+					base.upgradeAttack();
+					
+					// then the more expensive ones
+					buyUnit(UnitType.knight, i, base);
+					buyUnit(UnitType.tank, i, base);
+					buyUnit(UnitType.horseman, i, base);
+					buyUnit(UnitType.lancer, i, base);
+					
+				}
 				
 				i++;
 			}
@@ -402,7 +405,11 @@ public class Game implements ITextSerializable {
 			
 			while(i <= howLongToOperate) {
 				
-				int iFromTop = getRows() - i; // aggresive strategy will try to spawn units from top first
+				// aggresive strategy will try to spawn units from top first
+				// this multiplication and using remainder will prevent
+				// iFromTop to going below 0 or over getRows()-1
+				
+				int iFromTop = (howLongToOperate * getRows() - i) % getRows();
 				
 				// first buying heavy, expensive units
 				buyUnit(UnitType.lancer, iFromTop, base);
@@ -421,11 +428,13 @@ public class Game implements ITextSerializable {
 				base.upgradeGold();
 				base.upgradeHealth();
 				
+				i++;
+				
 			}
 		}
 		
 		// Example: AI will always try to upgrade its gold income. It won't do anything else
-		base.upgradeGold();
+		//base.upgradeGold();
 	}
 	
 	public void ai2Turn() {

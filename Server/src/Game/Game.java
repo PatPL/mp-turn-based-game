@@ -372,10 +372,10 @@ public class Game implements ITextSerializable {
 				
 				for(int j = 0; j < getRows(); j++) {
 					// first buying some average units
-					buyUnit(UnitType.mage, i, base);
-					buyUnit(UnitType.archer, i, base);
-					buyUnit(UnitType.scout, i, base);
-					buyUnit(UnitType.swordsman, i, base);
+					buyUnit(UnitType.mage, j, base);
+					buyUnit(UnitType.archer, j, base);
+					buyUnit(UnitType.scout, j, base);
+					buyUnit(UnitType.swordsman, j, base);
 					
 					// then adding some modyfiers
 					base.upgradeGold();
@@ -383,10 +383,10 @@ public class Game implements ITextSerializable {
 					base.upgradeAttack();
 					
 					// then the more expensive ones
-					buyUnit(UnitType.knight, i, base);
-					buyUnit(UnitType.tank, i, base);
-					buyUnit(UnitType.horseman, i, base);
-					buyUnit(UnitType.lancer, i, base);
+					buyUnit(UnitType.knight, j, base);
+					buyUnit(UnitType.tank, j, base);
+					buyUnit(UnitType.horseman, j, base);
+					buyUnit(UnitType.lancer, j, base);
 					
 				}
 				

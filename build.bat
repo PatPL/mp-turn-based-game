@@ -37,9 +37,9 @@ del "java-runtime\bin\all.jar"
 del startServer.bat
 del startClient.bat
 echo cd java-runtime/bin >> startServer.bat
-echo java.exe -cp nobg.jar GameServer.GameServer >> startServer.bat
+echo java.exe -cp nobg.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.bat
 echo cd java-runtime/bin >> startClient.bat
-echo java.exe -cp nobg.jar Client.ClientGUI >> startClient.bat
+echo java.exe -cp nobg.jar Client.ClientGUI 127.0.0.1:1234 >> startClient.bat
 move nobg.jar java-runtime/bin/nobg.jar
 tar -acf nobg-build.zip java-runtime startServer.bat startClient.bat
 

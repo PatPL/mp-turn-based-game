@@ -226,9 +226,7 @@ public class ClientGUI {
 						return;
 					}
 					
-					// <- connect
-					refreshGameList();
-					
+					joinGame(res.getBody());
 				}
 			);
 		}, parentFrame);
@@ -236,6 +234,10 @@ public class ClientGUI {
 	
 	private void joinSelectedGame() {
 		String gameCode = games.get(table1.getSelectedRow()).gameCode;
+		joinGame(gameCode);
+	}
+	
+	private void joinGame(String gameCode) {
 		HTTPClient.send("/joinGame", gameCode, res -> {
 			if(res.getStatusType() != StatusType.Success_2xx) {
 				JOptionPane.showMessageDialog(

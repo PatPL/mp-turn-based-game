@@ -11,6 +11,8 @@ import Webserver.enums.StatusType;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
@@ -225,6 +227,20 @@ public class GameGUI {
 		menuButton.addActionListener(e -> {
 			PlaySound.playSound(Sounds.buttonPress);
 			showMenuGUI();
+		});
+		
+		// "Easter egg" to test AIvAI fight
+		redGoldIconLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// Applies ai2Turn thinking to current game state
+				// (AI makes a move for you)
+				if (game.isLocalPlayerTurn()) {
+					System.out.println("ai2Turn move applied");
+					game.ai2Turn();
+					refresh();
+				}
+			}
 		});
 		
 		// Window close event for cleanup

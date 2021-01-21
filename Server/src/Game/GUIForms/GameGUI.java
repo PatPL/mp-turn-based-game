@@ -198,7 +198,7 @@ public class GameGUI {
 		gameWindow.setContentPane(mainPanel);
 		gameWindow.setModalityType(Dialog.ModalityType.APPLICATION_MODAL);
 		gameWindow.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		gameWindow.setSize(800, 600);
+		gameWindow.setSize(1000, 600);
 		gameWindow.setLocationRelativeTo(null);
 		this.backgroundMusicClip = PlaySound.repeatSound(Sounds.backgroundMusic);
 		
@@ -207,6 +207,7 @@ public class GameGUI {
 		this.game = new Game(0, 0, isPlayerRed);
 		textImage.setImage(isPlayerRed ? "redText.png" : "blueText.png");
 		gameMapPanel.setGame(this.game);
+		gameMapPanel.setTopPanel(topPanel);
 		
 		//End turn button
 		endTurnButton.addActionListener(e -> {

@@ -73,7 +73,7 @@ public class JMap extends JPanel {
     }
     
     private int mapHeight () {
-        return (this.getHeight () / 2) - padding * 2 + topPanelHeight ();
+        return (this.getHeight () / 2) - padding * 2 + topPanelHeight () / 2;
     }
     
     private int pxToMapX (int px) {
@@ -81,7 +81,7 @@ public class JMap extends JPanel {
     }
     
     private int pxToMapY (int px) {
-        return px + padding + (this.getHeight () / 2) - topPanelHeight ();
+        return px + padding + (this.getHeight () / 2) - topPanelHeight () / 2;
     }
     
     private interface PXConverter {

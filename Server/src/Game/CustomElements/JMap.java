@@ -16,7 +16,7 @@ public class JMap extends JPanel {
     private Game game;
     private static final int padding = 8;
     private static final int unitMargin = 8;
-    private static final double baseWidth = 0.1;
+    private static final double baseWidth = 0.15;
     private static final boolean DRAW_DEBUG_SQUARES = false;
     private static final Color redBaseFieldColor = Color.decode ("#FF4444");
     private static final Color blueBaseFieldColor = Color.decode ("#6666FF");
@@ -24,7 +24,7 @@ public class JMap extends JPanel {
     private static final int fieldBorderWidth = 2;
     private static final Color fieldBorderColor = Color.decode ("#444444");
     private static final int unitFieldPadding = 4;
-    private static final boolean healthbarVertical = false;
+    private static final boolean healthbarVertical = true;
     private static final double healthbarHeight = 0.1;
     private static final int healthbarBorderWidth = 2;
     private static final Color healthbarBorderColor = Color.decode ("#444444");
@@ -45,7 +45,7 @@ public class JMap extends JPanel {
         this.setOpaque (false);
         
         redBaseImage = ImageIO.read (getClass ().getClassLoader ().getResource ("redCastle.png"));
-        blueBaseImage = ImageIO.read (getClass ().getClassLoader ().getResource ("blue_castle.png"));
+        blueBaseImage = ImageIO.read (getClass ().getClassLoader ().getResource ("blueCastle.png"));
     }
     
     public void setGame (Game game) {

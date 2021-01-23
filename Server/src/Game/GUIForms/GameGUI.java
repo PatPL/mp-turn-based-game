@@ -51,9 +51,9 @@ public class GameGUI {
     private final Clip backgroundMusicClip;
     
     private void createUIComponents () throws IOException {
-        redHealthImageLabel = new JImage ("heart2.png");
+        redHealthImageLabel = new JImage ("redHeart.png");
         redGoldIconLabel = new JImage ("money2.png");
-        blueHealthImageLabel = new JImage ("heart2b.png");
+        blueHealthImageLabel = new JImage ("blueHeart.png");
         blueGoldIconLabel = new JImage ("money2.png");
         backgroundPanel = new JImage ("background.png", true);
         textImage = new JImage ("null64.png");
@@ -200,7 +200,7 @@ public class GameGUI {
         gameWindow.setContentPane (mainPanel);
         gameWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-        gameWindow.setSize (1000, 600);
+        gameWindow.setSize (1000, 625);
         gameWindow.setLocationRelativeTo (null);
         this.backgroundMusicClip = PlaySound.repeat (Sounds.backgroundMusic);
         

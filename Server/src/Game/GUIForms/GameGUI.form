@@ -69,6 +69,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="24"/>
+                  <foreground color="-17477"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -78,6 +79,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="24"/>
+                  <foreground color="-4473857"/>
                   <horizontalAlignment value="4"/>
                   <horizontalTextPosition value="4"/>
                   <text value=""/>
@@ -89,6 +91,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="24"/>
+                  <foreground color="-17477"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -98,6 +101,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="24"/>
+                  <foreground color="-4473857"/>
                   <horizontalAlignment value="4"/>
                   <horizontalTextPosition value="4"/>
                   <text value=""/>
@@ -109,6 +113,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="20"/>
+                  <foreground color="-17477"/>
                   <text value=""/>
                 </properties>
               </component>
@@ -118,6 +123,7 @@
                 </constraints>
                 <properties>
                   <font name="Verdana" size="20"/>
+                  <foreground color="-4473857"/>
                   <horizontalAlignment value="4"/>
                   <horizontalTextPosition value="4"/>
                   <text value=""/>

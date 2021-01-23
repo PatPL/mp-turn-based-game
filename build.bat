@@ -26,13 +26,13 @@ jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules 
 
 REM Build the entire thing
 echo cd java-runtime/bin >> startServer.bat
-echo java.exe -cp all.jar GameServer.GameServer >> startServer.bat
+echo java.exe -cp all.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.bat
 echo cd java-runtime/bin >> startClient.bat
-echo java.exe -cp all.jar Client.ClientGUI >> startClient.bat
+echo java.exe -cp all.jar Client.ClientGUI 127.0.0.1:1234 >> startClient.bat
 move all.jar java-runtime/bin/all.jar
 tar -acf all-build.zip java-runtime startServer.bat startClient.bat
 
-REM Build the nobg build
+REM Build the nobg build - a version without the huge background audio file
 del "java-runtime\bin\all.jar"
 del startServer.bat
 del startClient.bat

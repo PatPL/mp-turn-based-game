@@ -5,8 +5,8 @@ import javax.sound.sampled.AudioSystem;
 import java.io.BufferedInputStream;
 
 public enum Sounds {
-    buttonPress ("buttonPress3.wav"),
-    backgroundMusic ("background.wav");
+    buttonPress ("buttonPress.wav"),
+    silence ("silence.wav");
     
     public final AudioInputStream AUDIO_INPUT_STREAM;
     public final String PATH;

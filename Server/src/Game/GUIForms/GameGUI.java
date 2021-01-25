@@ -202,7 +202,8 @@ public class GameGUI {
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         gameWindow.setSize (1000, 625);
         gameWindow.setLocationRelativeTo (null);
-        this.backgroundMusicClip = PlaySound.repeat (Sounds.backgroundMusic);
+        // Background audio temporarily disabled until a good replacement is found
+        this.backgroundMusicClip = PlaySound.repeat (Sounds.silence);
         
         this.isRedPlayer = isPlayerRed;
         this.gameCode = gameCode;

@@ -31,8 +31,8 @@ public enum UnitType {
     scout (
         "Scout",
         new Unit (25, 10, 1, 30, 2),
-        "units/redScout.png",
-        "units/blueScout.png"
+        "units/A-light-infantry/red-light-infantry-1.png",
+        "units/A-light-infantry/blue-light-infantry-1.png"
     ),
     mage (
         "Mage",
@@ -78,6 +78,7 @@ public enum UnitType {
             tmpBlueImage = ImageIO.read (getClass ().getClassLoader ().getResource (blueImagePath));
         } catch (Exception e) {
             System.out.println ("Error in UnitType initializer");
+            e.printStackTrace ();
         }
         this.redImage = tmpRedImage;
         this.blueImage = tmpBlueImage;

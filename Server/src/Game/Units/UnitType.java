@@ -23,6 +23,25 @@ public enum UnitType {
         "units/A-light-infantry/red-light-infantry-3.png",
         "units/A-light-infantry/blue-light-infantry-3.png"
     ),
+    // B - Infantry
+    B_1 (
+        "Recruit",
+        new Unit (50, 20, 1, 1, 25),
+        "units/B-infantry/red-infantry-1.png",
+        "units/B-infantry/blue-infantry-1.png"
+    ),
+    B_2 (
+        "Soldier",
+        new Unit (60, 25, 1, 1, 45),
+        "units/B-infantry/red-infantry-2.png",
+        "units/B-infantry/blue-infantry-2.png"
+    ),
+    B_3 (
+        "Veteran",
+        new Unit (70, 30, 1, 1, 65),
+        "units/B-infantry/red-infantry-3.png",
+        "units/B-infantry/blue-infantry-3.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),

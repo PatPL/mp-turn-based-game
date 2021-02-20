@@ -42,6 +42,25 @@ public enum UnitType {
         "units/B-infantry/red-infantry-3.png",
         "units/B-infantry/blue-infantry-3.png"
     ),
+    // C - Short ranged
+    C_1 (
+        "Novice archer",
+        new Unit (40, 15, 2, 1, 35),
+        "units/C-short-ranged/red-short-ranged-1.png",
+        "units/C-short-ranged/blue-short-ranged-1.png"
+    ),
+    C_2 (
+        "Archer",
+        new Unit (45, 20, 2, 1, 55),
+        "units/C-short-ranged/red-short-ranged-2.png",
+        "units/C-short-ranged/blue-short-ranged-2.png"
+    ),
+    C_3 (
+        "Veteran archer",
+        new Unit (50, 25, 2, 1, 75),
+        "units/C-short-ranged/red-short-ranged-2.png",
+        "units/C-short-ranged/blue-short-ranged-2.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),

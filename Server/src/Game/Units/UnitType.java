@@ -4,59 +4,30 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 
 public enum UnitType {
+    // A - Light infantry
+    A_1 (
+        "Spotter",
+        new Unit (30, 30, 1, 2, 40),
+        "units/A-light-infantry/red-light-infantry-1.png",
+        "units/A-light-infantry/blue-light-infantry-1.png"
+    ),
+    A_2 (
+        "Scout",
+        new Unit (35, 35, 1, 2, 60),
+        "units/A-light-infantry/red-light-infantry-2.png",
+        "units/A-light-infantry/blue-light-infantry-2.png"
+    ),
+    A_3 (
+        "Spy",
+        new Unit (40, 40, 1, 2, 80),
+        "units/A-light-infantry/red-light-infantry-3.png",
+        "units/A-light-infantry/blue-light-infantry-3.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),
         "null64.png",
         "null64.png"
-    ),
-    swordsman (
-        "Swordsman",
-        new Unit (40, 15, 1, 20, 1),
-        "units/redSwordsman.png",
-        "units/blueSwordsman.png"
-    ),
-    archer (
-        "Archer",
-        new Unit (20, 10, 3, 30, 1),
-        "units/redArcher.png",
-        "units/blueArcher.png"
-    ),
-    knight (
-        "Knight",
-        new Unit (60, 25, 1, 50, 1),
-        "units/redKnight.png",
-        "units/blueKnight.png"
-    ),
-    scout (
-        "Scout",
-        new Unit (25, 10, 1, 30, 2),
-        "units/A-light-infantry/red-light-infantry-1.png",
-        "units/A-light-infantry/blue-light-infantry-1.png"
-    ),
-    mage (
-        "Mage",
-        new Unit (40, 20, 2, 40, 1),
-        "units/redMage.png",
-        "units/blueMage.png"
-    ),
-    tank (
-        "Tank",
-        new Unit (120, 0, 1, 70, 1),
-        "units/redTank.png",
-        "units/blueTank.png"
-    ),
-    horseman (
-        "Horseman",
-        new Unit (70, 20, 1, 80, 2),
-        "units/redHorseman.png",
-        "units/blueHorseman.png"
-    ),
-    lancer (
-        "Lancer",
-        new Unit (85, 30, 1, 125, 2),
-        "units/redLancer.png",
-        "units/blueLancer.png"
     );
     
     public final String name;

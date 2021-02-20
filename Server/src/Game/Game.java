@@ -365,12 +365,9 @@ public class Game implements ITextSerializable {
         double rangedUsefulnessBoost = 1.6;
         // Units available to AI sorted by usefulness
         UnitType[] units = new UnitType[] {
-            UnitType.lancer,
-            UnitType.horseman,
-            UnitType.knight,
-            UnitType.mage,
-            UnitType.swordsman,
-            UnitType.archer
+            UnitType.A_1, // TODO: Fill this one out after all units are implemented
+            UnitType.A_2, // Maybe some sort of algorithm that sorts these itself?
+            UnitType.A_3
         };
         
         int totalBudget = base.getGold ();

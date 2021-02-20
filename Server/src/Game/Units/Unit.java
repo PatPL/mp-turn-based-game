@@ -132,10 +132,10 @@ public class Unit implements ITextSerializable {
         this.team = teamNumber;
     }
     
-    public Unit (int health, int newDamage, int range, int cost, int speed) {
+    public Unit (int health, int attack, int range, int speed, int cost) {
         this.health = health;
         this.maxHealth = health;
-        this.damage = newDamage;
+        this.damage = attack;
         this.range = range;
         this.cost = cost;
         this.speed = speed;

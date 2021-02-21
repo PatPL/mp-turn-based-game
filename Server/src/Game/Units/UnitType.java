@@ -99,6 +99,25 @@ public enum UnitType {
         "units/E-heavy-infantry/red-heavy-infantry-3.png",
         "units/E-heavy-infantry/blue-heavy-infantry-3.png"
     ),
+    // F - Cavalry
+    F_1 (
+        "Village peasant",
+        new Unit (80, 35, 1, 2, 85),
+        "units/F-cavalry/red-cavalry-1.png",
+        "units/F-cavalry/blue-cavalry-1.png"
+    ),
+    F_2 (
+        "Village militia",
+        new Unit (100, 50, 1, 2, 135),
+        "units/F-cavalry/red-cavalry-2.png",
+        "units/F-cavalry/blue-cavalry-2.png"
+    ),
+    F_3 (
+        "Militia sergeant",
+        new Unit (120, 65, 1, 2, 190),
+        "units/F-cavalry/red-cavalry-3.png",
+        "units/F-cavalry/blue-cavalry-3.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),

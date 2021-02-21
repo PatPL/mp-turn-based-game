@@ -25,7 +25,7 @@ public enum UnitType {
     ),
     // B - Infantry
     B_1 (
-        "Recruit",
+        "Squire",
         new Unit (50, 20, 1, 1, 25),
         "units/B-infantry/red-infantry-1.png",
         "units/B-infantry/blue-infantry-1.png"
@@ -37,7 +37,7 @@ public enum UnitType {
         "units/B-infantry/blue-infantry-2.png"
     ),
     B_3 (
-        "Veteran",
+        "Sergeant",
         new Unit (70, 30, 1, 1, 65),
         "units/B-infantry/red-infantry-3.png",
         "units/B-infantry/blue-infantry-3.png"
@@ -79,6 +79,25 @@ public enum UnitType {
         new Unit (40, 20, 4, 1, 85),
         "units/D-long-ranged/red-long-ranged-3.png",
         "units/D-long-ranged/blue-long-ranged-3.png"
+    ),
+    // E - Heavy infantry
+    E_1 (
+        "Recruit",
+        new Unit (100, 25, 1, 1, 60),
+        "units/E-heavy-infantry/red-heavy-infantry-1.png",
+        "units/E-heavy-infantry/blue-heavy-infantry-1.png"
+    ),
+    E_2 (
+        "Crusader",
+        new Unit (130, 30, 1, 1, 95),
+        "units/E-heavy-infantry/red-heavy-infantry-2.png",
+        "units/E-heavy-infantry/blue-heavy-infantry-2.png"
+    ),
+    E_3 (
+        "Elite crusader",
+        new Unit (160, 35, 1, 1, 120),
+        "units/E-heavy-infantry/red-heavy-infantry-3.png",
+        "units/E-heavy-infantry/blue-heavy-infantry-3.png"
     ),
     empty (
         "-",

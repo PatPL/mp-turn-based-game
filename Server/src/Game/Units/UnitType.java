@@ -61,6 +61,25 @@ public enum UnitType {
         "units/C-short-ranged/red-short-ranged-2.png",
         "units/C-short-ranged/blue-short-ranged-2.png"
     ),
+    // D - Long ranged
+    D_1 (
+        "Novice longbowman",
+        new Unit (30, 15, 3, 1, 40),
+        "units/D-long-ranged/red-long-ranged-1.png",
+        "units/D-long-ranged/blue-long-ranged-1.png"
+    ),
+    D_2 (
+        "Longbowman",
+        new Unit (35, 15, 4, 1, 65),
+        "units/D-long-ranged/red-long-ranged-2.png",
+        "units/D-long-ranged/blue-long-ranged-2.png"
+    ),
+    D_3 (
+        "Veteran longbowman",
+        new Unit (40, 20, 4, 1, 85),
+        "units/D-long-ranged/red-long-ranged-3.png",
+        "units/D-long-ranged/blue-long-ranged-3.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),

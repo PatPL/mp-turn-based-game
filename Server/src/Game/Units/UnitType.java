@@ -118,6 +118,25 @@ public enum UnitType {
         "units/F-cavalry/red-cavalry-3.png",
         "units/F-cavalry/blue-cavalry-3.png"
     ),
+    // G - Heavy cavalry
+    G_1 (
+        "",
+        new Unit (110, 40, 1, 2, 115),
+        "units/G-heavy-cavalry/red-heavy-cavalry-1.png",
+        "units/G-heavy-cavalry/blue-heavy-cavalry-1.png"
+    ),
+    G_2 (
+        "",
+        new Unit (145, 60, 1, 1, 175),
+        "units/G-heavy-cavalry/red-heavy-cavalry-2.png",
+        "units/G-heavy-cavalry/blue-heavy-cavalry-2.png"
+    ),
+    G_3 (
+        "Knight",
+        new Unit (180, 80, 1, 1, 260),
+        "units/G-heavy-cavalry/red-heavy-cavalry-3.png",
+        "units/G-heavy-cavalry/blue-heavy-cavalry-3.png"
+    ),
     empty (
         "-",
         new Unit (0, 0, 0, 0, 0),

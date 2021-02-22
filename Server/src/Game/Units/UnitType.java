@@ -58,8 +58,8 @@ public enum UnitType {
     C_3 (
         "Veteran archer",
         new Unit (50, 25, 2, 1, 75),
-        "units/C-short-ranged/red-short-ranged-2.png",
-        "units/C-short-ranged/blue-short-ranged-2.png"
+        "units/C-short-ranged/red-short-ranged-3.png",
+        "units/C-short-ranged/blue-short-ranged-3.png"
     ),
     // D - Long ranged
     D_1 (
@@ -120,13 +120,13 @@ public enum UnitType {
     ),
     // G - Heavy cavalry
     G_1 (
-        "",
+        "Horseman",
         new Unit (110, 40, 1, 2, 115),
         "units/G-heavy-cavalry/red-heavy-cavalry-1.png",
         "units/G-heavy-cavalry/blue-heavy-cavalry-1.png"
     ),
     G_2 (
-        "",
+        "Armored horseman",
         new Unit (145, 60, 1, 1, 175),
         "units/G-heavy-cavalry/red-heavy-cavalry-2.png",
         "units/G-heavy-cavalry/blue-heavy-cavalry-2.png"
@@ -136,6 +136,25 @@ public enum UnitType {
         new Unit (180, 80, 1, 1, 260),
         "units/G-heavy-cavalry/red-heavy-cavalry-3.png",
         "units/G-heavy-cavalry/blue-heavy-cavalry-3.png"
+    ),
+    // H - Heavy ranged
+    H_1 (
+        "Crossbowman",
+        new Unit (50, 30, 2, 1, 75),
+        "units/H-heavy-ranged/red-heavy-ranged-1.png",
+        "units/H-heavy-ranged/blue-heavy-ranged-1.png"
+    ),
+    H_2 (
+        "Armored crossbowman",
+        new Unit (60, 35, 2, 1, 100),
+        "units/H-heavy-ranged/red-heavy-ranged-2.png",
+        "units/H-heavy-ranged/blue-heavy-ranged-2.png"
+    ),
+    H_3 (
+        "Crossbow crusader",
+        new Unit (70, 40, 2, 1, 120),
+        "units/H-heavy-ranged/red-heavy-ranged-3.png",
+        "units/H-heavy-ranged/blue-heavy-ranged-3.png"
     ),
     empty (
         "-",

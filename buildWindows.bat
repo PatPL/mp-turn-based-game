@@ -7,8 +7,8 @@ mkdir buildWindows
 REM Package the project into a .jar
 cd Server/out/production/Server
 echo   Packaging the project into a jar file...
-jar -cvf all.jar *
-move all.jar ../../../../buildWindows/all.jar
+jar -cvf all.jar * > nul
+move all.jar ../../../../buildWindows/all.jar > nul
 cd ../../../..
 
 REM Build a custom JRE runtime
@@ -28,7 +28,7 @@ echo cd java-runtime/bin >> startClient.bat
 echo java.exe -cp all.jar Client.ClientGUI 127.0.0.1:1234 >> startClient.bat
 
 echo   Compressing everything into a zip archive...
-move all.jar java-runtime/bin/all.jar
+move all.jar java-runtime/bin/all.jar > nul
 tar -acf all-build-Windows.zip java-runtime startServer.bat startClient.bat
 
 REM Cleanup
@@ -37,5 +37,5 @@ del startServer.bat
 del startClient.bat
 rd /s /q java-runtime
 
-echo "  Done."
+echo   Done.
 pause

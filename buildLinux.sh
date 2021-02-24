@@ -1,3 +1,12 @@
+#!/bin/bash
+if [ $EUID -ne 0 ]; then
+    echo "  Run this script as root"
+    echo "  >sudo $0"
+    echo "  "
+    echo "  Aborting..."
+    exit
+fi
+
 exec_start=$(date +%s%N)
 
 # Clean previous folder

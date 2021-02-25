@@ -25,7 +25,7 @@ echo   Creating launcher scripts...
 echo cd java-runtime/bin >> startServer.bat
 echo java.exe -cp all.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.bat
 echo cd java-runtime/bin >> startClient.bat
-echo java.exe -cp all.jar Client.ClientGUI 127.0.0.1:1234 >> startClient.bat
+echo java.exe -cp all.jar Client.ClientGUI >> startClient.bat
 
 echo   Compressing everything into a zip archive...
 move all.jar java-runtime/bin/all.jar > nul

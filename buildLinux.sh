@@ -43,7 +43,7 @@ echo cd java-runtime/bin >> startServer.sh
 echo ./java -cp all.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.sh
 chmod +100 startServer.sh
 echo cd java-runtime/bin >> startClient.sh
-echo ./java -cp all.jar Client.ClientGUI 127.0.0.1:1234 >> startClient.sh
+echo ./java -cp all.jar Client.ClientGUI >> startClient.sh
 chmod +100 startClient.sh
 
 echo "  Compressing everything into a 7z archive..."

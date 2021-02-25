@@ -24,7 +24,17 @@ public class HTTPClient {
     }
     
     public static void setServerAddress (String address) {
-        HTTPClient.address = address;
+        String[] parts = address.split (":", 2);
+        if (parts.length == 2) {
+            try {
+                setServerPort (Integer.parseInt (parts[1]));
+            } catch (Exception e) {
+                // Invalid port
+                
+            }
+        }
+        
+        HTTPClient.address = parts[0];
     }
     
     public static void setServerPort (int port) {

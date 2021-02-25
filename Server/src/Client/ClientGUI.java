@@ -3,22 +3,16 @@ package Client;
 import Game.GUIForms.GameGUI;
 import Webserver.enums.StatusType;
 import common.HTTPClient;
-import common.Utility;
 import common.enums.KeyEnum;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.prefs.Preferences;
 
 public class ClientGUI {
     
@@ -28,11 +22,10 @@ public class ClientGUI {
     private JTable table1;
     private JButton refreshGameListButton;
     private JButton hostGameButton;
-    private JTextField nicknameInput;
     private JButton joinGameButton;
+    private JButton settingsButton;
     
     private final List<GameListing> games = new ArrayList<GameListing> ();
-    private final Preferences userPrefs = Preferences.userNodeForPackage (this.getClass ());
     
     public final static String[] gameListingCols = new String[] {"Name", "Code", "Host", "Size", "Players"};
     
@@ -114,27 +107,7 @@ public class ClientGUI {
     public ClientGUI (JFrame parentFrame) {
         this.parentFrame = parentFrame;
         
-        // Setting up an unique UserID used by server to identify users
-        if (userPrefs.get (KeyEnum.userID.key, null) == null) {
-            userPrefs.put (KeyEnum.userID.key, Utility.getRandomString (32));
-        }
-        // Setting up a default nickname
-        if (userPrefs.get (KeyEnum.nickname.key, null) == null) {
-            userPrefs.put (KeyEnum.nickname.key, "Player");
-        }
-        
-        //
-        boolean LOSOWE_ID_NA_OKNO_DLA_TESTOW = true;
-        if (LOSOWE_ID_NA_OKNO_DLA_TESTOW) {
-            HTTPClient.defaultHeaders.put (KeyEnum.userID.key, Utility.getRandomString (32));
-            HTTPClient.defaultHeaders.put (KeyEnum.nickname.key, userPrefs.get (KeyEnum.nickname.key, null));
-        } else {
-            // Set a default header sent with every request to the server
-            HTTPClient.defaultHeaders.put (KeyEnum.userID.key, userPrefs.get (KeyEnum.userID.key, null));
-            HTTPClient.defaultHeaders.put (KeyEnum.nickname.key, userPrefs.get (KeyEnum.nickname.key, null));
-        }
-        
-        nicknameInput.setText (userPrefs.get (KeyEnum.nickname.key, null));
+        if (KeyEnum.userID == KeyEnum.nickname) { /* An expression to force the KeyEnum to load. */ }
         
         setupListeners ();
         startRefreshInterval ();
@@ -142,29 +115,6 @@ public class ClientGUI {
     }
     
     public static void main (String[] args) {
-        String address = "127.0.0.1";
-        int port = 1234;
-        
-        if (args.length >= 1) {
-            String[] tmp = args[0].split (":", 2);
-            if (tmp.length == 2) {
-                try {
-                    int tmpPort = Integer.parseInt (tmp[1]);
-                    address = tmp[0];
-                    port = tmpPort;
-                } catch (Exception e) {
-                    e.printStackTrace ();
-                }
-            }
-        } else {
-            System.out.println ("[client] ip:port - choose custom server ip/port");
-            System.out.println ("Example: 'java ClientGUI 192.168.0.1:22222'");
-            System.out.println (" ");
-        }
-        
-        HTTPClient.setServerAddress (address);
-        HTTPClient.setServerPort (port);
-        
         JFrame frame = new JFrame ("ClientGUI");
         ClientGUI gui = new ClientGUI (frame);
         frame.setContentPane (gui.panel1);
@@ -234,6 +184,10 @@ public class ClientGUI {
         joinGame (gameCode);
     }
     
+    private void openSettings () {
+        new SettingsGUI (this.parentFrame);
+    }
+    
     private void joinGame (String gameCode) {
         HTTPClient.send ("/joinGame", gameCode, res -> {
             if (res.getStatusType () != StatusType.Success_2xx) {
@@ -284,11 +238,7 @@ public class ClientGUI {
         refreshGameListButton.addActionListener (l -> refreshGameList ());
         hostGameButton.addActionListener (l -> hostNewGame ());
         joinGameButton.addActionListener (l -> joinSelectedGame ());
-        
-        applyDocumentListener (nicknameInput, newValue -> {
-            userPrefs.put (KeyEnum.nickname.key, newValue);
-            HTTPClient.defaultHeaders.put (KeyEnum.nickname.key, newValue);
-        });
+        settingsButton.addActionListener (l -> openSettings ());
     }
     
     // First function call after this many [ms]

@@ -1,7 +1,5 @@
 package common;
 
-import Client.ClientGUI;
-
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -67,7 +65,8 @@ public class Utility {
     public interface DocumentListenerHandler {
         void onChange (String newValue);
     }
-    public void applyDocumentListener (JTextField element, DocumentListenerHandler handler) {
+    
+    public static void applyDocumentListener (JTextField element, DocumentListenerHandler handler) {
         element.getDocument ().addDocumentListener (new DocumentListener () {
             @Override
             public void insertUpdate (DocumentEvent e) {

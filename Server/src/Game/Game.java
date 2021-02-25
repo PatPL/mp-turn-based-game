@@ -364,11 +364,8 @@ public class Game implements ITextSerializable {
         // Boost to ranged unit's usefullness, if it would be spawed right behind another unit
         double rangedUsefulnessBoost = 1.6;
         // Units available to AI sorted by usefulness
-        UnitType[] units = new UnitType[] {
-            UnitType.A_1, // TODO: Fill this one out after all units are implemented
-            UnitType.A_2, // Maybe some sort of algorithm that sorts these itself?
-            UnitType.A_3
-        };
+        UnitType[] units = UnitType.values ();
+        Arrays.sort (units, (a, b) -> b.defaultUnit.getCost () - a.defaultUnit.getCost ());
         
         int totalBudget = base.getGold ();
         for (int i : lossRows) {

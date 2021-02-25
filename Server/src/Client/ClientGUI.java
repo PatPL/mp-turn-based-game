@@ -291,41 +291,6 @@ public class ClientGUI {
         });
     }
     
-    private interface Handler {
-        void onChange (String newValue);
-    }
-    
-    private void applyDocumentListener (JTextField element, Handler handler) {
-        element.getDocument ().addDocumentListener (new DocumentListener () {
-            @Override
-            public void insertUpdate (DocumentEvent e) {
-                handler.onChange (element.getText ());
-            }
-            
-            @Override
-            public void removeUpdate (DocumentEvent e) {
-                handler.onChange (element.getText ());
-            }
-            
-            @Override
-            public void changedUpdate (DocumentEvent e) {
-                handler.onChange (element.getText ());
-            }
-        });
-        
-        element.addFocusListener (new FocusListener () {
-            @Override
-            public void focusGained (FocusEvent e) {
-                element.selectAll ();
-            }
-            
-            @Override
-            public void focusLost (FocusEvent e) {
-                handler.onChange (element.getText ());
-            }
-        });
-    }
-    
     // First function call after this many [ms]
     private long intervalStartDelay = 1000;
     // Next function call after this many [ms]

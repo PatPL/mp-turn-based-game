@@ -1,5 +1,12 @@
 package common;
 
+import Client.ClientGUI;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -55,6 +62,40 @@ public class Utility {
         } else {
             return input.substring (offset).split (separator)[0];
         }
+    }
+    
+    public interface DocumentListenerHandler {
+        void onChange (String newValue);
+    }
+    public void applyDocumentListener (JTextField element, DocumentListenerHandler handler) {
+        element.getDocument ().addDocumentListener (new DocumentListener () {
+            @Override
+            public void insertUpdate (DocumentEvent e) {
+                handler.onChange (element.getText ());
+            }
+            
+            @Override
+            public void removeUpdate (DocumentEvent e) {
+                handler.onChange (element.getText ());
+            }
+            
+            @Override
+            public void changedUpdate (DocumentEvent e) {
+                handler.onChange (element.getText ());
+            }
+        });
+        
+        element.addFocusListener (new FocusListener () {
+            @Override
+            public void focusGained (FocusEvent e) {
+                element.selectAll ();
+            }
+            
+            @Override
+            public void focusLost (FocusEvent e) {
+                handler.onChange (element.getText ());
+            }
+        });
     }
     
 }

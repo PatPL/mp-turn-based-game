@@ -22,8 +22,8 @@ jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules 
 
 REM Add launchers and package the project
 echo   Creating launcher scripts...
-copy ../buildResources/startServer.bat ./startServer.bat
-copy ../buildResources/startClient.bat ./startClient.bat
+copy ..\buildResources\startServer.bat . > nul
+copy ..\buildResources\startClient.bat . > nul
 
 echo   Compressing everything into a zip archive...
 move all.jar java-runtime/bin/all.jar > nul

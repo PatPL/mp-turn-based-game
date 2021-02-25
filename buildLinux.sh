@@ -1,11 +1,13 @@
 #!/bin/bash
-if [ $EUID -ne 0 ]; then
-    echo "  Run this script as root"
-    echo "  >sudo $0"
-    echo "  "
-    echo "  Aborting..."
-    exit
-fi
+
+# Force the script to be run as root
+# if [ $EUID -ne 0 ]; then
+#     echo "  Run this script as root"
+#     echo "  >sudo $0"
+#     echo "  "
+#     echo "  Aborting..."
+#     exit
+# fi
 
 exec_start=$(date +%s%N)
 
@@ -39,12 +41,8 @@ find java-runtime -name '*.so' | xargs -I '{}' strip --strip-debug {}
 
 # Add launchers and package the project
 echo "  Creating launcher scripts..."
-echo cd java-runtime/bin >> startServer.sh
-echo ./java -cp all.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.sh
-chmod +100 startServer.sh
-echo cd java-runtime/bin >> startClient.sh
-echo ./java -cp all.jar Client.ClientGUI >> startClient.sh
-chmod +100 startClient.sh
+cp ../buildResources/startServer.sh ./
+cp ../buildResources/startClient.sh ./
 
 echo "  Compressing everything into a 7z archive..."
 mv all.jar java-runtime/bin

@@ -1,5 +1,6 @@
 .idea/.gitignore
 .idea/.name
+.idea/vcs.xml
 
 # Źródło:
 # https://raw.githubusercontent.com/github/gitignore/master/Global/JetBrains.gitignore

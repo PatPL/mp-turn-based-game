@@ -22,10 +22,8 @@ jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules 
 
 REM Add launchers and package the project
 echo   Creating launcher scripts...
-echo cd java-runtime/bin >> startServer.bat
-echo java.exe -cp all.jar GameServer.GameServer 127.0.0.1:1234 >> startServer.bat
-echo cd java-runtime/bin >> startClient.bat
-echo java.exe -cp all.jar Client.ClientGUI >> startClient.bat
+copy ../buildResources/startServer.bat ./startServer.bat
+copy ../buildResources/startClient.bat ./startClient.bat
 
 echo   Compressing everything into a zip archive...
 move all.jar java-runtime/bin/all.jar > nul

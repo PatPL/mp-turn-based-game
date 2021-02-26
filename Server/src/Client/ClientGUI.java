@@ -3,6 +3,7 @@ package Client;
 import Game.GUIForms.GameGUI;
 import Webserver.enums.StatusType;
 import common.HTTPClient;
+import common.Utility;
 import common.enums.KeyEnum;
 
 import javax.swing.*;
@@ -24,6 +25,7 @@ public class ClientGUI {
     private JButton hostGameButton;
     private JButton joinGameButton;
     private JButton settingsButton;
+    private JTextField gameCodeInput;
     
     private final List<GameListing> games = new ArrayList<GameListing> ();
     
@@ -124,9 +126,14 @@ public class ClientGUI {
         frame.setVisible (true);
     }
     
+    private boolean isRefreshing = false;
+    
     private void refreshGameList () {
         HTTPClient.send ("/gameList", "", res -> {
+            isRefreshing = true;
             String[] lines = res.getBody ().split ("\n");
+            int selectedRow = table1.getSelectedRow ();
+            String selectedCode = selectedRow >= 0 ? games.get (selectedRow).gameCode : "";
             
             games.clear ();
             for (String line : lines) {
@@ -148,12 +155,21 @@ public class ClientGUI {
             // table1.invalidate();
             // table1.repaint();
             
-            int selectedRow = table1.getSelectedRow ();
             // Redraw the table. The methods above didn't work, though they should've worked.
             table1.tableChanged (new TableModelEvent (table1.getModel ()));
             if (selectedRow >= 0 && selectedRow < table1.getModel ().getRowCount ()) {
                 table1.setRowSelectionInterval (selectedRow, selectedRow);
             }
+            
+            // If the previously selected code was the selected one, not one typed in by user, refresh the code.
+            // Because the selection could've changed, and the listener will ignore the change because of the isRefreshing
+            // TODO: Test this once serverGUI is finished
+            int newSelection = table1.getSelectedRow ();
+            if (selectedCode == gameCodeInput.getText ()) {
+                gameCodeInput.setText (newSelection >= 0 ? games.get (newSelection).gameCode : "");
+            }
+            
+            isRefreshing = false;
         });
     }
     
@@ -180,8 +196,7 @@ public class ClientGUI {
     }
     
     private void joinSelectedGame () {
-        String gameCode = games.get (table1.getSelectedRow ()).gameCode;
-        joinGame (gameCode);
+        joinGame (gameCodeInput.getText ());
     }
     
     private void openSettings () {
@@ -229,16 +244,29 @@ public class ClientGUI {
         table1.setModel (buildGameListTableModel ());
         table1.setSelectionMode (ListSelectionModel.SINGLE_SELECTION);
         table1.getSelectionModel ().addListSelectionListener (l -> {
-            joinGameButton.setEnabled (
-                table1.getSelectedRow () >= 0
-                // && games.get(table1.getSelectedRow()).connectedPlayerCount < 2
-            );
+            int selection = table1.getSelectedRow ();
+            boolean validSelection = selection >= 0;
+            if (!isRefreshing) {
+                // Only set this text, if this listener didn't get triggered by refreshing the game list
+                gameCodeInput.setText (validSelection ? games.get (selection).gameCode : "");
+            }
+            
+        });
+        
+        Utility.applyDocumentListener (gameCodeInput, newValue -> {
+            joinGameButton.setEnabled (!newValue.equals (""));
+            if (!newValue.equals (newValue.toUpperCase ())) {
+                SwingUtilities.invokeLater (() -> {
+                    gameCodeInput.setText (newValue.toUpperCase ());
+                });
+            }
         });
         
         refreshGameListButton.addActionListener (l -> refreshGameList ());
         hostGameButton.addActionListener (l -> hostNewGame ());
         joinGameButton.addActionListener (l -> joinSelectedGame ());
         settingsButton.addActionListener (l -> openSettings ());
+        
     }
     
     // First function call after this many [ms]

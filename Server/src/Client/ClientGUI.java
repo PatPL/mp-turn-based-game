@@ -1,6 +1,7 @@
 package Client;
 
 import Game.GUIForms.GameGUI;
+import Webserver.enums.Status;
 import Webserver.enums.StatusType;
 import common.HTTPClient;
 import common.Utility;
@@ -10,10 +11,8 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class ClientGUI {
     
@@ -38,10 +37,11 @@ public class ClientGUI {
         int length;
         int height;
         int connectedPlayerCount;
+        Boolean hasPassword;
         
         public String getColumn (int col) {
             if (col == 0) {
-                return this.gameName;
+                return (hasPassword ? "[\uD83D\uDD12] " : "") + this.gameName;
             } else if (col == 1) {
                 return this.gameCode;
             } else if (col == 2) {
@@ -146,6 +146,7 @@ public class ClientGUI {
                     newListing.gameName = parts[3];
                     newListing.connectedPlayerCount = Integer.parseInt (parts[4]);
                     newListing.gameHost = parts[5];
+                    newListing.hasPassword = Boolean.parseBoolean (parts[6]);
                 } catch (Exception e) {
                     continue;
                 }
@@ -174,10 +175,10 @@ public class ClientGUI {
     }
     
     private void hostNewGame () {
-        new HostGameFormGUI ((length, height, name, ai, isPublic) -> {
+        new HostGameFormGUI ((length, height, name, ai, isPublic, password) -> {
             HTTPClient.send (
                 "/addGame",
-                String.format ("%s;%s;%s;%s;%s", length, height, name, ai, isPublic),
+                String.format ("%s;%s;%s;%s;%s;%s", length, height, name, ai, isPublic, password),
                 res -> {
                     if (res.getStatusType () != StatusType.Success_2xx) {
                         JOptionPane.showMessageDialog (
@@ -189,46 +190,73 @@ public class ClientGUI {
                         return;
                     }
                     
-                    joinGame (res.getBody ());
+                    joinGame (res.getBody (), password);
                 }
             );
         }, parentFrame);
     }
     
     private void joinSelectedGame () {
-        joinGame (gameCodeInput.getText ());
+        joinGame (gameCodeInput.getText (), "");
     }
     
     private void openSettings () {
         new SettingsGUI (this.parentFrame);
     }
     
-    private void joinGame (String gameCode) {
-        HTTPClient.send ("/joinGame", gameCode, res -> {
-            if (res.getStatusType () != StatusType.Success_2xx) {
-                JOptionPane.showMessageDialog (
-                    this.panel1,
-                    String.format ("Failed to join game %s: %s", gameCode, res.getBody ()),
-                    "Błąd",
-                    JOptionPane.ERROR_MESSAGE
-                );
-                return;
+    private String askForPassword (String gameCode) {
+        JPasswordField passwordField = new JPasswordField ();
+        int result = JOptionPane.showConfirmDialog (
+            parentFrame,
+            passwordField,
+            String.format ("Enter password to game %s:", gameCode),
+            JOptionPane.OK_CANCEL_OPTION,
+            JOptionPane.PLAIN_MESSAGE
+        );
+        return result == JOptionPane.OK_OPTION ? Utility.sha1 (String.valueOf (passwordField.getPassword ())) : null;
+    }
+    
+    private void joinGame (String gameCode, String password) {
+        HTTPClient.send (
+            "/joinGame",
+            gameCode,
+            Map.of (KeyEnum.gamePassword.key, password),
+            res -> {
+                if (res.getStatusCode () == Status.Forbidden_403.code) {
+                    String newPassword = askForPassword (gameCode);
+                    if (newPassword == null) {
+                        return;
+                    }
+                    
+                    joinGame (gameCode, newPassword);
+                    return;
+                }
+                
+                if (res.getStatusType () != StatusType.Success_2xx) {
+                    JOptionPane.showMessageDialog (
+                        this.panel1,
+                        String.format ("Failed to join game %s: %s", gameCode, res.getBody ()),
+                        "Błąd",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                    return;
+                }
+                
+                Boolean isPlayerRed = Boolean.parseBoolean (res.getBody ());
+                
+                // W tym miejscu serwer dołączył do odpowiedniej gry
+                parentFrame.setVisible (false);
+                stopRefreshInterval ();
+                
+                // A dialog with no parent shows on windows taskbar
+                // As the parent windows hides itself anyway, it doesn't affect anything, and still works as expected
+                new GameGUI (gameCode, isPlayerRed);
+                
+                parentFrame.setVisible (true);
+                startRefreshInterval ();
+                refreshGameList ();
             }
-            
-            Boolean isPlayerRed = Boolean.parseBoolean (res.getBody ());
-            
-            // W tym miejscu serwer dołączył do odpowiedniej gry
-            parentFrame.setVisible (false);
-            stopRefreshInterval ();
-            
-            // A dialog with no parent shows on windows taskbar
-            // As the parent windows hides itself anyway, it doesn't affect anything, and still works as expected
-            new GameGUI (gameCode, isPlayerRed);
-            
-            parentFrame.setVisible (true);
-            startRefreshInterval ();
-            refreshGameList ();
-        });
+        );
     }
     
     // Run at most once

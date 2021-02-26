@@ -42,10 +42,18 @@ public class HTTPClient {
     }
     
     public static void send (String URI, String body, HTTPResponseHandler handler) {
+        send (URI, body, null, handler);
+    }
+    
+    public static void send (String URI, String body, Map<String, String> additionalHeaders, HTTPResponseHandler handler) {
         Request req = new Request ();
         req.method = "GET";
         req.URI = URI;
         req.body = body;
+        
+        if (additionalHeaders != null) {
+            req.headers.putAll (additionalHeaders);
+        }
         
         send (req, handler);
     }

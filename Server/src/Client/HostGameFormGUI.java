@@ -1,5 +1,7 @@
 package Client;
 
+import common.Utility;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -17,6 +19,7 @@ public class HostGameFormGUI {
     private JTextField serverNameInput;
     private JCheckBox aiOponentCheckbox;
     private JCheckBox publicGameCheckbox;
+    private JTextField passwordInput;
     
     public interface HostGameFormSubmitHandler {
         public void onSubmit (
@@ -24,7 +27,8 @@ public class HostGameFormGUI {
             int height,
             String name,
             boolean ai,
-            boolean isPublic
+            boolean isPublic,
+            String password
         );
     }
     
@@ -68,7 +72,8 @@ public class HostGameFormGUI {
                 heightInputSlider.getValue (),
                 serverNameInput.getText ().replace (";", ","),
                 aiOponentCheckbox.isSelected (),
-                publicGameCheckbox.isSelected ()
+                publicGameCheckbox.isSelected (),
+                passwordInput.getText ().equals ("") ? "" : Utility.sha1 (passwordInput.getText ())
             );
             dialog.dispose ();
         });

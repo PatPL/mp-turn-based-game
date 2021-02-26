@@ -6,12 +6,27 @@ import javax.swing.event.DocumentListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.stream.Collectors;
 
 public class Utility {
     
     private final static String latinAlphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private final static MessageDigest sha1md;
+    static {
+        MessageDigest tmp;
+        try {
+            tmp = MessageDigest.getInstance ("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            tmp = null;
+            System.out.println ("Error - SHA-1 not found");
+            e.printStackTrace ();
+        }
+        sha1md = tmp;
+    }
     
     /**
      * @param length Length of the returned String
@@ -95,6 +110,22 @@ public class Utility {
                 handler.onChange (element.getText ());
             }
         });
+    }
+    
+    public static String btoa (byte[] data) {
+        return Base64.getEncoder ().encodeToString (data);
+    }
+    
+    public static byte[] atob (String value) {
+        return Base64.getDecoder ().decode (value);
+    }
+    
+    /**
+     * @param input String to be hashed
+     * @return input hashed with SHA-1 in form of a base64 string
+     */
+    public static String sha1 (String input) {
+        return btoa (sha1md.digest (input.getBytes ()));
     }
     
 }

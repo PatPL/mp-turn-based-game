@@ -46,9 +46,10 @@ public class GameServer {
         int height,
         String name,
         boolean ai,
-        boolean isPublic
+        boolean isPublic,
+        String password
     ) {
-        GameLobby newGameLobby = new GameLobby (hostID, length, height, name, ai, isPublic);
+        GameLobby newGameLobby = new GameLobby (hostID, length, height, name, ai, isPublic, password);
         gameList.put (newGameLobby.ID, newGameLobby);
         return newGameLobby.ID;
     }
@@ -70,8 +71,9 @@ public class GameServer {
             return true;
         }
         
-        String[] params = req.body.split (";");
-        if (params.length != 5) {
+        // limit: -1; makes split include the empty trailing string
+        String[] params = req.body.split (";", -1);
+        if (params.length != 6) {
             res.setStatus (Status.BadRequest_400);
             res.setBody ("Incorrect data in request body", Response.BodyType.Text);
             return true;
@@ -85,7 +87,8 @@ public class GameServer {
                 Integer.parseInt (params[1]),
                 params[2],
                 Boolean.parseBoolean (params[3]),
-                Boolean.parseBoolean (params[4])
+                Boolean.parseBoolean (params[4]),
+                params[5]
             );
         } catch (NumberFormatException e) {
             res.setStatus (Status.BadRequest_400);
@@ -119,6 +122,8 @@ public class GameServer {
             gameListString.append (i.getValue ().connectedPlayers.size ());
             gameListString.append (";");
             gameListString.append (getNickname (i.getValue ().host));
+            gameListString.append (";");
+            gameListString.append (!i.getValue ().password.equals (""));
             gameListString.append ("\r\n");
         }
         res.setBody (gameListString.toString (), Response.BodyType.Text);
@@ -134,6 +139,7 @@ public class GameServer {
         }
         
         String userID = req.headers.get (KeyEnum.userID.key);
+        String sentPassword = req.headers.getOrDefault (KeyEnum.gamePassword.key, null);
         String gameCode = req.body;
         GameLobby gameLobby = gameList.getOrDefault (gameCode, null);
         
@@ -149,8 +155,15 @@ public class GameServer {
             return true;
         }
         
-        if (gameLobby.connectedPlayers.size () >= 2) {
+        if (!gameLobby.password.equals ("") && !gameLobby.password.equals (sentPassword)) {
+            // Invalid or no password.
             res.setStatus (Status.Forbidden_403);
+            res.setBody (String.format ("Invalid or no password to game %s", gameCode), Response.BodyType.Text);
+            return true;
+        }
+        
+        if (gameLobby.connectedPlayers.size () >= 2) {
+            res.setStatus (Status.Conflict_409);
             res.setBody (String.format ("Game with code %s is full", gameCode), Response.BodyType.Text);
             return true;
         }

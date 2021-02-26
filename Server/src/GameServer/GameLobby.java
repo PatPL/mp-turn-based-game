@@ -24,6 +24,7 @@ public class GameLobby {
     public final Game game;
     public final boolean ai;
     public final boolean isPublic;
+    public final String password;
     
     public GameLobby (
         String host,
@@ -31,7 +32,8 @@ public class GameLobby {
         int height,
         String name,
         boolean ai,
-        boolean isPublic
+        boolean isPublic,
+        String password
     ) {
         String newID;
         int IDLength = defaultIDLength;
@@ -51,6 +53,7 @@ public class GameLobby {
         this.name = name;
         this.ai = ai;
         this.isPublic = isPublic;
+        this.password = password;
         
         this.game = new Game (height, length, false);
         this.game.setServerWriteTimestamp (createdAt);

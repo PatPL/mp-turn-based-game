@@ -44,6 +44,7 @@ public class MenuGUI {
         JDialog menuWindow = new JDialog (parentDialog);
         
         menuWindow.setContentPane (mainPanel);
+        menuWindow.setTitle ("Base upgrades");
         menuWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         menuWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         menuWindow.setSize (400, 300);

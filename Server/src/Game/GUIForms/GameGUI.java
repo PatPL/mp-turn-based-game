@@ -198,6 +198,7 @@ public class GameGUI {
         JDialog gameWindow = new JDialog ((Dialog) null);
         parentDialog = gameWindow;
         gameWindow.setContentPane (mainPanel);
+        gameWindow.setTitle (String.format ("Game %s", gameCode));
         gameWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         gameWindow.setSize (1000, 625);

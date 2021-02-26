@@ -19,6 +19,7 @@ public class SettingsGUI {
         this.dialog = dialog;
         
         dialog.setContentPane (mainPanel);
+        dialog.setTitle ("Settings");
         dialog.setAlwaysOnTop (true);
         dialog.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         dialog.setResizable (false);

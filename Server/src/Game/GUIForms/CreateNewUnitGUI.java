@@ -39,6 +39,7 @@ public class CreateNewUnitGUI {
         JDialog gameWindow = new JDialog (parentDialog);
         
         gameWindow.setContentPane (mainPanel);
+        gameWindow.setTitle ("Buy unit");
         gameWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         gameWindow.setSize (game.getRows () == 1 ? 380 : 530, 650);

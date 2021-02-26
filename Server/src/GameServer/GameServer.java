@@ -45,9 +45,10 @@ public class GameServer {
         int length,
         int height,
         String name,
-        boolean ai
+        boolean ai,
+        boolean isPublic
     ) {
-        GameLobby newGameLobby = new GameLobby (hostID, length, height, name, ai);
+        GameLobby newGameLobby = new GameLobby (hostID, length, height, name, ai, isPublic);
         gameList.put (newGameLobby.ID, newGameLobby);
         return newGameLobby.ID;
     }
@@ -70,7 +71,7 @@ public class GameServer {
         }
         
         String[] params = req.body.split (";");
-        if (params.length != 4) {
+        if (params.length != 5) {
             res.setStatus (Status.BadRequest_400);
             res.setBody ("Incorrect data in request body", Response.BodyType.Text);
             return true;
@@ -83,7 +84,8 @@ public class GameServer {
                 Integer.parseInt (params[0]),
                 Integer.parseInt (params[1]),
                 params[2],
-                Boolean.parseBoolean (params[3])
+                Boolean.parseBoolean (params[3]),
+                Boolean.parseBoolean (params[4])
             );
         } catch (NumberFormatException e) {
             res.setStatus (Status.BadRequest_400);
@@ -102,6 +104,10 @@ public class GameServer {
         
         StringBuilder gameListString = new StringBuilder ();
         for (Map.Entry<String, GameLobby> i : gameList.entrySet ()) {
+            if (!i.getValue ().isPublic) {
+                continue;
+            }
+            
             gameListString.append (i.getValue ().ID);
             gameListString.append (";");
             gameListString.append (i.getValue ().length);

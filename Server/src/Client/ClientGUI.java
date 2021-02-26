@@ -174,10 +174,10 @@ public class ClientGUI {
     }
     
     private void hostNewGame () {
-        new HostGameFormGUI ((length, height, name, ai) -> {
+        new HostGameFormGUI ((length, height, name, ai, isPublic) -> {
             HTTPClient.send (
                 "/addGame",
-                String.format ("%s;%s;%s;%s", length, height, name, ai),
+                String.format ("%s;%s;%s;%s;%s", length, height, name, ai, isPublic),
                 res -> {
                     if (res.getStatusType () != StatusType.Success_2xx) {
                         JOptionPane.showMessageDialog (

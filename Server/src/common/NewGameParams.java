@@ -4,12 +4,12 @@ import common.interfaces.ITextSerializable;
 
 public class NewGameParams implements ITextSerializable {
     
-    private int length;
-    private int height;
-    private String name;
-    private boolean ai;
-    private boolean isPublic;
-    private String password;
+    private int length = -1;
+    private int height = -1;
+    private String name = null;
+    private boolean ai = false;
+    private boolean isPublic = false;
+    private String password = null;
     
     public int getLength () {
         return length;
@@ -36,9 +36,7 @@ public class NewGameParams implements ITextSerializable {
     }
     
     public NewGameParams () {
-        this (
-            -1, -1, "[DEFAULT]", false, false, "NOT-SHA1-HASH"
-        );
+    
     }
     
     public NewGameParams (

@@ -4,6 +4,7 @@ import Webserver.Request;
 import Webserver.Response;
 import Webserver.WebServer;
 import Webserver.enums.Status;
+import common.NewGameParams;
 import common.Utility;
 import common.enums.KeyEnum;
 
@@ -42,14 +43,9 @@ public class GameServer {
     
     public String addGame (
         String hostID,
-        int length,
-        int height,
-        String name,
-        boolean ai,
-        boolean isPublic,
-        String password
+        NewGameParams gameParams
     ) {
-        GameLobby newGameLobby = new GameLobby (hostID, length, height, name, ai, isPublic, password);
+        GameLobby newGameLobby = new GameLobby (hostID, gameParams);
         gameList.put (newGameLobby.ID, newGameLobby);
         return newGameLobby.ID;
     }
@@ -70,31 +66,11 @@ public class GameServer {
             res.setBody ("No userID provided", Response.BodyType.Text);
             return true;
         }
+    
+        NewGameParams gameParams = new NewGameParams ();
+        gameParams.deserialize (req.body, 0);
         
-        // limit: -1; makes split include the empty trailing string
-        String[] params = req.body.split (";", -1);
-        if (params.length != 6) {
-            res.setStatus (Status.BadRequest_400);
-            res.setBody ("Incorrect data in request body", Response.BodyType.Text);
-            return true;
-        }
-        
-        String gameID = null;
-        try {
-            gameID = addGame (
-                req.headers.get (KeyEnum.userID.key),
-                Integer.parseInt (params[0]),
-                Integer.parseInt (params[1]),
-                params[2],
-                Boolean.parseBoolean (params[3]),
-                Boolean.parseBoolean (params[4]),
-                params[5]
-            );
-        } catch (NumberFormatException e) {
-            res.setStatus (Status.BadRequest_400);
-            res.setBody ("Error while parsing number data", Response.BodyType.Text);
-            return true;
-        }
+        String gameID = addGame (req.headers.get (KeyEnum.userID.key), gameParams);
         
         res.setStatus (Status.Created_201);
         res.setBody (gameID, Response.BodyType.Text);

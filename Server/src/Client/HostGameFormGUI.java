@@ -1,5 +1,6 @@
 package Client;
 
+import common.NewGameParams;
 import common.Utility;
 
 import javax.swing.*;
@@ -22,14 +23,7 @@ public class HostGameFormGUI {
     private JTextField passwordInput;
     
     public interface HostGameFormSubmitHandler {
-        public void onSubmit (
-            int length,
-            int height,
-            String name,
-            boolean ai,
-            boolean isPublic,
-            String password
-        );
+        public void onSubmit (NewGameParams gameParams);
     }
     
     public void refresh () {
@@ -67,14 +61,14 @@ public class HostGameFormGUI {
         refresh ();
         
         hostGameButton.addActionListener (l -> {
-            handler.onSubmit (
+            handler.onSubmit (new NewGameParams (
                 lengthInputSlider.getValue (),
                 heightInputSlider.getValue (),
                 serverNameInput.getText ().replace (";", ","),
                 aiOponentCheckbox.isSelected (),
                 publicGameCheckbox.isSelected (),
                 passwordInput.getText ().equals ("") ? "" : Utility.sha1 (passwordInput.getText ())
-            );
+            ));
             dialog.dispose ();
         });
         

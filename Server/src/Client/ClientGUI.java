@@ -175,10 +175,10 @@ public class ClientGUI {
     }
     
     private void hostNewGame () {
-        new HostGameFormGUI ((length, height, name, ai, isPublic, password) -> {
+        new HostGameFormGUI (newGameParams -> {
             HTTPClient.send (
                 "/addGame",
-                String.format ("%s;%s;%s;%s;%s;%s", length, height, name, ai, isPublic, password),
+                newGameParams.serialize (),
                 res -> {
                     if (res.getStatusType () != StatusType.Success_2xx) {
                         JOptionPane.showMessageDialog (
@@ -190,7 +190,7 @@ public class ClientGUI {
                         return;
                     }
                     
-                    joinGame (res.getBody (), password);
+                    joinGame (res.getBody (), newGameParams.getPassword ());
                 }
             );
         }, parentFrame);

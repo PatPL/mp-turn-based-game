@@ -1,6 +1,7 @@
 package GameServer;
 
 import Game.Game;
+import common.NewGameParams;
 import common.Utility;
 
 import java.util.HashMap;
@@ -26,15 +27,7 @@ public class GameLobby {
     public final boolean isPublic;
     public final String password;
     
-    public GameLobby (
-        String host,
-        int length,
-        int height,
-        String name,
-        boolean ai,
-        boolean isPublic,
-        String password
-    ) {
+    public GameLobby (String host, NewGameParams gameParams) {
         String newID;
         int IDLength = defaultIDLength;
         do {
@@ -48,12 +41,12 @@ public class GameLobby {
         
         createdAt = System.currentTimeMillis ();
         this.host = host;
-        this.length = length;
-        this.height = height;
-        this.name = name;
-        this.ai = ai;
-        this.isPublic = isPublic;
-        this.password = password;
+        this.length = gameParams.getLength ();
+        this.height = gameParams.getHeight ();
+        this.name = gameParams.getName ();
+        this.ai = gameParams.isAi ();
+        this.isPublic = gameParams.isPublic ();
+        this.password = gameParams.getPassword ();
         
         this.game = new Game (height, length, false);
         this.game.setServerWriteTimestamp (createdAt);

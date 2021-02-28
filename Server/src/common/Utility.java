@@ -73,7 +73,7 @@ public class Utility {
         if (offset >= input.length ()) {
             return null;
         } else {
-            return input.substring (offset).split (separator)[0];
+            return input.substring (offset).split (separator, -1)[0];
         }
     }
     

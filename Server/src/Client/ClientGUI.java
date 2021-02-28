@@ -3,6 +3,7 @@ package Client;
 import Game.GUIForms.GameGUI;
 import Webserver.enums.Status;
 import Webserver.enums.StatusType;
+import common.GameListing;
 import common.HTTPClient;
 import common.Utility;
 import common.enums.KeyEnum;
@@ -29,33 +30,6 @@ public class ClientGUI {
     private final List<GameListing> games = new ArrayList<GameListing> ();
     
     public final static String[] gameListingCols = new String[] {"Name", "Code", "Host", "Size", "Players"};
-    
-    private class GameListing {
-        String gameCode;
-        String gameName;
-        String gameHost;
-        int length;
-        int height;
-        int connectedPlayerCount;
-        Boolean hasPassword;
-        
-        public String getColumn (int col) {
-            if (col == 0) {
-                return (hasPassword ? "[\uD83D\uDD12] " : "") + this.gameName;
-            } else if (col == 1) {
-                return this.gameCode;
-            } else if (col == 2) {
-                return this.gameHost;
-            } else if (col == 3) {
-                return String.format ("%sx%s", length, height);
-            } else if (col == 4) {
-                return String.format ("%s/2", connectedPlayerCount);
-            } else {
-                return "";
-            }
-        }
-        
-    }
     
     private TableModel buildGameListTableModel () {
         return new TableModel () {
@@ -131,32 +105,19 @@ public class ClientGUI {
     private void refreshGameList () {
         HTTPClient.send ("/gameList", "", res -> {
             isRefreshing = true;
-            String[] lines = res.getBody ().split ("\n");
             int selectedRow = table1.getSelectedRow ();
-            String selectedCode = selectedRow >= 0 ? games.get (selectedRow).gameCode : "";
+            String selectedCode = selectedRow >= 0 ? games.get (selectedRow).getGameCode () : "";
             
             games.clear ();
-            for (String line : lines) {
+            
+            int offset = 0;
+            while (offset < res.getBody ().length ()) {
                 GameListing newListing = new GameListing ();
-                String[] parts = line.strip ().split (";");
-                try {
-                    newListing.gameCode = parts[0];
-                    newListing.length = Integer.parseInt (parts[1]);
-                    newListing.height = Integer.parseInt (parts[2]);
-                    newListing.gameName = parts[3];
-                    newListing.connectedPlayerCount = Integer.parseInt (parts[4]);
-                    newListing.gameHost = parts[5];
-                    newListing.hasPassword = Boolean.parseBoolean (parts[6]);
-                } catch (Exception e) {
-                    continue;
-                }
+                offset += newListing.deserialize (res.getBody (), offset);
                 games.add (newListing);
             }
             
-            // table1.invalidate();
-            // table1.repaint();
-            
-            // Redraw the table. The methods above didn't work, though they should've worked.
+            // Redraw the entire table.
             table1.tableChanged (new TableModelEvent (table1.getModel ()));
             if (selectedRow >= 0 && selectedRow < table1.getModel ().getRowCount ()) {
                 table1.setRowSelectionInterval (selectedRow, selectedRow);
@@ -167,7 +128,7 @@ public class ClientGUI {
             // TODO: Test this once serverGUI is finished
             int newSelection = table1.getSelectedRow ();
             if (selectedCode == gameCodeInput.getText ()) {
-                gameCodeInput.setText (newSelection >= 0 ? games.get (newSelection).gameCode : "");
+                gameCodeInput.setText (newSelection >= 0 ? games.get (newSelection).getGameCode () : "");
             }
             
             isRefreshing = false;
@@ -276,7 +237,7 @@ public class ClientGUI {
             boolean validSelection = selection >= 0;
             if (!isRefreshing) {
                 // Only set this text, if this listener didn't get triggered by refreshing the game list
-                gameCodeInput.setText (validSelection ? games.get (selection).gameCode : "");
+                gameCodeInput.setText (validSelection ? games.get (selection).getGameCode () : "");
             }
             
         });

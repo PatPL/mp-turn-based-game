@@ -4,6 +4,7 @@ import Webserver.Request;
 import Webserver.Response;
 import Webserver.WebServer;
 import Webserver.enums.Status;
+import common.GameListing;
 import common.NewGameParams;
 import common.Utility;
 import common.enums.KeyEnum;
@@ -87,20 +88,17 @@ public class GameServer {
                 continue;
             }
             
-            gameListString.append (i.getValue ().ID);
-            gameListString.append (";");
-            gameListString.append (i.getValue ().length);
-            gameListString.append (";");
-            gameListString.append (i.getValue ().height);
-            gameListString.append (";");
-            gameListString.append (i.getValue ().name);
-            gameListString.append (";");
-            gameListString.append (i.getValue ().connectedPlayers.size ());
-            gameListString.append (";");
-            gameListString.append (getNickname (i.getValue ().host));
-            gameListString.append (";");
-            gameListString.append (!i.getValue ().password.equals (""));
-            gameListString.append ("\r\n");
+            GameLobby lobby = i.getValue ();
+            gameListString.append (new GameListing (
+                lobby.ID,
+                lobby.name,
+                getNickname (lobby.host),
+                lobby.length,
+                lobby.height,
+                lobby.connectedPlayers.size (),
+                !lobby.password.equals ("")
+            ).serialize ());
+            
         }
         res.setBody (gameListString.toString (), Response.BodyType.Text);
         

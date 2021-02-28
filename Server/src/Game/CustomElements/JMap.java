@@ -12,7 +12,8 @@ public class JMap extends JPanel {
     
     private final Image redBaseImage;
     private final Image blueBaseImage;
-    private JPanel topPanel; // Used to add more unused space
+    private JPanel topPanel;    //  Used to add more unused space
+    private JPanel bottomPanel; // Used to remove some used space
     private Game game;
     private static final int padding = 8;
     private static final int unitMargin = 8;
@@ -60,12 +61,24 @@ public class JMap extends JPanel {
         }
     }
     
-    private int topPanelHeight () {
-        if (topPanel == null) {
-            return 0;
+    public void setBottomPanel (JPanel bottomPanel) {
+        if (this.bottomPanel == null) {
+            this.bottomPanel = bottomPanel;
+        }
+    }
+    
+    private int bonusPanelHeight () {
+        int bonusHeight = 0;
+        
+        if (topPanel != null) {
+            bonusHeight += topPanel.getHeight ();
         }
         
-        return topPanel.getHeight ();
+        if (bottomPanel != null) {
+            bonusHeight -= bottomPanel.getHeight ();
+        }
+        
+        return bonusHeight;
     }
     
     private int mapWidth () {
@@ -73,7 +86,7 @@ public class JMap extends JPanel {
     }
     
     private int mapHeight () {
-        return (this.getHeight () / 2) - padding * 2 + topPanelHeight () / 2;
+        return (this.getHeight () / 2) - padding * 2 + bonusPanelHeight () / 2;
     }
     
     private int pxToMapX (int px) {
@@ -81,7 +94,7 @@ public class JMap extends JPanel {
     }
     
     private int pxToMapY (int px) {
-        return px + padding + (this.getHeight () / 2) - topPanelHeight () / 2;
+        return px + padding + (this.getHeight () / 2) - bonusPanelHeight () / 2;
     }
     
     private interface PXConverter {

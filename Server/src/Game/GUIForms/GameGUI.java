@@ -7,6 +7,8 @@ import Webserver.enums.StatusType;
 import common.HTTPClient;
 import common.PlaySound;
 import common.enums.Sounds;
+import common.interfaces.IAction;
+import common.interfaces.IProvider;
 
 import javax.sound.sampled.Clip;
 import javax.swing.*;
@@ -42,6 +44,9 @@ public class GameGUI {
     private JImage backgroundPanel;
     private JMap gameMapPanel;
     private JImage textImage;
+    private JPanel statusLED;
+    private JLabel statusLabel;
+    private JPanel statusBarPanel;
     
     private final String gameCode;
     private final Game game;
@@ -212,6 +217,7 @@ public class GameGUI {
         textImage.setImage (isPlayerRed ? "redText.png" : "blueText.png");
         gameMapPanel.setGame (this.game);
         gameMapPanel.setTopPanel (topPanel);
+        gameMapPanel.setBottomPanel (statusBarPanel);
         
         //End turn button
         endTurnButton.addActionListener (e -> {
@@ -245,11 +251,27 @@ public class GameGUI {
             }
         });
         
+        IAction onSuccess = () -> {
+            statusLED.setBackground (Color.decode ("#44BB44"));
+            statusLabel.setText (String.format ("Connected to server %s", HTTPClient.getServerAddress ()));
+        };
+        IProvider<String> onError = errorMessage -> {
+            statusLED.setBackground (Color.decode ("#BB4444"));
+            statusLabel.setText (String.format ("Connection error: %s", errorMessage));
+        };
+        
+        HTTPClient.onSuccess.add (onSuccess);
+        HTTPClient.onError.add (onError);
+        
         // Window close event for cleanup
         gameWindow.addWindowListener (new WindowAdapter () {
             @Override
             public void windowClosed (WindowEvent e) {
                 stopUpdateInterval ();
+                
+                HTTPClient.onSuccess.remove (onSuccess);
+                HTTPClient.onError.remove (onError);
+                
                 backgroundMusicClip.stop ();
                 backgroundMusicClip.flush ();
                 backgroundMusicClip.close ();

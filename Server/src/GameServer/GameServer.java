@@ -67,7 +67,7 @@ public class GameServer {
             res.setBody ("No userID provided", Response.BodyType.Text);
             return true;
         }
-    
+        
         NewGameParams gameParams = new NewGameParams ();
         gameParams.deserialize (req.body, 0);
         

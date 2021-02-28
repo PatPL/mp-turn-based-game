@@ -2,19 +2,27 @@ package common;
 
 import Webserver.Request;
 import Webserver.Response;
+import common.interfaces.IAction;
+import common.interfaces.IProvider;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class HTTPClient {
     
+    public static final List<IAction> onSuccess = new ArrayList<IAction> ();
+    public static final List<IProvider<String>> onError = new ArrayList<IProvider<String>> ();
     public static final Map<String, String> defaultHeaders = new HashMap<String, String> ();
     private static String address = "127.0.0.1";
     private static int port = 1234;
@@ -41,6 +49,10 @@ public class HTTPClient {
         HTTPClient.port = port;
     }
     
+    public static String getServerAddress () {
+        return String.format ("%s:%s", address, port);
+    }
+    
     public static void send (String URI, String body, HTTPResponseHandler handler) {
         send (URI, body, null, handler);
     }
@@ -59,11 +71,19 @@ public class HTTPClient {
     }
     
     public static void send (Request req, HTTPResponseHandler handler) {
+        // Address as it was at the time of sending the message
+        String currentAddress = getServerAddress ();
         new Thread (() -> {
             try {
                 handleMessage (req, handler);
+                announceServerStatus (true);
+            } catch (ConnectException e) {
+                announceServerStatus (false, String.format ("Couldn't connect to server at %s", currentAddress));
+            } catch (UnknownHostException e) {
+                announceServerStatus (false, String.format ("Invalid server address: %s", currentAddress));
             } catch (IOException e) {
-                System.out.printf ("Error while sending a message:\n%s\n", e);
+                System.out.println ("Other server error:");
+                e.printStackTrace ();
             }
         }).start ();
     }
@@ -120,6 +140,22 @@ public class HTTPClient {
         
         serverSocket.close ();
         handler.onResponse (res);
+    }
+    
+    private static void announceServerStatus (boolean messageReceived) {
+        announceServerStatus (messageReceived, "");
+    }
+    
+    private static void announceServerStatus (boolean messageReceived, String message) {
+        if (messageReceived) {
+            for (IAction i : onSuccess) {
+                i.invoke ();
+            }
+        } else {
+            for (IProvider<String> i : onError) {
+                i.invoke (message);
+            }
+        }
     }
     
 }

@@ -12,6 +12,8 @@ import javax.swing.*;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
+import java.awt.*;
+import java.util.List;
 import java.util.Timer;
 import java.util.*;
 
@@ -26,6 +28,8 @@ public class ClientGUI {
     private JButton joinGameButton;
     private JButton settingsButton;
     private JTextField gameCodeInput;
+    private JPanel statusLED;
+    private JLabel statusLabel;
     
     private final List<GameListing> games = new ArrayList<GameListing> ();
     
@@ -84,6 +88,15 @@ public class ClientGUI {
         this.parentFrame = parentFrame;
         
         if (KeyEnum.userID == KeyEnum.nickname) { /* An expression to force the KeyEnum to load. */ }
+        
+        HTTPClient.onSuccess.add (() -> {
+            statusLED.setBackground (Color.decode ("#44BB44"));
+            statusLabel.setText (String.format ("Connected to server %s", HTTPClient.getServerAddress ()));
+        });
+        HTTPClient.onError.add (errorMessage -> {
+            statusLED.setBackground (Color.decode ("#BB4444"));
+            statusLabel.setText (String.format ("Connection error: %s", errorMessage));
+        });
         
         setupListeners ();
         startRefreshInterval ();

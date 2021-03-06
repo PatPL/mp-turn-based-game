@@ -25,8 +25,9 @@ public enum KeyEnum {
         // "nickname" == KeyEnum.nickname.key | but Java throws error "java: self-reference in initializer"
         HTTPClient.defaultHeaders.put ("nickname", newValue);
     }),
-    serverAddress ("serverAddress", "127.0.0.1:1234", HTTPClient::setServerAddress),
-    gamePassword ("gamePassword");
+    serverAddress ("serverAddress", "127.0.0.1:8686", HTTPClient::setServerAddress),
+    gamePassword ("gamePassword"),
+    serverGuiAddress ("serverGuiAddress", "127.0.0.1:8686");
     
     public final String key;
     public final String defaultValue;

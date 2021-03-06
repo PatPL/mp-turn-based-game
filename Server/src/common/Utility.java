@@ -102,7 +102,10 @@ public class Utility {
         element.addFocusListener (new FocusListener () {
             @Override
             public void focusGained (FocusEvent e) {
-                element.selectAll ();
+                // Don't override selection behaviour, if the cause of focus gain is a mouse event.
+                if (e.getCause ().ordinal () != 0) {
+                    element.selectAll ();
+                }
             }
             
             @Override

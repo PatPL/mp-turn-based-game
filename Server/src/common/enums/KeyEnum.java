@@ -37,7 +37,7 @@ public enum KeyEnum {
     }
     
     KeyEnum (String key, String defaultValue) {
-        this (key, null, null);
+        this (key, defaultValue, null);
     }
     
     KeyEnum (String key, String defaultValue, IProvider<String> onChange) {

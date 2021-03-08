@@ -8,13 +8,12 @@ import common.GameListing;
 import common.NewGameParams;
 import common.Utility;
 import common.enums.KeyEnum;
+import common.interfaces.IAction;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class GameServer {
     
@@ -23,10 +22,23 @@ public class GameServer {
     private final static int gamePurgeInterval = 10 * 60 * 1000; // 10 minutes
     
     private WebServer currentWebServer = null;
-    private final Map<String, GameLobby> gameList = new HashMap<String, GameLobby> ();
+    private final List<GameLobby> gameList = new ArrayList<GameLobby> ();
+    private final Map<String, GameLobby> gameMap = new HashMap<String, GameLobby> ();
     private final Map<String, String> nicknameAssociation = new HashMap<String, String> ();
     
-    private String getNickname (String userID) {
+    public List<IAction> onGameListUpdate = new ArrayList<IAction> ();
+    
+    private void sendGameListUpdateEvents () {
+        for (IAction i : onGameListUpdate) {
+            i.invoke ();
+        }
+    }
+    
+    public String getNickname (String userID) {
+        if (userID == "-") {
+            return "<AI>";
+        }
+        
         return nicknameAssociation.getOrDefault (userID, "<unknown nickname>");
     }
     
@@ -42,13 +54,41 @@ public class GameServer {
         currentWebServer.stop ();
     }
     
+    public int getGameCount () {
+        return gameList.size ();
+    }
+    
+    public GameLobby getGame (int index) {
+        return gameList.get (index);
+    }
+    
+    public GameLobby getGame (String id) {
+        return gameMap.getOrDefault (id, null);
+    }
+    
     public String addGame (
         String hostID,
         NewGameParams gameParams
     ) {
         GameLobby newGameLobby = new GameLobby (hostID, gameParams);
-        gameList.put (newGameLobby.ID, newGameLobby);
+        
+        gameMap.put (newGameLobby.ID, newGameLobby);
+        gameList.add (newGameLobby);
+        
+        sendGameListUpdateEvents ();
+        
         return newGameLobby.ID;
+    }
+    
+    public void removeGame (String id) {
+        if (!gameMap.containsKey (id)) {
+            // There is no game with this code
+            return;
+        }
+        
+        gameList.remove (gameMap.remove (id));
+    
+        sendGameListUpdateEvents ();
     }
     
     private boolean authorize (Request req) {
@@ -83,7 +123,7 @@ public class GameServer {
         res.setStatus (Status.OK_200);
         
         StringBuilder gameListString = new StringBuilder ();
-        for (Map.Entry<String, GameLobby> i : gameList.entrySet ()) {
+        for (Map.Entry<String, GameLobby> i : gameMap.entrySet ()) {
             if (!i.getValue ().isPublic) {
                 continue;
             }
@@ -115,7 +155,7 @@ public class GameServer {
         String userID = req.headers.get (KeyEnum.userID.key);
         String sentPassword = req.headers.getOrDefault (KeyEnum.gamePassword.key, null);
         String gameCode = req.body;
-        GameLobby gameLobby = gameList.getOrDefault (gameCode, null);
+        GameLobby gameLobby = gameMap.getOrDefault (gameCode, null);
         
         if (gameLobby == null) {
             res.setStatus (Status.NotFound_404);
@@ -157,6 +197,9 @@ public class GameServer {
             gameLobby.connectedPlayers.put ("-", false);
         }
         
+        // New player successfully joined
+        sendGameListUpdateEvents ();
+        
         return true;
     }
     
@@ -169,7 +212,7 @@ public class GameServer {
         
         String userID = req.headers.get (KeyEnum.userID.key);
         String gameCode = req.body;
-        GameLobby gameLobby = gameList.getOrDefault (gameCode, null);
+        GameLobby gameLobby = gameMap.getOrDefault (gameCode, null);
         
         if (gameLobby == null) {
             res.setStatus (Status.NotFound_404);
@@ -197,7 +240,7 @@ public class GameServer {
         
         String userID = req.headers.get (KeyEnum.userID.key);
         String gameCode = Utility.readUntil (req.body, ";", 0);
-        GameLobby gameLobby = gameList.getOrDefault (gameCode, null);
+        GameLobby gameLobby = gameMap.getOrDefault (gameCode, null);
         
         if (gameLobby == null) {
             res.setStatus (Status.NotFound_404);
@@ -256,7 +299,7 @@ public class GameServer {
         if (gameLobby.game.isGameOver ()) {
             Timer timer = new Timer (20 * 1000, e -> {
                 System.out.printf ("Removed finished game: %s\n", gameCode);
-                gameList.remove (gameCode);
+                removeGame (gameCode);
             });
             timer.setRepeats (false);
             timer.start ();
@@ -280,7 +323,7 @@ public class GameServer {
         // Removes all games, which didn't have an update in [idleGameLifetime]ms
         Set<String> toPurge = new HashSet<String> ();
         long now = System.currentTimeMillis ();
-        for (Map.Entry<String, GameLobby> i : gameList.entrySet ()) {
+        for (Map.Entry<String, GameLobby> i : gameMap.entrySet ()) {
             if (now >= i.getValue ().game.getServerWriteTimestamp () + idleGameLifetime) {
                 toPurge.add (i.getKey ());
             }
@@ -290,7 +333,7 @@ public class GameServer {
             System.out.printf ("Removed %s idle games:\n", toPurge.size ());
             for (String i : toPurge) {
                 System.out.printf (" -%s\n", i);
-                gameList.remove (i);
+                removeGame (i);
             }
             System.out.println (" ");
         }

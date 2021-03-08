@@ -27,7 +27,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="8e247" class="javax.swing.JTable" binding="gameTable">
+              <component id="8e247" class="javax.swing.JTable" binding="lobbyTable">
                 <constraints/>
                 <properties/>
               </component>

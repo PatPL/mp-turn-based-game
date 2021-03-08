@@ -8,8 +8,10 @@ import java.awt.event.FocusListener;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
+import java.util.Date;
 import java.util.stream.Collectors;
 
 public class Utility {
@@ -129,6 +131,11 @@ public class Utility {
      */
     public static String sha1 (String input) {
         return btoa (sha1md.digest (input.getBytes ()));
+    }
+    
+    private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss.SSS");
+    public static String epochMillisToString (long time) {
+        return dateTimeFormat.format (new Date (time));
     }
     
 }

@@ -13,7 +13,6 @@ import javax.swing.table.TableModel;
 public class ServerGUI {
     private JPanel mainPanel;
     private JTable lobbyTable;
-    private JList requestList;
     private JButton startButton;
     private JButton stopButton;
     private JTextField serverAddressInput;
@@ -85,7 +84,8 @@ public class ServerGUI {
         JFrame frame = new JFrame ("ServerGUI");
         frame.setContentPane (new ServerGUI ().mainPanel);
         frame.setDefaultCloseOperation (JFrame.EXIT_ON_CLOSE);
-        frame.pack ();
+        frame.setSize (1000, 800);
+        frame.setLocationRelativeTo (null);
         frame.setVisible (true);
     }
     

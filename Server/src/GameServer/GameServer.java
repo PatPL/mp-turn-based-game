@@ -273,6 +273,7 @@ public class GameServer {
         }
         
         res.setStatus (Status.OK_200);
+        res.setBody ("-", Response.BodyType.Text);
         gameLobby.game.deserialize (req.body.substring (gameCode.length () + 1), 0);
         
         if (gameLobby.game.getServerWriteTimestamp () != previousWriteTimestamp) {

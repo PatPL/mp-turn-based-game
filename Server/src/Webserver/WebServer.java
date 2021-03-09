@@ -220,13 +220,13 @@ public class WebServer {
         }
         
         res.setHeader ("Requested-URI", req.URI);
-        System.out.printf (
-            // https://en.wikipedia.org/wiki/ANSI_escape_code
-            "|>\033[93m%s\n\033[91m<<<<<<<< INBOUND\033[0m\n%s\n\033[32m>>>>>>>> OUTBOUND\033[0m\n%s\n\033[96m****************\033[0m\n\n",
-            LocalDateTime.now ().format (DateTimeFormatter.ISO_LOCAL_DATE_TIME),
-            Utility.leftPad (req.toString (), "\033[91m| \033[0m"),
-            Utility.leftPad (res.toString (), "\033[32m| \033[0m")
-        );
+//        System.out.printf (
+//            // https://en.wikipedia.org/wiki/ANSI_escape_code
+//            "|>\033[93m%s\n\033[91m<<<<<<<< INBOUND\033[0m\n%s\n\033[32m>>>>>>>> OUTBOUND\033[0m\n%s\n\033[96m****************\033[0m\n\n",
+//            LocalDateTime.now ().format (DateTimeFormatter.ISO_LOCAL_DATE_TIME),
+//            Utility.leftPad (req.toString (), "\033[91m| \033[0m"),
+//            Utility.leftPad (res.toString (), "\033[32m| \033[0m")
+//        );
         
         client.getOutputStream ().write (res.toByteArray ());
         client.shutdownOutput ();

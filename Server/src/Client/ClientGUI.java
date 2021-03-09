@@ -116,7 +116,7 @@ public class ClientGUI {
     private boolean isRefreshing = false;
     
     private void refreshGameList () {
-        HTTPClient.send ("/gameList", "", res -> {
+        HTTPClient.send ("/gameList", "-", res -> {
             isRefreshing = true;
             int selectedRow = table1.getSelectedRow ();
             String selectedCode = selectedRow >= 0 ? games.get (selectedRow).getGameCode () : "";

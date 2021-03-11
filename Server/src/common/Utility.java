@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class Utility {
@@ -136,6 +137,16 @@ public class Utility {
     private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss.SSS");
     public static String epochMillisToString (long time) {
         return dateTimeFormat.format (new Date (time));
+    }
+    
+    static Random rng = new Random ();
+    /**
+     * @param min Lower bound
+     * @param max Upper bound (Exclusive)
+     * @return Random integer in range <min, max)
+     */
+    public static int randomRange (int min, int max) {
+        return Math.abs (rng.nextInt ()) % (max - min) + min;
     }
     
 }

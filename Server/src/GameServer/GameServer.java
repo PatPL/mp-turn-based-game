@@ -20,6 +20,7 @@ public class GameServer {
     private static final int defaultPort = 1234;
     private final static long idleGameLifetime = 30 * 60 * 1000; // 30 minutes
     private final static int gamePurgeInterval = 10 * 60 * 1000; // 10 minutes
+    private Timer gamePurgeTimer;
     
     private WebServer currentWebServer = null;
     private final List<GameLobby> gameList = new ArrayList<GameLobby> ();
@@ -48,10 +49,18 @@ public class GameServer {
     
     public void start () {
         currentWebServer.start ();
+        if (gamePurgeTimer == null) {
+            gamePurgeTimer = new Timer (gamePurgeInterval, (e) -> purgeIdleGames ());
+            gamePurgeTimer.start ();
+        }
     }
     
     public void stop () {
         currentWebServer.stop ();
+        if (gamePurgeTimer != null) {
+            gamePurgeTimer.stop ();
+            gamePurgeTimer = null;
+        }
     }
     
     public int getGameCount () {
@@ -371,7 +380,6 @@ public class GameServer {
         
         server.start ();
         System.out.printf ("Game server listening at %s\n\n", server.currentWebServer.getAddress ());
-        new Timer (gamePurgeInterval, (e) -> server.purgeIdleGames ()).start ();
     }
     
 }

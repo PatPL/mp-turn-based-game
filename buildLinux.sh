@@ -42,15 +42,17 @@ find java-runtime -name '*.so' | xargs -I '{}' strip --strip-debug {}
 # Add launchers and package the project
 echo "  Creating launcher scripts..."
 cp ../buildResources/startServer.sh ./
+cp ../buildResources/startServerGUI.sh ./
 cp ../buildResources/startClient.sh ./
 
 echo "  Compressing everything into a 7z archive..."
 mv all.jar java-runtime/bin
-7z a -bso0 -bsp0 all-build-Linux java-runtime startServer.sh startClient.sh
+7z a -bso0 -bsp0 all-build-Linux java-runtime startServer.sh startServerGUI.sh startClient.sh
 
 # Cleanup
 echo "  Final cleanup..."
 rm -rf startServer.sh
+rm -rf startServerGUI.sh
 rm -rf startClient.sh
 rm -rf java-runtime
 

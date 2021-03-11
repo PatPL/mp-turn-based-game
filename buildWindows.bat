@@ -23,15 +23,17 @@ jlink --no-header-files --no-man-pages --compress=2 --strip-debug --add-modules 
 REM Add launchers and package the project
 echo   Creating launcher scripts...
 copy ..\buildResources\startServer.bat . > nul
+copy ..\buildResources\startServerGUI.bat . > nul
 copy ..\buildResources\startClient.bat . > nul
 
 echo   Compressing everything into a zip archive...
 move all.jar java-runtime/bin/all.jar > nul
-tar -acf all-build-Windows.zip java-runtime startServer.bat startClient.bat
+tar -acf all-build-Windows.zip java-runtime startServer.bat startServerGUI.bat startClient.bat
 
 REM Cleanup
 echo   Final cleanup...
 del startServer.bat
+del startServerGUI.bat
 del startClient.bat
 rd /s /q java-runtime
 

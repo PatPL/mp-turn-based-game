@@ -1,0 +1,1 @@
+@java -cp ./Server/out/production/Server GameServer.ServerGUI

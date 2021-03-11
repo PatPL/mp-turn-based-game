@@ -289,7 +289,20 @@ public class GameServer {
             System.out.println ("serverWriteTimestamp mismatched. Client side error?");
         }
         
-        gameLobby.game.calculateTurn ();
+        IAction processTurn = () -> {
+            gameLobby.game.calculateTurn ();
+            gameLobby.game.setServerWriteTimestamp (System.currentTimeMillis ());
+            if (gameLobby.game.isGameOver ()) {
+                Timer timer = new Timer (20 * 1000, e -> {
+                    System.out.printf ("Removed finished game: %s\n", gameCode);
+                    removeGame (gameCode);
+                });
+                timer.setRepeats (false);
+                timer.start ();
+            }
+        };
+    
+        processTurn.invoke ();
         
         if (gameLobby.ai && !gameLobby.game.isGameOver ()) {
             // "Thinking" time so that a player has some time to see the result of his own turn
@@ -297,23 +310,15 @@ public class GameServer {
             // Run after 1 second
             Timer timer = new Timer (1000, e -> {
                 gameLobby.game.ai2Turn ();
-                
-                gameLobby.game.calculateTurn ();
-                gameLobby.game.setServerWriteTimestamp (System.currentTimeMillis ());
+    
+                processTurn.invoke ();
             });
             timer.setRepeats (false);
             timer.start ();
         }
         
-        gameLobby.game.setServerWriteTimestamp (System.currentTimeMillis ());
-        if (gameLobby.game.isGameOver ()) {
-            Timer timer = new Timer (20 * 1000, e -> {
-                System.out.printf ("Removed finished game: %s\n", gameCode);
-                removeGame (gameCode);
-            });
-            timer.setRepeats (false);
-            timer.start ();
-        }
+        
+        
         return true;
     }
     

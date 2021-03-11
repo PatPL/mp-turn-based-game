@@ -91,7 +91,11 @@ public class HTTPClient {
     private static void handleMessage (Request req, HTTPResponseHandler handler) throws IOException {
         // Add default headers
         for (Map.Entry<String, String> i : defaultHeaders.entrySet ()) {
-            req.headers.put (i.getKey (), i.getValue ());
+            if (!req.headers.containsKey (i.getKey ())) {
+                // Only write the default header, if it doesn't exist yet.
+                // Turns additional headers from `send()` into overrides.
+                req.headers.put (i.getKey (), i.getValue ());
+            }
         }
         
         Socket serverSocket = new Socket (InetAddress.getByName (address), port);

@@ -10,7 +10,6 @@ import common.Utility;
 import common.enums.KeyEnum;
 import common.interfaces.IAction;
 
-import javax.swing.*;
 import javax.swing.Timer;
 import java.io.IOException;
 import java.util.*;
@@ -96,7 +95,7 @@ public class GameServer {
         }
         
         gameList.remove (gameMap.remove (id));
-    
+        
         sendGameListUpdateEvents ();
     }
     
@@ -301,7 +300,7 @@ public class GameServer {
                 timer.start ();
             }
         };
-    
+        
         processTurn.invoke ();
         
         if (gameLobby.ai && !gameLobby.game.isGameOver ()) {
@@ -310,14 +309,12 @@ public class GameServer {
             // Run after 1 second
             Timer timer = new Timer (1000, e -> {
                 gameLobby.game.ai2Turn ();
-    
+                
                 processTurn.invoke ();
             });
             timer.setRepeats (false);
             timer.start ();
         }
-        
-        
         
         return true;
     }

@@ -1,7 +1,6 @@
 package Webserver;
 
 import Webserver.enums.Status;
-import common.Utility;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,8 +9,6 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicReference;

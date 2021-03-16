@@ -76,7 +76,7 @@ public class AutomaticPlayer {
                     break;
             }
         }
-    
+        
         if ((purpose & 0b0001) != 0) {
             game.buyUnit (UnitType.B_1, Utility.randomRange (0, game.getRows ()), game.getLocalBase ());
         }
@@ -87,7 +87,7 @@ public class AutomaticPlayer {
         } catch (InterruptedException e) {
             e.printStackTrace ();
         }
-    
+        
         // Send game update
         if (game.isLocalPlayerTurn ()) {
             log ("Local player move applied. Sending update, and waiting for state update");
@@ -104,7 +104,7 @@ public class AutomaticPlayer {
     
     public AutomaticPlayer (IAction onGameOver, boolean logging) {
         if (KeyEnum.nickname.key.equals (KeyEnum.gamePassword.key)) { /* Initialize KeyEnum */ }
-    
+        
         // Player will connect to the server set in ClientGUI
         
         this.logging = logging;
@@ -125,7 +125,7 @@ public class AutomaticPlayer {
             System.out.printf ("||| Started %s/%s\n", i + 1, instances);
             Thread.sleep (spoolupTimePerInstance);
         }
-    
+        
         System.out.println ("||| All players spooled up");
     }
     
@@ -153,7 +153,7 @@ public class AutomaticPlayer {
                 System.out.println ("THIS SHOULDN'T HAPPEN (ATTEMPTED OVERWRITE)");
                 return;
             }
-    
+            
             log ("Fetched fresh game state");
             game.deserialize (res.getBody (), 0);
             

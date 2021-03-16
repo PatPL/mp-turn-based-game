@@ -135,11 +135,13 @@ public class Utility {
     }
     
     private static final SimpleDateFormat dateTimeFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss.SSS");
+    
     public static String epochMillisToString (long time) {
         return dateTimeFormat.format (new Date (time));
     }
     
     static Random rng = new Random ();
+    
     /**
      * @param min Lower bound
      * @param max Upper bound (Exclusive)

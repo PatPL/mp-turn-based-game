@@ -93,7 +93,8 @@ public class ServerGUI {
     // JTable/JList Model factories
     //
     
-    private final static String[] gameLobbiesCols = new String[] { "Name", "Code", "Size", "Players", "AI", "Unlisted", "Password", "Creation time" };
+    private final static String[] gameLobbiesCols = new String[] {"Name", "Code", "Size", "Players", "AI", "Unlisted", "Password", "Creation time"};
+    
     private TableModel buildLobbyListTableModel () {
         return new TableModel () {
             @Override

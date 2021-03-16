@@ -73,8 +73,8 @@ public class JImage extends JPanel {
         super.paintComponent (g);
         
         if (center) {
-            int missingWidth = Math.max (0, this.getWidth () - image.getWidth (this));
-            int missingHeight = Math.max (0, this.getHeight () - image.getHeight (this));
+            int missingWidth = this.getWidth () - image.getWidth (this);
+            int missingHeight = this.getHeight () - image.getHeight (this);
             
             int bonusWidth = missingWidth;
             missingHeight -= (bonusWidth * image.getHeight (this)) / image.getWidth (this);

@@ -81,6 +81,13 @@ public class AutomaticPlayer {
             game.buyUnit (UnitType.B_1, Utility.randomRange (0, game.getRows ()), game.getLocalBase ());
         }
         
+        // Your turn should take 2-8 seconds
+        try {
+            Thread.sleep (Utility.randomRange (2000, 10000));
+        } catch (InterruptedException e) {
+            e.printStackTrace ();
+        }
+    
         // Send game update
         if (game.isLocalPlayerTurn ()) {
             log ("Local player move applied. Sending update, and waiting for state update");
@@ -110,8 +117,8 @@ public class AutomaticPlayer {
     }
     
     public static void main (String[] args) throws InterruptedException {
-        long spoolupTimePerInstance = 2000;
-        int instances = 10;
+        long spoolupTimePerInstance = 500;
+        int instances = 200;
         
         for (int i = 0; i < instances; ++i) {
             infinitePlayer ();

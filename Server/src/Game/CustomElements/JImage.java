@@ -73,21 +73,31 @@ public class JImage extends JPanel {
         super.paintComponent (g);
         
         if (center) {
+            int missingWidth = Math.max (0, this.getWidth () - image.getWidth (this));
+            int missingHeight = Math.max (0, this.getHeight () - image.getHeight (this));
+            
+            int bonusWidth = missingWidth;
+            missingHeight -= (bonusWidth * image.getHeight (this)) / image.getWidth (this);
+            missingHeight = Math.max (0, missingHeight);
+            
+            bonusWidth += (missingHeight * image.getWidth (this)) / image.getHeight (this);
+            int bonusHeight = (bonusWidth * image.getHeight (this)) / image.getWidth (this);
+            
             if (background != null) {
                 g.setColor (background);
                 g.fillRect (
-                    (this.getWidth () - image.getWidth (this)) / 2,
-                    (this.getHeight () - image.getHeight (this)) / 2,
-                    image.getWidth (this),
-                    image.getHeight (this)
+                    (this.getWidth () - image.getWidth (this) - bonusWidth) / 2,
+                    (this.getHeight () - image.getHeight (this) - bonusHeight) / 2,
+                    image.getWidth (this) + bonusWidth,
+                    image.getHeight (this) + bonusHeight
                 );
             }
             g.drawImage (
                 image,
-                (this.getWidth () - image.getWidth (this)) / 2,
-                (this.getHeight () - image.getHeight (this)) / 2,
-                image.getWidth (this),
-                image.getHeight (this),
+                (this.getWidth () - image.getWidth (this) - bonusWidth) / 2,
+                (this.getHeight () - image.getHeight (this) - bonusHeight) / 2,
+                image.getWidth (this) + bonusWidth,
+                image.getHeight (this) + bonusHeight,
                 this
             );
         } else {

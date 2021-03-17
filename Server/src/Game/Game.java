@@ -331,8 +331,8 @@ public class Game implements ITextSerializable {
         // Strategy: Spawn units to exceed oponent's health value in each lane.
         int[] healthAdvantage = new int[rows];
         for (int y = 0; y < rows; ++y) {
-            // AI's inner will to overwhelm the enemy by 10HP/lane
-            healthAdvantage[y] = -10;
+            // AI's inner will to overwhelm the enemy by 1HP/lane
+            healthAdvantage[y] = -1;
             for (int x = 0; x < columns; ++x) {
                 Unit unit = getUnit (x, y);
                 if (unit.getTeam () == 0) {
@@ -340,6 +340,8 @@ public class Game implements ITextSerializable {
                     continue;
                 }
                 
+                // Static HP value per enemy unit to prioritize attacked fields
+                healthAdvantage[y] += unit.getTeam () == base.getTeamNumber () ? 0 : -10;
                 healthAdvantage[y] += unit.getHealth () * (unit.getTeam () == base.getTeamNumber () ? 1 : -1);
             }
         }
@@ -359,7 +361,7 @@ public class Game implements ITextSerializable {
             totalRowLoss -= healthAdvantage[i];
             lossRows.add (i);
         }
-        lossRows.sort (Comparator.comparingInt (o -> healthAdvantage[o]));
+        lossRows.sort (Comparator.comparingInt (o -> -healthAdvantage[o]));
         
         // Boost to ranged unit's usefullness, if it would be spawed right behind another unit
         double rangedUsefulnessBoost = 1.6;

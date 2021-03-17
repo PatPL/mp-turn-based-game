@@ -59,9 +59,9 @@ public class MenuGUI {
         //For attack and health pane
         currentAttackLabel.setText (String.format ("Current Attack Modifier: %sx", localBase.getAttackModifier ()));
         currentHealthLabel.setText (String.format ("Current Health Modifier: %sx", localBase.getHealthModifier ()));
-        attackTextArea.append ("Attack modifier enhances" + newline + "damage dealt for all units." + newline +
+        attackTextArea.append ("Attack modifier enhances" + newline + "damage dealt by new units." + newline +
             "It doesn't apply for already" + newline + "existing units.");
-        healthTextArea.append ("Health modifier enhances" + newline + "maximum health for all units." + newline +
+        healthTextArea.append ("Health modifier enhances" + newline + "maximum health of new units." + newline +
             "It doesn't apply for already" + newline + "existing units.");
         costAttackLabel.setText (String.format ("Cost: %s gold", localBase.getAttackUpgradeCost ()));
         costHealthLabel.setText (String.format ("Cost: %s gold", localBase.getHealthUpgradeCost ()));
@@ -82,7 +82,7 @@ public class MenuGUI {
                 PlaySound.once (Sounds.buttonPress);
                 if (localBase.upgradeGold ()) {
                     //Message dialog
-                    JOptionPane.showMessageDialog (null, "Gold income upgraded!");
+                    JOptionPane.showMessageDialog (mainPanel, "Gold income upgraded!");
                     
                     //Refreshes text after upgrading
                     currentGoldIncomeLabel.setText (String.format ("Current Gold Income: +%s per turn", localBase.getGoldIncome ()));
@@ -102,7 +102,7 @@ public class MenuGUI {
                 PlaySound.once (Sounds.buttonPress);
                 if (localBase.upgradeAttack ()) {
                     //Message dialog
-                    JOptionPane.showMessageDialog (null, "Attack for your units upgraded!");
+                    JOptionPane.showMessageDialog (mainPanel, "Attack of new units upgraded!");
                     
                     //Refreshes text after upgrading
                     costAttackLabel.setText (String.format ("Cost: %s gold", localBase.getAttackUpgradeCost ()));
@@ -121,7 +121,7 @@ public class MenuGUI {
                 PlaySound.once (Sounds.buttonPress);
                 if (localBase.upgradeHealth ()) {
                     //Message dialog
-                    JOptionPane.showMessageDialog (null, "Health for your units upgraded!");
+                    JOptionPane.showMessageDialog (mainPanel, "Health of new units upgraded!");
                     
                     //Refreshes text after upgrading
                     costHealthLabel.setText (String.format ("Cost: %s gold", localBase.getHealthUpgradeCost ()));

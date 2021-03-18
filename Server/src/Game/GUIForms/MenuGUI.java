@@ -7,8 +7,6 @@ import common.interfaces.IAction;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MenuGUI {
     
@@ -35,12 +33,10 @@ public class MenuGUI {
     private final static String newline = "\n";
     
     private void errorMessage () {
-        JOptionPane.showMessageDialog (null, "Not enough gold!", "Error",
-            JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog (mainPanel, "Not enough gold!", "Error", JOptionPane.ERROR_MESSAGE);
     }
     
     public MenuGUI (JDialog parentDialog, Base localBase, IAction onUpdate) {
-        
         JDialog menuWindow = new JDialog (parentDialog);
         
         menuWindow.setContentPane (mainPanel);
@@ -67,69 +63,57 @@ public class MenuGUI {
         costHealthLabel.setText (String.format ("Cost: %s gold", localBase.getHealthUpgradeCost ()));
         
         //Close button
-        closeButton.addActionListener (new ActionListener () {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                PlaySound.once (Sounds.buttonPress);
-                menuWindow.dispose ();
-            }
+        closeButton.addActionListener (e -> {
+            PlaySound.once (Sounds.buttonPress);
+            menuWindow.dispose ();
         });
         
         //Upgrade gold income button
-        upgradeGoldIncomeButton.addActionListener (new ActionListener () {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                PlaySound.once (Sounds.buttonPress);
-                if (localBase.upgradeGold ()) {
-                    //Message dialog
-                    JOptionPane.showMessageDialog (mainPanel, "Gold income upgraded!");
-                    
-                    //Refreshes text after upgrading
-                    currentGoldIncomeLabel.setText (String.format ("Current Gold Income: +%s per turn", localBase.getGoldIncome ()));
-                    currentGoldLabel.setText (String.format ("Current Gold: %s", localBase.getGold ()));
-                    costLabel.setText (String.format ("Cost: %s gold", localBase.getGoldIncome () * 25 / 10));
-                    onUpdate.invoke ();
-                } else {
-                    errorMessage ();
-                }
+        upgradeGoldIncomeButton.addActionListener (e -> {
+            PlaySound.once (Sounds.buttonPress);
+            if (localBase.upgradeGold ()) {
+                //Message dialog
+                JOptionPane.showMessageDialog (mainPanel, "Gold income upgraded!");
+                
+                //Refreshes text after upgrading
+                currentGoldIncomeLabel.setText (String.format ("Current Gold Income: +%s per turn", localBase.getGoldIncome ()));
+                currentGoldLabel.setText (String.format ("Current Gold: %s", localBase.getGold ()));
+                costLabel.setText (String.format ("Cost: %s gold", localBase.getGoldIncome () * 25 / 10));
+                onUpdate.invoke ();
+            } else {
+                errorMessage ();
             }
         });
         
         //Upgrade attack button
-        upgradeAttackButton.addActionListener (new ActionListener () {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                PlaySound.once (Sounds.buttonPress);
-                if (localBase.upgradeAttack ()) {
-                    //Message dialog
-                    JOptionPane.showMessageDialog (mainPanel, "Attack of new units upgraded!");
-                    
-                    //Refreshes text after upgrading
-                    costAttackLabel.setText (String.format ("Cost: %s gold", localBase.getAttackUpgradeCost ()));
-                    currentAttackLabel.setText (String.format ("Current Attack Modifier: %sx", localBase.getAttackModifier ()));
-                    onUpdate.invoke ();
-                } else {
-                    errorMessage ();
-                }
+        upgradeAttackButton.addActionListener (e -> {
+            PlaySound.once (Sounds.buttonPress);
+            if (localBase.upgradeAttack ()) {
+                //Message dialog
+                JOptionPane.showMessageDialog (mainPanel, "Attack of new units upgraded!");
+                
+                //Refreshes text after upgrading
+                costAttackLabel.setText (String.format ("Cost: %s gold", localBase.getAttackUpgradeCost ()));
+                currentAttackLabel.setText (String.format ("Current Attack Modifier: %sx", localBase.getAttackModifier ()));
+                onUpdate.invoke ();
+            } else {
+                errorMessage ();
             }
         });
         
         //Upgrade health button
-        upgradeHealthButton.addActionListener (new ActionListener () {
-            @Override
-            public void actionPerformed (ActionEvent e) {
-                PlaySound.once (Sounds.buttonPress);
-                if (localBase.upgradeHealth ()) {
-                    //Message dialog
-                    JOptionPane.showMessageDialog (mainPanel, "Health of new units upgraded!");
-                    
-                    //Refreshes text after upgrading
-                    costHealthLabel.setText (String.format ("Cost: %s gold", localBase.getHealthUpgradeCost ()));
-                    currentHealthLabel.setText (String.format ("Current Health Modifier: %sx", localBase.getHealthModifier ()));
-                    onUpdate.invoke ();
-                } else {
-                    errorMessage ();
-                }
+        upgradeHealthButton.addActionListener (e -> {
+            PlaySound.once (Sounds.buttonPress);
+            if (localBase.upgradeHealth ()) {
+                //Message dialog
+                JOptionPane.showMessageDialog (mainPanel, "Health of new units upgraded!");
+                
+                //Refreshes text after upgrading
+                costHealthLabel.setText (String.format ("Cost: %s gold", localBase.getHealthUpgradeCost ()));
+                currentHealthLabel.setText (String.format ("Current Health Modifier: %sx", localBase.getHealthModifier ()));
+                onUpdate.invoke ();
+            } else {
+                errorMessage ();
             }
         });
         
@@ -140,7 +124,6 @@ public class MenuGUI {
         JDialog dialog = new JDialog ();
         Base base = new Base (100, 1);
         base.setPowerBar (100);
-        new MenuGUI (dialog, base, () -> {
-        });
+        new MenuGUI (dialog, base, () -> { });
     }
 }

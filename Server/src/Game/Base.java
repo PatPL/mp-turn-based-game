@@ -11,7 +11,6 @@ public class Base implements ITextSerializable {
     private int teamNumber;
     private int gold;
     private int goldIncome;
-    private int powerBar;
     private double attackModifier;
     private double healthModifier;
     private int attackUpgradeCost;
@@ -32,10 +31,6 @@ public class Base implements ITextSerializable {
     
     public int getGoldIncome () {
         return goldIncome;
-    }
-    
-    public int getPowerBarValue () {
-        return powerBar;
     }
     
     public double getAttackModifier () {
@@ -75,14 +70,6 @@ public class Base implements ITextSerializable {
         this.gold += deltaGold;
     }
     
-    public void setPowerBar (int powerBar) {
-        this.powerBar = powerBar;
-    }
-    
-    public void addPowerBar (int deltaPowerBar) {
-        powerBar += deltaPowerBar;
-    }
-    
     public void setAttackModifier (double newAttackModifier) {
         attackModifier = newAttackModifier;
     }
@@ -108,7 +95,6 @@ public class Base implements ITextSerializable {
         this.teamNumber = teamNumber;
         gold = 100;
         goldIncome = 10;
-        powerBar = 30;
         attackModifier = 1.0;
         healthModifier = 1.0;
         healthUpgradeCost = 40;
@@ -178,8 +164,6 @@ public class Base implements ITextSerializable {
         output.append (";");
         output.append (goldIncome);
         output.append (";");
-        output.append (powerBar);
-        output.append (";");
         output.append (attackModifier);
         output.append (";");
         output.append (healthModifier);
@@ -212,10 +196,6 @@ public class Base implements ITextSerializable {
         tmp = Utility.readUntil (rawText, ";", offset + addedOffset);
         addedOffset += tmp.length () + 1;
         this.goldIncome = Integer.parseInt (tmp);
-        
-        tmp = Utility.readUntil (rawText, ";", offset + addedOffset);
-        addedOffset += tmp.length () + 1;
-        this.powerBar = Integer.parseInt (tmp);
         
         tmp = Utility.readUntil (rawText, ";", offset + addedOffset);
         addedOffset += tmp.length () + 1;

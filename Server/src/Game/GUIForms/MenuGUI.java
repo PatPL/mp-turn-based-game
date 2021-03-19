@@ -123,7 +123,6 @@ public class MenuGUI {
     public static void main (String[] args) {
         JDialog dialog = new JDialog ();
         Base base = new Base (100, 1);
-        base.setPowerBar (100);
         new MenuGUI (dialog, base, () -> { });
     }
 }

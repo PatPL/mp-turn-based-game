@@ -194,6 +194,7 @@ public class Game implements ITextSerializable {
     private boolean checkUnitDeath (Unit unit) {
         if (unit.getHealth () <= 0) {
             Base opponentBase = unit.getTeam () == 1 ? blueBase : redBase;
+            opponentBase.addGold (20);
             unit.die ();
             return true;
         }

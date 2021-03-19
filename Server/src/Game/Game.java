@@ -273,11 +273,52 @@ public class Game implements ITextSerializable {
         }
         
         int forward = movingUnit.getTeam () == 1 ? 1 : -1;
+        
+        // Checks is the moving unit has an enemy within its attack range before moving
+        boolean enemyInRange = false;
+        for (int i = 1; i <= movingUnit.getRange (); ++i) {
+            Unit nextUnit = getUnit (x + i * forward, y);
+            if (nextUnit == null) {
+                break;
+            }
+            
+            if (
+                (nextUnit.getTeam () != 0 && nextUnit.getTeam () != movingUnit.getTeam ()) ||
+                    isFieldInBase (x + i * forward)
+            ) {
+                enemyInRange = true;
+                break;
+            }
+        }
+        
+        // If enemy is in range, don't move...
+        //    ...unless you're on a base field
+        if (enemyInRange && !isFieldInBase (x)) {
+            return 0;
+        }
+        
         int i;
         for (i = 1; i <= movingUnit.getSpeed (); ++i) {
             Unit nextUnit = getUnit (x + i * forward, y);
-            if (nextUnit != null && nextUnit.getTeam () == 0 && !isFieldInBase (x + i * forward)) {
-                // Next unit is actually there, and it's empty (not a base field either)
+            // There's already an enemy in range before making this move. Don't move forward.
+            Unit furthestTargetBeforeMove = getUnit (x + (i + movingUnit.getRange () - 1) * forward, y);
+            boolean furthestTargetBeforeMoveIsEnemy = false;
+            if (furthestTargetBeforeMove != null) {
+                furthestTargetBeforeMoveIsEnemy = furthestTargetBeforeMove.getTeam () != 0 && furthestTargetBeforeMove.getTeam () != movingUnit.getTeam ();
+                furthestTargetBeforeMoveIsEnemy |= isFieldInBase (x + (i + movingUnit.getRange () - 1) * forward);
+            }
+            
+            if (
+                nextUnit != null &&
+                    nextUnit.getTeam () == 0 &&
+                    !isFieldInBase (x + i * forward) &&
+                    (enemyInRange || !furthestTargetBeforeMoveIsEnemy)
+            ) {
+                // Next unit (field) is actually there, and it's empty (not a base field either)
+                // Also, move of size `i` will not go forward any more than necessary to get an enemy in range
+                // (unless you're on a base field and an enemy is already in range)
+                // (enemyInRange can only be true here, if movingUnit is on a base field)
+                
                 continue;
             }
             // Can't go there
@@ -289,6 +330,11 @@ public class Game implements ITextSerializable {
         if (i == 0) {
             // Can't move even a single field forward
             return 0;
+        }
+        
+        // If there's an enemy in range, but you're on a base field, move at most one tile
+        if (enemyInRange && isFieldInBase (x)) {
+            i = Math.min (i, 1);
         }
         
         // Move i tiles forward

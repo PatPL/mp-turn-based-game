@@ -126,9 +126,9 @@ public class Unit implements ITextSerializable {
     
     public Unit (UnitType type, double healthMultiplier, double attackMultiplier, int teamNumber) {
         this.deserialize (type.defaultUnit.serialize (), 0);
-        this.health *= healthMultiplier;
-        this.maxHealth *= healthMultiplier;
-        this.damage *= attackMultiplier;
+        this.health = (int) Math.floor (this.health * healthMultiplier);
+        this.maxHealth = (int) Math.floor (this.maxHealth * healthMultiplier);
+        this.damage = (int) Math.ceil (this.damage * attackMultiplier);
         this.team = teamNumber;
     }
     

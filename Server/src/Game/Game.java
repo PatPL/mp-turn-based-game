@@ -228,20 +228,26 @@ public class Game implements ITextSerializable {
         }
         
         for (int i = 1; i <= attackingUnit.getRange (); ++i) {
+            Unit probableTarget = getUnit (x + i * forward, y);
+            boolean enemyInRange = probableTarget != null && probableTarget.getTeam () != 0 && probableTarget.getTeam () != attackingUnit.getTeam ();
             if (isFieldInBase (x + i * forward)) {
                 // Attack the base
                 Base targetBase = x + i * forward == 0 ? redBase : blueBase;
                 targetBase.addHealth (-attackingUnit.getDamage ());
                 checkBaseDeath (targetBase);
+                
+                if (enemyInRange && probableTarget.getRange () >= i) {
+                    // Unit on an attacked base field will retaliate.
+                    // Ranged units get 2x to their damage
+                    int rangedMultiplier = probableTarget.getRange () > 1 ? 2 : 1;
+                    attackingUnit.addHealth (-probableTarget.getDamage () * rangedMultiplier);
+                    checkUnitDeath (attackingUnit);
+                }
+                
                 return true;
             }
             
-            Unit probableTarget = getUnit (x + i * forward, y);
-            if (
-                probableTarget != null &&
-                    probableTarget.getTeam () != 0 &&
-                    probableTarget.getTeam () != attackingUnit.getTeam ()
-            ) {
+            if (enemyInRange) {
                 // Valid unit target in range
                 if (probableTarget.getRange () >= i && probableTarget.getRange () == 1 && !isFieldInBase (x)) {
                     // Valid target has the attacker in range, and can attack the attacker

@@ -42,7 +42,7 @@ public class CreateNewUnitGUI {
         gameWindow.setTitle ("Buy unit");
         gameWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-        gameWindow.setSize (game.getRows () == 1 ? 380 : 530, 650);
+        gameWindow.setSize (game.getRows () == 1 ? 420 : 550, 650);
         gameWindow.setLocation (-gameWindow.getWidth () / 2, -gameWindow.getHeight () / 2);
         gameWindow.setLocationRelativeTo (mainPanel);
         

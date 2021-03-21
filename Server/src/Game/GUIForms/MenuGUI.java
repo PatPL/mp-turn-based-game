@@ -43,7 +43,7 @@ public class MenuGUI {
         menuWindow.setTitle ("Base upgrades");
         menuWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         menuWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
-        menuWindow.setSize (400, 300);
+        menuWindow.setSize (480, 300);
         menuWindow.setLocation (-menuWindow.getWidth () / 2, -menuWindow.getHeight () / 2);
         menuWindow.setLocationRelativeTo (mainPanel);
         

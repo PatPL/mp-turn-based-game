@@ -199,7 +199,7 @@ public class GameGUI {
     }
     
     //Constructor
-    public GameGUI (String gameCode, boolean isPlayerRed) {
+    public GameGUI (Component parent, String gameCode, boolean isPlayerRed) {
         JDialog gameWindow = new JDialog ((Dialog) null);
         parentDialog = gameWindow;
         gameWindow.setContentPane (mainPanel);
@@ -207,7 +207,7 @@ public class GameGUI {
         gameWindow.setModalityType (Dialog.ModalityType.APPLICATION_MODAL);
         gameWindow.setDefaultCloseOperation (JFrame.DISPOSE_ON_CLOSE);
         gameWindow.setSize (1000, 625);
-        gameWindow.setLocationRelativeTo (null);
+        gameWindow.setLocationRelativeTo (parent);
         // Background audio temporarily disabled until a good replacement is found
         this.backgroundMusicClip = PlaySound.repeat (Sounds.silence);
         

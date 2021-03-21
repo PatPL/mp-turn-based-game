@@ -224,7 +224,7 @@ public class ClientGUI {
                 
                 // A dialog with no parent shows on windows taskbar
                 // As the parent windows hides itself anyway, it doesn't affect anything, and still works as expected
-                new GameGUI (gameCode, isPlayerRed);
+                new GameGUI (parentFrame, gameCode, isPlayerRed);
                 
                 parentFrame.setVisible (true);
                 startRefreshInterval ();
